@@ -1,0 +1,24 @@
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/roomrent_maharashtra?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Kolkata
+    username: root
+    password: YBpmk@2702
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+  jackson:
+    serialization:
+      fail-on-empty-beans: false
+
+app:
+  jwt:
+    secret: 32a0b9ab1ddf4e7e8ef9a1db0c3d2cf632a0b9ab1ddf4e7e8ef9a1db0c3d2cf6
+    expiration-ms: 86400000
+
+server:
+  port: 8080
+

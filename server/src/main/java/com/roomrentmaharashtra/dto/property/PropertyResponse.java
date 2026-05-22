@@ -1,0 +1,26 @@
+package com.roomrentmaharashtra.dto.property;
+
+import com.roomrentmaharashtra.entity.GenderPreference;
+import com.roomrentmaharashtra.entity.PropertyType;
+
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.util.List;
+
+public record PropertyResponse(
+    Long id,
+    String title,
+    String description,
+    BigDecimal price,
+    String location,
+    PropertyType type,
+    GenderPreference gender,
+    List<String> amenities,
+    List<String> imageUrls,
+    OwnerSummary owner,
+    boolean saved,
+    LocalDateTime createdAt
+) {
+    public record OwnerSummary(Long id, String name, String email) {
+    }
+}

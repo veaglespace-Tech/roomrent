@@ -1,0 +1,29 @@
+@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  color-scheme: light;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  @apply bg-base-200 text-neutral font-sans;
+  background-image:
+    radial-gradient(circle at top left, rgba(15, 118, 110, 0.12), transparent 22%),
+    radial-gradient(circle at right, rgba(249, 115, 22, 0.1), transparent 18%),
+    linear-gradient(180deg, rgba(255, 248, 240, 0.45), rgba(245, 251, 249, 0.2));
+}
+
+.page-shell {
+  @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8;
+}
+
+.panel {
+  @apply rounded-[28px] border border-base-300 bg-base-100 shadow-card;
+}
