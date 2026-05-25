@@ -1,6 +1,6 @@
 # RoomRent Maharashtra
 
-Full-stack room and PG rental marketplace inspired by the RoomRent Jaipur flow, built with:
+Full-stack room and PG rental marketplace built for a Maharashtra-wide rollout, built with:
 
 - Frontend: Next.js App Router, TypeScript, Tailwind CSS, DaisyUI, Redux Toolkit, Axios, Lucide React
 - Backend: Spring Boot, Spring Security, JWT, JPA/Hibernate

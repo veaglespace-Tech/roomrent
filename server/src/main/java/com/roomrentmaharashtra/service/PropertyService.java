@@ -128,7 +128,24 @@ public class PropertyService {
         property.setTitle(request.title());
         property.setDescription(request.description());
         property.setPrice(request.price());
+        property.setSecurityDeposit(request.securityDeposit());
         property.setLocation(request.location());
+        property.setAreaLocality(request.areaLocality());
+        property.setCity(request.city());
+        property.setDistrict(request.district());
+        property.setState(request.state());
+        property.setCategory(request.category());
+        property.setSharingType(request.sharingType());
+        property.setFurnishedStatus(request.furnishedStatus());
+        property.setListedByType(request.listedByType());
+        property.setContactNumber(request.contactNumber());
+        property.setLatitude(request.latitude());
+        property.setLongitude(request.longitude());
+        property.setAvailabilityStatus(request.availabilityStatus());
+        property.setAvailableFromDate(request.availableFromDate());
+        property.setOccupancyDetails(request.occupancyDetails());
+        property.setListingSource(request.listingSource());
+        property.setListingUrl(request.listingUrl());
         property.setType(request.type());
         property.setGender(request.gender());
         property.setAmenities(new ArrayList<>(new LinkedHashSet<>(request.amenities())));
@@ -152,7 +169,24 @@ public class PropertyService {
             property.getTitle(),
             property.getDescription(),
             property.getPrice(),
+            property.getSecurityDeposit(),
             property.getLocation(),
+            property.getAreaLocality(),
+            property.getCity(),
+            property.getDistrict(),
+            property.getState(),
+            property.getCategory(),
+            property.getSharingType(),
+            property.getFurnishedStatus(),
+            property.getListedByType(),
+            property.getContactNumber(),
+            property.getLatitude(),
+            property.getLongitude(),
+            property.getAvailabilityStatus(),
+            property.getAvailableFromDate(),
+            property.getOccupancyDetails(),
+            property.getListingSource(),
+            property.getListingUrl(),
             property.getType(),
             property.getGender(),
             property.getAmenities(),

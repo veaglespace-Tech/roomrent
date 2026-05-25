@@ -1,0 +1,87 @@
+package com.roomrentmaharashtra.service;
+
+import com.roomrentmaharashtra.dto.ingestion.IngestionRunRequest;
+import com.roomrentmaharashtra.dto.ingestion.IngestionRunResponse;
+import com.roomrentmaharashtra.dto.ingestion.ListingSourceRequest;
+import com.roomrentmaharashtra.dto.ingestion.ListingSourceResponse;
+import com.roomrentmaharashtra.entity.IngestionRun;
+import com.roomrentmaharashtra.entity.ListingSource;
+import com.roomrentmaharashtra.exception.ResourceNotFoundException;
+import com.roomrentmaharashtra.repository.IngestionRunRepository;
+import com.roomrentmaharashtra.repository.ListingSourceRepository;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Service
+public class IngestionAdminService {
+
+    private final ListingSourceRepository listingSourceRepository;
+    private final IngestionRunRepository ingestionRunRepository;
+
+    public IngestionAdminService(ListingSourceRepository listingSourceRepository,
+                                 IngestionRunRepository ingestionRunRepository) {
+        this.listingSourceRepository = listingSourceRepository;
+        this.ingestionRunRepository = ingestionRunRepository;
+    }
+
+    public List<ListingSourceResponse> getSources() {
+        return listingSourceRepository.findAll().stream().map(this::toSourceResponse).toList();
+    }
+
+    public ListingSourceResponse createSource(ListingSourceRequest request) {
+        ListingSource source = new ListingSource();
+        source.setSourceName(request.sourceName());
+        source.setSourceDomain(request.sourceDomain());
+        source.setAllowedForIngestion(request.allowedForIngestion());
+        source.setTermsStatus(request.termsStatus());
+        source.setNotes(request.notes());
+        return toSourceResponse(listingSourceRepository.save(source));
+    }
+
+    public List<IngestionRunResponse> getRuns() {
+        return ingestionRunRepository.findTop20ByOrderByStartedAtDesc().stream().map(this::toRunResponse).toList();
+    }
+
+    public IngestionRunResponse enqueueRun(IngestionRunRequest request) {
+        ListingSource source = listingSourceRepository.findById(request.sourceId())
+            .orElseThrow(() -> new ResourceNotFoundException("Listing source not found"));
+
+        IngestionRun run = new IngestionRun();
+        run.setSource(source);
+        run.setStatus("QUEUED");
+        run.setFetchedCount(0);
+        run.setParsedCount(0);
+        run.setPublishedCount(0);
+        run.setErrorCount(0);
+        run.setNotes(request.notes());
+        return toRunResponse(ingestionRunRepository.save(run));
+    }
+
+    private ListingSourceResponse toSourceResponse(ListingSource source) {
+        return new ListingSourceResponse(
+            source.getId(),
+            source.getSourceName(),
+            source.getSourceDomain(),
+            source.isAllowedForIngestion(),
+            source.getTermsStatus(),
+            source.getNotes()
+        );
+    }
+
+    private IngestionRunResponse toRunResponse(IngestionRun run) {
+        return new IngestionRunResponse(
+            run.getId(),
+            run.getSource().getSourceName(),
+            run.getSource().getSourceDomain(),
+            run.getStatus(),
+            run.getFetchedCount(),
+            run.getParsedCount(),
+            run.getPublishedCount(),
+            run.getErrorCount(),
+            run.getStartedAt(),
+            run.getFinishedAt(),
+            run.getNotes()
+        );
+    }
+}

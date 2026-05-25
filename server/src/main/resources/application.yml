@@ -18,7 +18,8 @@ app:
   jwt:
     secret: 32a0b9ab1ddf4e7e8ef9a1db0c3d2cf632a0b9ab1ddf4e7e8ef9a1db0c3d2cf6
     expiration-ms: 86400000
+  seed-demo-data: false
+  purge-legacy-demo-listings: true
 
 server:
   port: 8080
-

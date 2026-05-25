@@ -15,7 +15,24 @@ CREATE TABLE IF NOT EXISTS properties (
     title VARCHAR(180) NOT NULL,
     description TEXT NOT NULL,
     price DECIMAL(10, 2) NOT NULL,
+    security_deposit DECIMAL(10, 2) NULL,
     location VARCHAR(180) NOT NULL,
+    area_locality VARCHAR(160) NULL,
+    city VARCHAR(120) NULL,
+    district VARCHAR(120) NULL,
+    state VARCHAR(120) NULL,
+    category VARCHAR(80) NULL,
+    sharing_type VARCHAR(60) NULL,
+    furnished_status VARCHAR(40) NULL,
+    listed_by_type VARCHAR(40) NULL,
+    contact_number VARCHAR(30) NULL,
+    latitude DECIMAL(10, 7) NULL,
+    longitude DECIMAL(10, 7) NULL,
+    availability_status VARCHAR(40) NULL,
+    available_from_date VARCHAR(30) NULL,
+    occupancy_details VARCHAR(160) NULL,
+    listing_source VARCHAR(180) NULL,
+    listing_url VARCHAR(500) NULL,
     type VARCHAR(50) NOT NULL,
     gender VARCHAR(30) NOT NULL,
     created_by BIGINT NOT NULL,
@@ -35,6 +52,30 @@ CREATE TABLE IF NOT EXISTS property_images (
     property_id BIGINT NOT NULL,
     image_url VARCHAR(500) NOT NULL,
     CONSTRAINT fk_property_image FOREIGN KEY (property_id) REFERENCES properties (id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS listing_sources (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    source_name VARCHAR(180) NOT NULL,
+    source_domain VARCHAR(255) NOT NULL,
+    allowed_for_ingestion BOOLEAN NOT NULL DEFAULT FALSE,
+    terms_status VARCHAR(40) NOT NULL DEFAULT 'PENDING',
+    notes TEXT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE IF NOT EXISTS ingestion_runs (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    source_id BIGINT NOT NULL,
+    status VARCHAR(40) NOT NULL,
+    fetched_count INT NOT NULL DEFAULT 0,
+    parsed_count INT NOT NULL DEFAULT 0,
+    published_count INT NOT NULL DEFAULT 0,
+    error_count INT NOT NULL DEFAULT 0,
+    notes TEXT NULL,
+    started_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    finished_at TIMESTAMP NULL,
+    CONSTRAINT fk_ingestion_source FOREIGN KEY (source_id) REFERENCES listing_sources (id)
 );
 
 CREATE TABLE IF NOT EXISTS enquiries (

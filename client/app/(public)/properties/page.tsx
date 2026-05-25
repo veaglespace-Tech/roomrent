@@ -50,8 +50,8 @@ function PropertiesContent() {
         <div>
           <div className="mb-6 flex items-center justify-between">
             <div>
-              <h1 className="text-3xl font-bold">Available Properties in Jaipur</h1>
-              <p className="mt-2 text-base-content/70">Explore rooms, PGs, hostels, flats, and rental options with live filters and direct owner enquiry flow.</p>
+              <h1 className="text-3xl font-bold">Available Properties Across Maharashtra</h1>
+              <p className="mt-2 text-base-content/70">Explore hostels, PGs, rooms, flats, and commercial rentals with live filters and direct owner enquiry flow.</p>
             </div>
             <div className="badge badge-lg border-none bg-secondary/10 px-4 py-4 text-secondary">
               {properties.length} results

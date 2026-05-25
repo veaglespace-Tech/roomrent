@@ -5,8 +5,8 @@ import { Footer } from "@/components/layout/footer";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "Room Rent Jaipur",
-  description: "Dynamic Jaipur rental marketplace for rooms, PGs, flats, hostels and commercial spaces"
+  title: "RoomRent Maharashtra",
+  description: "Maharashtra-wide rental marketplace for hostels, PGs, rooms, flats, apartments and commercial spaces"
 };
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {

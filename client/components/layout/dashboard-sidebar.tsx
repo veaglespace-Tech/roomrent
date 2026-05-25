@@ -24,7 +24,9 @@ export function DashboardSidebar() {
   const adminLinks = [
     { href: "/dashboard/admin", label: "Admin Dashboard" },
     { href: "/dashboard/admin/users", label: "Manage Users" },
-    { href: "/dashboard/admin/properties", label: "Manage Properties" }
+    { href: "/dashboard/admin/properties", label: "Manage Properties" },
+    { href: "/dashboard/admin/source-registry", label: "Source Registry" },
+    { href: "/dashboard/admin/ingestion-queue", label: "Ingestion Queue" }
   ];
 
   const links = [

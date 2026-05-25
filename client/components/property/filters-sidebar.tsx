@@ -25,14 +25,14 @@ export function FiltersSidebar({ filters, onChange }: FiltersSidebarProps) {
     <aside className="panel sticky top-24 h-fit space-y-5 p-5">
       <div className="border-b border-base-300 pb-4">
         <h3 className="text-lg font-semibold">Filters</h3>
-        <p className="text-sm text-base-content/70">Refine by Jaipur area, budget, property type, and preference.</p>
+        <p className="text-sm text-base-content/70">Refine by city, district, locality, budget, property type, and preference.</p>
       </div>
 
       <div className="space-y-3 rounded-[22px] bg-base-200/60 p-4">
         <p className="text-sm font-semibold text-base-content/80">Location</p>
         <input
           className="input input-bordered w-full bg-base-100"
-          placeholder="Jaipur area or locality"
+          placeholder="City, district, or locality"
           value={filters.location || ""}
           onChange={(event) => onChange({ ...filters, location: event.target.value })}
         />

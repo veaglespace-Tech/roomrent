@@ -43,10 +43,8 @@ export default function LoginPage() {
           </button>
         </form>
         <div className="mt-6 rounded-[24px] bg-base-200/70 p-4 text-sm text-base-content/75">
-          <p className="font-semibold text-base-content">Demo access</p>
-          <p className="mt-2">Admin: `admin@roomrent.in` / `admin123`</p>
-          <p>Owner: `owner@roomrent.in` / `owner123`</p>
-          <p>User: `user@roomrent.in` / `user123`</p>
+          <p className="font-semibold text-base-content">Production note</p>
+          <p className="mt-2">Demo credentials and seeded demo listings have been disabled for the Maharashtra-wide rollout.</p>
         </div>
       </AuthCard>
     </section>

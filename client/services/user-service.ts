@@ -1,7 +1,5 @@
-"use client";
-
 import api from "@/services/api";
-import { AdminDashboard, Enquiry, Property, UserProfile } from "@/types";
+import { AdminDashboard, Enquiry, IngestionRun, ListingSource, Property, UserProfile } from "@/types";
 
 export const getProfile = async () => {
   const { data } = await api.get<UserProfile>("/users/me");
@@ -43,3 +41,28 @@ export const getAdminUsers = async () => {
   return data;
 };
 
+export const getListingSources = async () => {
+  const { data } = await api.get<ListingSource[]>("/admin/sources");
+  return data;
+};
+
+export const createListingSource = async (payload: {
+  sourceName: string;
+  sourceDomain: string;
+  allowedForIngestion: boolean;
+  termsStatus: string;
+  notes?: string;
+}) => {
+  const { data } = await api.post<ListingSource>("/admin/sources", payload);
+  return data;
+};
+
+export const getIngestionRuns = async () => {
+  const { data } = await api.get<IngestionRun[]>("/admin/ingestion-runs");
+  return data;
+};
+
+export const enqueueIngestionRun = async (payload: { sourceId: number; notes?: string }) => {
+  const { data } = await api.post<IngestionRun>("/admin/ingestion-runs", payload);
+  return data;
+};

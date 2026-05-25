@@ -6,7 +6,7 @@ import { FormEvent, useState } from "react";
 
 export function SearchBar() {
   const router = useRouter();
-  const [location, setLocation] = useState("Jaipur");
+  const [location, setLocation] = useState("");
   const [type, setType] = useState("");
 
   const handleSubmit = (event: FormEvent) => {
@@ -28,7 +28,7 @@ export function SearchBar() {
         <input
           value={location}
           onChange={(event) => setLocation(event.target.value)}
-          placeholder="Anywhere in Jaipur"
+          placeholder="City, district, area, or landmark in Maharashtra"
           className="grow"
         />
       </label>

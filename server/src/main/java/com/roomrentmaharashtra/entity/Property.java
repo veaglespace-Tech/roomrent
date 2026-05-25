@@ -40,8 +40,59 @@ public class Property {
     @Column(nullable = false, precision = 10, scale = 2)
     private BigDecimal price;
 
+    @Column(name = "security_deposit", precision = 10, scale = 2)
+    private BigDecimal securityDeposit;
+
     @Column(nullable = false, length = 180)
     private String location;
+
+    @Column(name = "area_locality", length = 160)
+    private String areaLocality;
+
+    @Column(length = 120)
+    private String city;
+
+    @Column(length = 120)
+    private String district;
+
+    @Column(length = 120)
+    private String state;
+
+    @Column(length = 80)
+    private String category;
+
+    @Column(name = "sharing_type", length = 60)
+    private String sharingType;
+
+    @Column(name = "furnished_status", length = 40)
+    private String furnishedStatus;
+
+    @Column(name = "listed_by_type", length = 40)
+    private String listedByType;
+
+    @Column(name = "contact_number", length = 30)
+    private String contactNumber;
+
+    @Column(precision = 10, scale = 7)
+    private BigDecimal latitude;
+
+    @Column(precision = 10, scale = 7)
+    private BigDecimal longitude;
+
+    @Column(name = "availability_status", length = 40)
+    private String availabilityStatus;
+
+    @Column(name = "available_from_date", length = 30)
+    private String availableFromDate;
+
+    @Column(name = "occupancy_details", length = 160)
+    private String occupancyDetails;
+
+    @Column(name = "listing_source", length = 180)
+    private String listingSource;
+
+    @Column(name = "listing_url", length = 500)
+    private String listingUrl;
 
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 50)
@@ -128,6 +179,142 @@ public class Property {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public BigDecimal getSecurityDeposit() {
+        return securityDeposit;
+    }
+
+    public void setSecurityDeposit(BigDecimal securityDeposit) {
+        this.securityDeposit = securityDeposit;
+    }
+
+    public String getAreaLocality() {
+        return areaLocality;
+    }
+
+    public void setAreaLocality(String areaLocality) {
+        this.areaLocality = areaLocality;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getDistrict() {
+        return district;
+    }
+
+    public void setDistrict(String district) {
+        this.district = district;
+    }
+
+    public String getState() {
+        return state;
+    }
+
+    public void setState(String state) {
+        this.state = state;
+    }
+
+    public String getCategory() {
+        return category;
+    }
+
+    public void setCategory(String category) {
+        this.category = category;
+    }
+
+    public String getSharingType() {
+        return sharingType;
+    }
+
+    public void setSharingType(String sharingType) {
+        this.sharingType = sharingType;
+    }
+
+    public String getFurnishedStatus() {
+        return furnishedStatus;
+    }
+
+    public void setFurnishedStatus(String furnishedStatus) {
+        this.furnishedStatus = furnishedStatus;
+    }
+
+    public String getListedByType() {
+        return listedByType;
+    }
+
+    public void setListedByType(String listedByType) {
+        this.listedByType = listedByType;
+    }
+
+    public String getContactNumber() {
+        return contactNumber;
+    }
+
+    public void setContactNumber(String contactNumber) {
+        this.contactNumber = contactNumber;
+    }
+
+    public BigDecimal getLatitude() {
+        return latitude;
+    }
+
+    public void setLatitude(BigDecimal latitude) {
+        this.latitude = latitude;
+    }
+
+    public BigDecimal getLongitude() {
+        return longitude;
+    }
+
+    public void setLongitude(BigDecimal longitude) {
+        this.longitude = longitude;
+    }
+
+    public String getAvailabilityStatus() {
+        return availabilityStatus;
+    }
+
+    public void setAvailabilityStatus(String availabilityStatus) {
+        this.availabilityStatus = availabilityStatus;
+    }
+
+    public String getAvailableFromDate() {
+        return availableFromDate;
+    }
+
+    public void setAvailableFromDate(String availableFromDate) {
+        this.availableFromDate = availableFromDate;
+    }
+
+    public String getOccupancyDetails() {
+        return occupancyDetails;
+    }
+
+    public void setOccupancyDetails(String occupancyDetails) {
+        this.occupancyDetails = occupancyDetails;
+    }
+
+    public String getListingSource() {
+        return listingSource;
+    }
+
+    public void setListingSource(String listingSource) {
+        this.listingSource = listingSource;
+    }
+
+    public String getListingUrl() {
+        return listingUrl;
+    }
+
+    public void setListingUrl(String listingUrl) {
+        this.listingUrl = listingUrl;
     }
 
     public PropertyType getType() {

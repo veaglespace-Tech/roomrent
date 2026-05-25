@@ -51,7 +51,7 @@ export function Header() {
     <header className="sticky top-0 z-50 bg-base-100/95 backdrop-blur">
       <div className="border-b border-base-300 bg-neutral text-neutral-content">
         <div className="page-shell flex min-h-10 items-center justify-between text-xs">
-          <p>roomrentjaipur@gmail.com</p>
+          <p>hello@roomrentmaharashtra.com</p>
           <div className="flex items-center gap-4">
             <Link href="/properties" className="hover:text-white">Post Requirement</Link>
             {user ? (
@@ -81,8 +81,8 @@ export function Header() {
                 <Building2 className="size-5" />
               </div>
               <div>
-                <p className="text-lg font-semibold leading-none">Room Rent Jaipur</p>
-                <p className="text-xs text-base-content/60">Rooms, PGs, flats and rental marketplace</p>
+                <p className="text-lg font-semibold leading-none">RoomRent Maharashtra</p>
+                <p className="text-xs text-base-content/60">Rooms, PGs, flats and commercial rental marketplace</p>
               </div>
             </Link>
           </div>
