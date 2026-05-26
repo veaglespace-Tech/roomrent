@@ -8,8 +8,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 @Configuration
 public class DataSeeder {
@@ -23,7 +23,20 @@ public class DataSeeder {
         "Compact Shared Flat for Students in Jagatpura",
         "Family Flat near Gopalpura Bypass",
         "Boys PG near Mansarovar Metro",
-        "Girls PG in Vidhyadhar Nagar"
+        "Girls PG in Vidhyadhar Nagar",
+        "Sunrise PG near FC Road",
+        "Teal Nest Girls Hostel",
+        "Urban Room for Working Boys",
+        "Compact Shared Flat for Students"
+    );
+
+    private static final Set<String> LEGACY_DEMO_MARKERS = Set.of(
+        "jaipur",
+        "rajasthan",
+        "demo",
+        "sample",
+        "mock",
+        "test listing"
     );
 
     @Bean
@@ -33,8 +46,8 @@ public class DataSeeder {
         return args -> {
             if (purgeLegacyDemoListings) {
                 List<Property> legacyDemoProperties = propertyRepository.findAll().stream()
-                    .filter(property -> LEGACY_DEMO_TITLES.contains(property.getTitle()))
-                    .collect(Collectors.toList());
+                    .filter(this::isLegacyDemoProperty)
+                    .toList();
 
                 if (!legacyDemoProperties.isEmpty()) {
                     propertyRepository.deleteAll(legacyDemoProperties);
@@ -42,9 +55,41 @@ public class DataSeeder {
             }
 
             if (seedDemoData) {
-                // Intentionally left empty. Maharashtra production data should come
-                // from verified submissions and compliant ingestion pipelines only.
+                // Production inventory should come from verified submissions only.
             }
         };
+    }
+
+    private boolean isLegacyDemoProperty(Property property) {
+        if (property == null) {
+            return false;
+        }
+
+        if (LEGACY_DEMO_TITLES.contains(property.getTitle())) {
+            return true;
+        }
+
+        String ownerEmail = property.getCreatedBy() != null ? property.getCreatedBy().getEmail() : "";
+        if ("owner@roomrent.in".equalsIgnoreCase(ownerEmail) || "admin@roomrent.in".equalsIgnoreCase(ownerEmail)) {
+            return true;
+        }
+
+        String combinedContent = String.join(" ",
+            safe(property.getTitle()),
+            safe(property.getDescription()),
+            safe(property.getLocation()),
+            safe(property.getAreaLocality()),
+            safe(property.getCity()),
+            safe(property.getDistrict()),
+            safe(property.getState()),
+            safe(property.getListingSource()),
+            safe(property.getListingUrl())
+        ).toLowerCase(Locale.ROOT);
+
+        return LEGACY_DEMO_MARKERS.stream().anyMatch(combinedContent::contains);
+    }
+
+    private String safe(String value) {
+        return value == null ? "" : value;
     }
 }

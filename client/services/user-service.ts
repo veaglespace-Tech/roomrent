@@ -57,6 +57,15 @@ export const createListingSource = async (payload: {
   return data;
 };
 
+export const moderateListingSource = async (sourceId: number, payload: {
+  allowedForIngestion: boolean;
+  termsStatus: string;
+  notes?: string;
+}) => {
+  const { data } = await api.post<ListingSource>(`/admin/sources/${sourceId}/moderate`, payload);
+  return data;
+};
+
 export const getIngestionRuns = async () => {
   const { data } = await api.get<IngestionRun[]>("/admin/ingestion-runs");
   return data;

@@ -2,10 +2,12 @@ package com.roomrentmaharashtra.controller;
 
 import com.roomrentmaharashtra.dto.ingestion.IngestionRunRequest;
 import com.roomrentmaharashtra.dto.ingestion.IngestionRunResponse;
+import com.roomrentmaharashtra.dto.ingestion.ListingSourceModerationRequest;
 import com.roomrentmaharashtra.dto.ingestion.ListingSourceRequest;
 import com.roomrentmaharashtra.dto.ingestion.ListingSourceResponse;
 import com.roomrentmaharashtra.service.IngestionAdminService;
 import jakarta.validation.Valid;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -32,6 +34,12 @@ public class IngestionAdminController {
     @PostMapping("/sources")
     public ListingSourceResponse createSource(@Valid @RequestBody ListingSourceRequest request) {
         return ingestionAdminService.createSource(request);
+    }
+
+    @PostMapping("/sources/{id}/moderate")
+    public ListingSourceResponse moderateSource(@PathVariable Long id,
+                                                @Valid @RequestBody ListingSourceModerationRequest request) {
+        return ingestionAdminService.moderateSource(id, request);
     }
 
     @GetMapping("/ingestion-runs")

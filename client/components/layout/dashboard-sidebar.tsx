@@ -36,16 +36,21 @@ export function DashboardSidebar() {
   ];
 
   return (
-    <aside className="panel sticky top-24 h-fit p-4">
-      <p className="px-3 py-2 text-sm font-semibold uppercase tracking-[0.2em] text-primary">Dashboard</p>
+    <aside className="sticky top-24 h-fit overflow-hidden rounded-[32px] border border-base-300/60 bg-white shadow-[0_26px_60px_-40px_rgba(15,23,42,0.34)]">
+      <div className="border-b border-base-300/60 bg-[linear-gradient(160deg,#f8fff9_0%,#fff4f8_100%)] p-6">
+        <p className="text-xs font-semibold uppercase tracking-[0.24em] text-green-700">Workspace</p>
+        <h2 className="mt-3 text-2xl font-semibold text-neutral">Dashboard</h2>
+        <p className="mt-2 text-sm text-base-content/65">Manage profile, saved homes, listings and lead activity.</p>
+      </div>
+      <div className="p-4">
       <ul className="menu gap-2">
         {links.map((link) => (
           <li key={link.href}>
             <Link
               href={link.href}
               className={cn(
-                "rounded-2xl",
-                pathname === link.href ? "bg-primary text-primary-content" : "hover:bg-base-200"
+                "rounded-2xl px-4 py-3",
+                pathname === link.href ? "bg-[#ef3d81] text-white" : "hover:bg-base-200"
               )}
             >
               {link.label}
@@ -53,6 +58,7 @@ export function DashboardSidebar() {
           </li>
         ))}
       </ul>
+      </div>
     </aside>
   );
 }

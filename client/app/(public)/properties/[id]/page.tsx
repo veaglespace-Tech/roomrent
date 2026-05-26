@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { Check, MapPin, ShieldCheck, UserRound } from "lucide-react";
+import { BedDouble, Check, MapPin, ShieldCheck, UserRound, Wallet } from "lucide-react";
 import { getPropertyById } from "@/services/property-service";
 import { EnquiryForm } from "@/components/forms/enquiry-form";
 import { Property } from "@/types";
@@ -45,11 +45,15 @@ export default function PropertyDetailPage() {
           <div className="panel p-7">
             <div className="flex flex-wrap items-start justify-between gap-4">
               <div>
-                <div className="badge badge-outline border-primary/30 text-primary">{property.type}</div>
+                <div className="flex flex-wrap gap-2">
+                  <div className="badge badge-outline border-primary/30 text-primary">{property.type}</div>
+                  {property.category ? <div className="badge border-none bg-secondary/12 text-secondary">{property.category}</div> : null}
+                  {property.sharingType ? <div className="badge border-none bg-base-200 text-base-content/75">{property.sharingType}</div> : null}
+                </div>
                 <h1 className="mt-4 text-4xl font-bold">{property.title}</h1>
                 <div className="mt-4 flex items-center gap-2 text-base-content/70">
                   <MapPin className="size-4" />
-                  {property.location}
+                  {[property.areaLocality, property.city, property.district, property.state].filter(Boolean).join(", ") || property.location}
                 </div>
               </div>
               <div className="rounded-[28px] bg-base-200 px-6 py-4 text-right">
@@ -77,6 +81,38 @@ export default function PropertyDetailPage() {
                   </div>
                 </div>
               </div>
+              <div className="rounded-3xl border border-base-300 p-4">
+                <div className="flex items-center gap-3">
+                  <Wallet className="size-5 text-primary" />
+                  <div>
+                    <p className="font-semibold">Security deposit</p>
+                    <p className="text-sm text-base-content/70">{property.securityDeposit ? `Rs. ${property.securityDeposit}` : "On request"}</p>
+                  </div>
+                </div>
+              </div>
+              <div className="rounded-3xl border border-base-300 p-4">
+                <div className="flex items-center gap-3">
+                  <BedDouble className="size-5 text-secondary" />
+                  <div>
+                    <p className="font-semibold">Furnishing</p>
+                    <p className="text-sm text-base-content/70">{property.furnishedStatus ? property.furnishedStatus.replaceAll("_", " ") : "Not specified"}</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div className="mt-6 grid gap-4 md:grid-cols-3">
+              <div className="rounded-3xl bg-base-200/70 p-4">
+                <p className="text-xs uppercase tracking-[0.18em] text-base-content/55">Availability</p>
+                <p className="mt-2 font-semibold">{property.availabilityStatus || "AVAILABLE"}</p>
+              </div>
+              <div className="rounded-3xl bg-base-200/70 p-4">
+                <p className="text-xs uppercase tracking-[0.18em] text-base-content/55">Listed by</p>
+                <p className="mt-2 font-semibold">{property.listedByType || "OWNER"}</p>
+              </div>
+              <div className="rounded-3xl bg-base-200/70 p-4">
+                <p className="text-xs uppercase tracking-[0.18em] text-base-content/55">Available from</p>
+                <p className="mt-2 font-semibold">{property.availableFromDate || "Immediate"}</p>
+              </div>
             </div>
             <div className="mt-8">
               <h2 className="text-2xl font-semibold">Amenities</h2>
@@ -98,12 +134,18 @@ export default function PropertyDetailPage() {
             <div className="mt-5 rounded-2xl bg-base-200 p-4 text-sm text-base-content/70">
               Reach the owner directly to confirm availability, security deposit, and move-in timing.
             </div>
+            {property.occupancyDetails ? (
+              <div className="mt-4 rounded-2xl border border-base-300 px-4 py-3 text-sm text-base-content/70">
+                Occupancy: {property.occupancyDetails}
+              </div>
+            ) : null}
           </div>
           <EnquiryForm propertyId={property.id} />
           <div className="panel p-6">
             <h3 className="text-xl font-semibold">Owner contact summary</h3>
             <p className="mt-4 text-sm text-base-content/70">Name: {property.owner.name}</p>
             <p className="mt-2 text-sm text-base-content/70">Email: {property.owner.email}</p>
+            {property.contactNumber ? <p className="mt-2 text-sm text-base-content/70">Phone: {property.contactNumber}</p> : null}
           </div>
         </div>
       </div>

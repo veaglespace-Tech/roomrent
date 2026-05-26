@@ -1,141 +1,140 @@
 "use client";
 
 import Link from "next/link";
-import { Building2, ChevronDown, Heart, LayoutDashboard, LogOut, Menu, Search, UserCircle2 } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { logout } from "@/store/slices/auth-slice";
+import { Building2, ChevronDown, Menu } from "lucide-react";
 
-const categoryGroups = [
+const navGroups = [
   {
     label: "Houses",
     links: [
-      { href: "/properties?type=ROOM", label: "One Room Set" },
-      { href: "/properties?type=ROOM", label: "Two Rooms Set" },
-      { href: "/properties?type=ROOM", label: "Three Rooms Set" },
-      { href: "/properties?type=ROOM", label: "Four Rooms Set" }
+      { label: "One Room Set", href: "/properties?type=ROOM&sharingType=Single Room" },
+      { label: "Two Room Set", href: "/properties?type=ROOM&sharingType=2 Sharing" },
+      { label: "Three Room Set", href: "/properties?type=ROOM&sharingType=3 Sharing" },
+      { label: "Four Room Set", href: "/properties?type=ROOM&sharingType=4 Sharing" }
     ]
   },
   {
     label: "Flats",
     links: [
-      { href: "/properties?type=FLAT", label: "1 BHK Flats" },
-      { href: "/properties?type=FLAT", label: "2 BHK Flats" },
-      { href: "/properties?type=FLAT", label: "3 BHK Flats" },
-      { href: "/properties?type=FLAT", label: "4 BHK Flats" }
+      { label: "1 BHK Flats", href: "/properties?type=FLAT&category=Flats / Apartments" },
+      { label: "2 BHK Flats", href: "/properties?type=FLAT&category=Flats / Apartments" },
+      { label: "3 BHK Flats", href: "/properties?type=FLAT&category=Flats / Apartments" },
+      { label: "4 BHK Flats", href: "/properties?type=FLAT&category=Flats / Apartments" }
     ]
   },
   {
-    label: "PG / Hostel",
+    label: "P.G/Hostel",
     links: [
-      { href: "/properties?type=PG&gender=BOYS", label: "PG | Hostel for Boys" },
-      { href: "/properties?type=PG&gender=GIRLS", label: "PG | Hostel for Girls" },
-      { href: "/properties?type=HOSTEL", label: "Student Hostels" }
+      { label: "PG | Hostel for Boys", href: "/properties?type=PG&gender=BOYS" },
+      { label: "PG | Hostel for Girls", href: "/properties?type=PG&gender=GIRLS" },
+      { label: "Student Hostels", href: "/properties?type=HOSTEL" }
+    ]
+  },
+  {
+    label: "Shops & Offices",
+    links: [
+      { label: "Shops", href: "/properties?category=Commercial" },
+      { label: "Offices", href: "/properties?category=Commercial" },
+      { label: "Co-working Spaces", href: "/properties?category=Commercial" }
+    ]
+  },
+  {
+    label: "People’s Need",
+    links: [
+      { label: "Room Seekers", href: "/register" },
+      { label: "Room Partners", href: "/register" }
     ]
   }
 ];
 
+const quickLinks = [
+  { label: "For Sale", href: "/properties" },
+  { label: "LearnTheta", href: "/properties" }
+];
+
 export function Header() {
-  const router = useRouter();
-  const dispatch = useAppDispatch();
-  const user = useAppSelector((state) => state.auth.user);
-
-  const handleLogout = () => {
-    localStorage.removeItem("roomrent_token");
-    localStorage.removeItem("roomrent_user");
-    dispatch(logout());
-    router.push("/login");
-  };
-
   return (
-    <header className="sticky top-0 z-50 bg-base-100/95 backdrop-blur">
-      <div className="border-b border-base-300 bg-neutral text-neutral-content">
-        <div className="page-shell flex min-h-10 items-center justify-between text-xs">
-          <p>hello@roomrentmaharashtra.com</p>
-          <div className="flex items-center gap-4">
-            <Link href="/properties" className="hover:text-white">Post Requirement</Link>
-            {user ? (
-              <button onClick={handleLogout} className="hover:text-white">Logout</button>
-            ) : (
-              <Link href="/login" className="hover:text-white">Login / Register</Link>
-            )}
-          </div>
-        </div>
-      </div>
+    <header className="sticky top-0 z-50 px-3 pt-4 md:px-5">
+      <div className="app-frame nav-frame">
+        <div className="border-b border-base-300/70">
+          <nav className="page-shell flex min-h-[72px] items-center justify-between gap-4">
+            <div className="flex items-center gap-3">
+              <Link href="/" className="flex items-center gap-3">
+                <div className="flex size-10 items-center justify-center rounded-xl bg-[#ff385c] text-white shadow-[0_18px_30px_-18px_rgba(255,56,92,0.75)]">
+                  <Building2 className="size-5" />
+                </div>
+                <span className="text-base font-semibold text-neutral md:text-lg">RoomRent Maharashtra</span>
+              </Link>
+            </div>
 
-      <div className="border-b border-base-300">
-        <div className="navbar page-shell min-h-[84px]">
-          <div className="navbar-start gap-3">
-            <div className="dropdown lg:hidden">
+            <div className="hidden items-center gap-3 md:flex">
+              <Link href="/login" className="rounded-lg px-3 py-2 text-sm font-medium text-base-content/72 transition hover:bg-base-200 hover:text-neutral">
+                Login
+              </Link>
+              <Link href="/register" className="rounded-lg px-3 py-2 text-sm font-medium text-base-content/72 transition hover:bg-base-200 hover:text-neutral">
+                Register
+              </Link>
+              <Link href="/properties" className="btn pink-button h-11 rounded-xl px-5 text-sm font-semibold">
+                Explore
+              </Link>
+            </div>
+
+            <div className="dropdown md:hidden">
               <div tabIndex={0} role="button" className="btn btn-ghost btn-circle">
                 <Menu className="size-5" />
               </div>
-              <ul tabIndex={0} className="menu dropdown-content z-[1] mt-3 w-64 rounded-box bg-base-100 p-2 shadow">
-                <li><Link href="/">Home</Link></li>
-                <li><Link href="/properties">Browse Listings</Link></li>
-                <li><Link href="/dashboard/profile">Dashboard</Link></li>
+              <ul tabIndex={0} className="menu dropdown-content right-0 z-50 mt-3 w-64 rounded-2xl bg-base-100 p-2 shadow-card">
+                {navGroups.map((group) => (
+                  <li key={group.label}>
+                    <details>
+                      <summary>{group.label}</summary>
+                      <ul>
+                        {group.links.map((link) => (
+                          <li key={link.label}><Link href={link.href}>{link.label}</Link></li>
+                        ))}
+                      </ul>
+                    </details>
+                  </li>
+                ))}
+                {quickLinks.map((link) => (
+                  <li key={link.label}><Link href={link.href}>{link.label}</Link></li>
+                ))}
+                <li><Link href="/login">Login</Link></li>
+                <li><Link href="/register">Register</Link></li>
               </ul>
             </div>
-            <Link href="/" className="flex items-center gap-3">
-              <div className="flex size-11 items-center justify-center rounded-2xl bg-primary text-primary-content">
-                <Building2 className="size-5" />
-              </div>
-              <div>
-                <p className="text-lg font-semibold leading-none">RoomRent Maharashtra</p>
-                <p className="text-xs text-base-content/60">Rooms, PGs, flats and commercial rental marketplace</p>
-              </div>
-            </Link>
-          </div>
+          </nav>
+        </div>
 
-          <div className="navbar-center hidden lg:flex">
-            <ul className="menu menu-horizontal items-center gap-1 px-2">
-              {categoryGroups.map((group) => (
-                <li key={group.label}>
-                  <details>
-                    <summary className="rounded-full">{group.label} <ChevronDown className="size-4" /></summary>
-                    <ul className="w-52 rounded-2xl bg-base-100 p-2 shadow-card">
-                      {group.links.map((item) => (
-                        <li key={item.label}><Link href={item.href}>{item.label}</Link></li>
-                      ))}
-                    </ul>
-                  </details>
-                </li>
-              ))}
-              <li><Link href="/properties" className="rounded-full">All Listings</Link></li>
-              <li><Link href="/dashboard/profile" className="rounded-full">My Account</Link></li>
-            </ul>
-          </div>
+        <div className="hidden md:block">
+          <div className="page-shell flex min-h-[56px] flex-wrap items-center gap-3 overflow-visible">
+            {navGroups.map((group) => (
+              <div key={group.label} className="dropdown dropdown-hover relative">
+                <div tabIndex={0} role="button" className="inline-flex items-center gap-1 rounded-lg px-3 py-2 text-sm font-medium text-base-content/72 transition hover:bg-base-200 hover:text-neutral">
+                  {group.label}
+                  <ChevronDown className="size-4" />
+                </div>
+                <ul tabIndex={0} className="dropdown-content z-50 mt-3 w-60 rounded-2xl border border-base-300/70 bg-base-100 p-2 shadow-card">
+                  {group.links.map((link) => (
+                    <li key={link.label}>
+                      <Link href={link.href} className="rounded-xl px-3 py-2 text-sm text-base-content/75 hover:bg-base-200 hover:text-neutral">
+                        {link.label}
+                      </Link>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
 
-          <div className="navbar-end gap-2">
-            <Link href="/properties" className="btn btn-ghost hidden rounded-full md:inline-flex">
-              <Search className="size-4" />
-              Explore
-            </Link>
-            {user ? (
-              <>
-                <Link href="/dashboard/saved-properties" className="btn btn-ghost btn-circle">
-                  <Heart className="size-5" />
-                </Link>
-                <Link href="/dashboard/profile" className="btn btn-ghost hidden rounded-full md:inline-flex">
-                  <LayoutDashboard className="size-4" />
-                  Dashboard
-                </Link>
-                <button className="btn btn-primary rounded-full" onClick={handleLogout}>
-                  <LogOut className="size-4" />
-                  Logout
-                </button>
-              </>
-            ) : (
-              <>
-                <Link href="/login" className="btn btn-ghost rounded-full">
-                  <UserCircle2 className="size-4" />
-                  Login
-                </Link>
-                <Link href="/register" className="btn btn-primary rounded-full">
-                  Post Free Ad
-                </Link>
-              </>
-            )}
+            {quickLinks.map((link) => (
+              <Link
+                key={link.label}
+                href={link.href}
+                className="rounded-lg px-3 py-2 text-sm font-medium text-base-content/72 transition hover:bg-base-200 hover:text-neutral"
+              >
+                {link.label}
+              </Link>
+            ))}
           </div>
         </div>
       </div>

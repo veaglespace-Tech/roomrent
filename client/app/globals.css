@@ -1,4 +1,4 @@
-@import url("https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap");
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap");
 
 @tailwind base;
 @tailwind components;
@@ -6,6 +6,10 @@
 
 :root {
   color-scheme: light;
+  --shell-border: rgba(15, 23, 42, 0.08);
+  --shell-shadow: 0 30px 80px -34px rgba(15, 23, 42, 0.22);
+  --accent-pink: #e83e7e;
+  --accent-green: #16a34a;
 }
 
 html {
@@ -15,9 +19,9 @@ html {
 body {
   @apply bg-base-200 text-neutral font-sans;
   background-image:
-    radial-gradient(circle at top left, rgba(15, 118, 110, 0.12), transparent 22%),
-    radial-gradient(circle at right, rgba(249, 115, 22, 0.1), transparent 18%),
-    linear-gradient(180deg, rgba(255, 248, 240, 0.45), rgba(245, 251, 249, 0.2));
+    radial-gradient(circle at top left, rgba(255, 56, 92, 0.08), transparent 24%),
+    radial-gradient(circle at top right, rgba(255, 56, 92, 0.06), transparent 18%),
+    linear-gradient(180deg, #fff8fa 0%, #ffffff 20%, #f9fafb 100%);
 }
 
 .page-shell {
@@ -25,5 +29,35 @@ body {
 }
 
 .panel {
-  @apply rounded-[28px] border border-base-300 bg-base-100 shadow-card;
+  @apply rounded-[28px] border bg-base-100 shadow-card;
+  border-color: var(--shell-border);
+  box-shadow: var(--shell-shadow);
+}
+
+.app-frame {
+  @apply mx-auto mt-6 w-[min(100%-24px,1220px)] overflow-hidden rounded-[32px] bg-white;
+  border: 1px solid var(--shell-border);
+  box-shadow: 0 28px 100px -46px rgba(15, 23, 42, 0.32);
+}
+
+.nav-frame {
+  overflow: visible;
+}
+
+.soft-card {
+  @apply rounded-[28px] bg-white;
+  border: 1px solid var(--shell-border);
+  box-shadow: 0 18px 45px -30px rgba(15, 23, 42, 0.28);
+}
+
+.pink-button {
+  @apply border-none text-white;
+  background: linear-gradient(135deg, #ff4d6d 0%, #ff385c 100%);
+  box-shadow: 0 18px 35px -20px rgba(255, 56, 92, 0.55);
+}
+
+.green-button {
+  @apply border-none text-white;
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+  box-shadow: 0 18px 35px -20px rgba(22, 163, 74, 0.55);
 }

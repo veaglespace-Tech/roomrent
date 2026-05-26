@@ -1,7 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
-import { createListingSource, getListingSources } from "@/services/user-service";
+import { createListingSource, getListingSources, moderateListingSource } from "@/services/user-service";
 import { ListingSource } from "@/types";
 
 export default function SourceRegistryPage() {
@@ -35,6 +35,15 @@ export default function SourceRegistryPage() {
     loadSources();
   };
 
+  const handleModeration = async (source: ListingSource, termsStatus: string, allowedForIngestion: boolean) => {
+    await moderateListingSource(source.id, {
+      allowedForIngestion,
+      termsStatus,
+      notes: source.notes || ""
+    });
+    loadSources();
+  };
+
   return (
     <div className="space-y-6">
       <form onSubmit={handleSubmit} className="panel grid gap-4 p-6 md:grid-cols-2">
@@ -60,6 +69,7 @@ export default function SourceRegistryPage() {
               <th>Domain</th>
               <th>Terms</th>
               <th>Allowed</th>
+              <th>Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -69,6 +79,13 @@ export default function SourceRegistryPage() {
                 <td>{source.sourceDomain}</td>
                 <td>{source.termsStatus}</td>
                 <td>{source.allowedForIngestion ? "Yes" : "No"}</td>
+                <td>
+                  <div className="flex flex-wrap gap-2">
+                    <button type="button" className="btn btn-xs rounded-full" onClick={() => handleModeration(source, "REVIEWED", false)}>Review</button>
+                    <button type="button" className="btn btn-xs rounded-full btn-success text-white" onClick={() => handleModeration(source, "APPROVED", true)}>Approve</button>
+                    <button type="button" className="btn btn-xs rounded-full btn-error text-white" onClick={() => handleModeration(source, "REJECTED", false)}>Reject</button>
+                  </div>
+                </td>
               </tr>
             ))}
           </tbody>

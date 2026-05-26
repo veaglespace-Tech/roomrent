@@ -1,328 +1,246 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import {
-  ArrowRight,
-  BadgeCheck,
-  Building2,
-  House,
-  MapPinned,
-  MoveRight,
-  SearchCheck,
-  ShieldCheck,
-  Store,
-  Users
-} from "lucide-react";
-import { getProperties } from "@/services/property-service";
-import { Property } from "@/types";
+import { ArrowRight, Building2, CircleDollarSign, Home, SearchCheck, ShieldCheck, Users } from "lucide-react";
 import { SearchBar } from "@/components/property/search-bar";
-import { PropertyCard } from "@/components/property/property-card";
-import { SectionHeading } from "@/components/section-heading";
-import {
-  brandNameOptions,
-  categoryBlueprint,
-  featuredMaharashtraCities,
-  maharashtraDistricts
-} from "@/lib/maharashtra-data";
+import { featuredMaharashtraCities, majorCitiesByDistrict } from "@/lib/maharashtra-data";
 
-const categoryCards = [
+const roomImages = [
+  "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=900&q=80",
+  "https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=900&q=80",
+  "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=900&q=80",
+  "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=900&q=80",
+  "https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=900&q=80",
+  "https://images.unsplash.com/photo-1460317442991-0ec209397118?auto=format&fit=crop&w=900&q=80",
+  "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=900&q=80",
+  "https://images.unsplash.com/photo-1484154218962-a197022b5858?auto=format&fit=crop&w=900&q=80"
+];
+
+const categoryTiles = [
+  { title: "Houses / Flats", href: "/properties?type=FLAT", description: "One room set to 4 BHK apartments", icon: Home },
+  { title: "Office Shops", href: "/properties?category=Commercial", description: "Shops, offices and co-working spaces", icon: Building2 },
+  { title: "PG / Hostel", href: "/properties?type=PG", description: "Boys and girls PG or hostel options", icon: Users },
+  { title: "For Sale", href: "/properties", description: "Mixed residential and commercial inventory", icon: CircleDollarSign }
+];
+
+const popularMarkets = [
+  { name: "Mumbai", district: "Mumbai City", count: "1,240+" },
+  { name: "Pune", district: "Pune", count: "980+" },
+  { name: "Thane", district: "Thane", count: "840+" },
+  { name: "Nashik", district: "Nashik", count: "620+" },
+  { name: "Nagpur", district: "Nagpur", count: "590+" },
+  { name: "Aurangabad", district: "Aurangabad", count: "420+" }
+];
+
+const testimonials = [
   {
-    title: "Hostels",
-    href: "/properties?type=HOSTEL",
-    subtitle: "Boys Hostel, Girls Hostel, student stays",
-    icon: Users
+    name: "Suresh Patil",
+    role: "Property Owner",
+    quote: "I received inquiries only from genuine tenants and the process of renting my property felt much faster."
   },
   {
-    title: "PG Accommodation",
-    href: "/properties?type=PG",
-    subtitle: "Boys PG, Girls PG, furnished shared stays",
-    icon: Building2
+    name: "Shiv Kumar",
+    role: "Tenant",
+    quote: "It saved my time and effort while searching for rooms, and I could compare options much more clearly."
   },
   {
-    title: "Rooms & Sharing",
-    href: "/properties?type=ROOM",
-    subtitle: "Single room, 1 sharing, 2 sharing, 3 sharing, 4 sharing",
-    icon: House
-  },
-  {
-    title: "Flats & Commercial",
-    href: "/properties?type=FLAT",
-    subtitle: "1 RK to 4 BHK+, shops, offices, co-working spaces",
-    icon: Store
+    name: "Babita Choudhary",
+    role: "PG Owner",
+    quote: "The direct owner to tenant model feels cleaner and more reliable than the usual listing experience."
   }
 ];
 
-const trustSignals = [
-  "Owner and broker submissions",
-  "District-wise rollout structure",
-  "Advanced filters and map-ready schema"
-];
-
-const formatCount = (count: number) => new Intl.NumberFormat("en-IN").format(count);
+const allDistricts = Object.entries(majorCitiesByDistrict).slice(0, 12);
 
 export default function HomePage() {
-  const [properties, setProperties] = useState<Property[]>([]);
-  const [error, setError] = useState("");
-
-  useEffect(() => {
-    getProperties()
-      .then(setProperties)
-      .catch(() => {
-        setProperties([]);
-        setError("Featured properties are unavailable right now.");
-      });
-  }, []);
-
-  const featuredProperties = properties.slice(0, 6);
-
-  const inventoryStats = useMemo(
-    () => ({
-      rooms: properties.filter((item) => item.type === "ROOM").length,
-      flats: properties.filter((item) => item.type === "FLAT").length,
-      pgHostels: properties.filter((item) => item.type === "PG" || item.type === "HOSTEL").length,
-      total: properties.length
-    }),
-    [properties]
-  );
-
   return (
-    <div className="pb-20">
-      <section className="relative overflow-hidden border-b border-base-300">
-        <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,rgba(15,118,110,0.24),transparent_26%),radial-gradient(circle_at_right,rgba(251,146,60,0.2),transparent_28%),linear-gradient(135deg,#fcf7ef_0%,#fffdfa_46%,#f5fbf9_100%)]" />
-        <div className="page-shell relative py-10 md:py-14">
-          <div className="grid gap-10 xl:grid-cols-[1.08fr_0.92fr]">
-            <div>
-              <div className="flex flex-wrap items-center gap-3 text-sm text-base-content/75">
-                <span className="inline-flex items-center gap-2 rounded-full bg-base-100 px-4 py-2 shadow-sm">
-                  <BadgeCheck className="size-4 text-primary" />
-                  Maharashtra rental portal
-                </span>
-                <span className="inline-flex items-center gap-2 rounded-full border border-base-300 px-4 py-2">
-                  <SearchCheck className="size-4 text-secondary" />
-                  City and district search
-                </span>
-              </div>
-
-              <h1 className="mt-6 max-w-4xl text-4xl font-extrabold leading-tight text-neutral md:text-6xl">
-                Find rooms, PGs, hostels, flats, and commercial rentals across Maharashtra
-              </h1>
-              <p className="mt-5 max-w-2xl text-base leading-8 text-base-content/75 md:text-lg">
-                Explore Maharashtra-wide rental discovery for Mumbai, Pune, Nagpur, Nashik, Thane, Navi Mumbai,
-                Aurangabad, Kolhapur, Solapur, Sangli, Satara, Ahmednagar, and every district rollout after that.
-              </p>
-
-              <div className="mt-8">
-                <SearchBar />
-              </div>
-
-              <div className="mt-8 flex flex-wrap gap-3 text-sm">
-                <Link href="/register" className="btn btn-primary rounded-full px-8">
-                  Post Free Ad
-                  <ArrowRight className="size-4" />
-                </Link>
-                <Link href="/properties" className="btn btn-outline rounded-full px-8">
-                  Browse Listings
-                </Link>
-              </div>
-
-              <div className="mt-8 flex flex-wrap gap-3">
-                {brandNameOptions.slice(0, 4).map((name) => (
-                  <span key={name} className="rounded-full border border-base-300 bg-base-100 px-4 py-2 text-xs font-medium text-base-content/70">
-                    {name}
-                  </span>
-                ))}
-              </div>
-            </div>
-
-            <div className="grid gap-5">
-              <div className="overflow-hidden rounded-[34px] border border-base-300 bg-neutral text-neutral-content shadow-[0_30px_70px_-28px_rgba(15,23,42,0.45)]">
-                <div className="relative h-[340px]">
-                  <Image
-                    src="https://images.unsplash.com/photo-1523217582562-09d0def993a6?auto=format&fit=crop&w=1600&q=80"
-                    alt="Maharashtra rental marketplace"
-                    fill
-                    className="object-cover opacity-70"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-neutral via-neutral/40 to-transparent" />
-                  <div className="absolute inset-x-0 bottom-0 p-7">
-                    <p className="text-sm uppercase tracking-[0.24em] text-neutral-content/70">What are you looking for?</p>
-                    <div className="mt-4 grid grid-cols-2 gap-3 text-sm">
-                      <Link href="/properties?type=HOSTEL" className="rounded-2xl bg-white/10 px-4 py-3 backdrop-blur">
-                        Hostels
-                      </Link>
-                      <Link href="/properties?type=PG" className="rounded-2xl bg-white/10 px-4 py-3 backdrop-blur">
-                        PG Accommodation
-                      </Link>
-                      <Link href="/properties?type=ROOM" className="rounded-2xl bg-white/10 px-4 py-3 backdrop-blur">
-                        Rooms & Sharing
-                      </Link>
-                      <Link href="/properties?type=FLAT" className="rounded-2xl bg-white/10 px-4 py-3 backdrop-blur">
-                        Flats & Apartments
-                      </Link>
-                    </div>
-                  </div>
-                </div>
-              </div>
-
-              <div className="grid gap-4 sm:grid-cols-3">
-                <div className="rounded-[28px] border border-base-300 bg-base-100 p-5 shadow-sm">
-                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Coverage</p>
-                  <p className="mt-3 text-3xl font-extrabold text-neutral">{maharashtraDistricts.length}</p>
-                  <p className="mt-1 text-sm text-base-content/70">districts prepared</p>
-                </div>
-                <div className="rounded-[28px] border border-base-300 bg-base-100 p-5 shadow-sm">
-                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-primary">Launch cities</p>
-                  <p className="mt-3 text-3xl font-extrabold text-neutral">{featuredMaharashtraCities.length}</p>
-                  <p className="mt-1 text-sm text-base-content/70">priority city pages</p>
-                </div>
-                <div className="rounded-[28px] border border-base-300 bg-[linear-gradient(135deg,#115e59_0%,#0f766e_60%,#134e4a_100%)] p-5 text-white shadow-sm">
-                  <p className="text-xs font-semibold uppercase tracking-[0.18em] text-white/70">Live listings</p>
-                  <p className="mt-3 text-3xl font-extrabold">{formatCount(inventoryStats.total)}</p>
-                  <p className="mt-1 text-sm text-white/75">after demo cleanup</p>
-                </div>
-              </div>
+    <div className="page-shell pb-16 pt-8">
+      <section className="app-frame overflow-hidden">
+        <div className="px-4 py-12 sm:px-8 md:px-12 md:py-16">
+          <div className="mx-auto flex max-w-4xl flex-col items-center justify-center text-center">
+            <h1 className="max-w-3xl text-4xl font-bold leading-tight text-neutral md:text-6xl">
+              Use us to fill a spare room or find one to live in.
+            </h1>
+            <p className="mt-4 max-w-2xl text-base leading-7 text-base-content/65 md:text-lg">
+              Search rooms, PGs, hostels, flats and workspaces across Maharashtra with a cleaner city-first discovery flow.
+            </p>
+            <div className="mt-8 w-full">
+              <SearchBar />
             </div>
           </div>
-        </div>
-      </section>
 
-      <section className="page-shell mt-14">
-        <div className="grid gap-4 lg:grid-cols-4">
-          {categoryCards.map(({ title, subtitle, href, icon: Icon }) => (
-            <Link
-              key={title}
-              href={href}
-              className="group rounded-[28px] border border-base-300 bg-base-100 p-6 shadow-sm transition hover:-translate-y-1 hover:shadow-card"
-            >
-              <div className="flex items-center justify-between">
-                <div className="flex size-12 items-center justify-center rounded-2xl bg-primary/10 text-primary">
-                  <Icon className="size-5" />
-                </div>
-                <MoveRight className="size-4 text-base-content/35 transition group-hover:translate-x-1" />
+          <div className="mx-auto mt-14 grid max-w-5xl grid-cols-2 gap-4 md:grid-cols-4">
+            {roomImages.map((image, index) => (
+              <div key={`${image}-${index}`} className="relative aspect-[4/3] overflow-hidden rounded-xl shadow-[0_16px_40px_-30px_rgba(15,23,42,0.45)]">
+                <Image
+                  src={image}
+                  alt={`Room rental preview ${index + 1}`}
+                  fill
+                  className="object-cover transition duration-300 hover:scale-105"
+                />
               </div>
-              <h2 className="mt-5 text-xl font-semibold">{title}</h2>
-              <p className="mt-2 text-sm leading-6 text-base-content/68">{subtitle}</p>
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      <section className="page-shell mt-20">
-        <div className="flex items-end justify-between gap-6">
-          <SectionHeading
-            eyebrow="Live Listings"
-            title="Featured inventory"
-            description="This grid now shows only live records from the backend. Jaipur demo properties were removed."
-          />
-          <div className="hidden rounded-full border border-base-300 bg-base-100 px-5 py-3 text-sm text-base-content/70 md:block">
-            {trustSignals.join(" • ")}
-          </div>
-        </div>
-        {error ? <p className="mt-4 text-sm text-error">{error}</p> : null}
-        {featuredProperties.length > 0 ? (
-          <div className="mt-10 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
-            {featuredProperties.map((property) => (
-              <PropertyCard key={property.id} property={property} />
             ))}
           </div>
-        ) : (
-          <div className="mt-10 rounded-[32px] border border-dashed border-base-300 bg-base-100 p-8 shadow-sm">
-            <div className="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-center">
-              <div>
-                <p className="text-2xl font-semibold text-neutral">No live listings yet</p>
-                <p className="mt-3 max-w-2xl text-sm leading-7 text-base-content/70">
-                  The fake Jaipur dataset is removed. Add verified owner listings from the dashboard, or start the
-                  Maharashtra ingestion pipeline using legally permitted public sources.
-                </p>
-              </div>
-              <Link href="/register" className="btn btn-primary rounded-full">
-                Add First Listing
+
+          <div className="mx-auto mt-14 grid max-w-5xl gap-6 border-t border-base-300/70 pt-10 md:grid-cols-2">
+            <div className="flex flex-col items-center rounded-xl bg-base-100 px-6 py-8 text-center shadow-[0_16px_40px_-32px_rgba(15,23,42,0.3)]">
+              <h2 className="text-3xl font-semibold text-neutral">Rent out a room</h2>
+              <p className="mt-4 max-w-md text-sm leading-7 text-base-content/65">
+                Find the right flatmate for your room among active seekers and publish your property in just a few steps.
+              </p>
+              <Link href="/register" className="btn pink-button mt-8 h-12 rounded-xl px-6 text-sm font-semibold">
+                Get Started
+              </Link>
+            </div>
+
+            <div className="flex flex-col items-center rounded-xl bg-base-100 px-6 py-8 text-center shadow-[0_16px_40px_-32px_rgba(15,23,42,0.3)]">
+              <h2 className="text-3xl font-semibold text-neutral">Find a room</h2>
+              <p className="mt-4 max-w-md text-sm leading-7 text-base-content/65">
+                Pick your city, check budgets, and browse listings designed for people moving fast without messy navigation.
+              </p>
+              <Link href="/properties" className="btn pink-button mt-8 h-12 rounded-xl px-6 text-sm font-semibold">
+                Explore Now
               </Link>
             </div>
           </div>
-        )}
+        </div>
       </section>
 
-      <section className="page-shell mt-20">
-        <SectionHeading
-          eyebrow="Explore by City"
-          title="Major Maharashtra markets"
-          description="Initial rollout markets for city pages, district landing pages, and inventory onboarding."
-        />
-        <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-          {featuredMaharashtraCities.map((item) => (
-            <div key={item.city} className="panel p-6">
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <p className="text-2xl font-semibold">{item.city}</p>
-                  <p className="mt-1 text-sm text-base-content/55">{item.district} district</p>
-                </div>
-                <div className="rounded-full bg-secondary/10 px-3 py-1 text-xs font-semibold text-secondary">Launch city</div>
-              </div>
-              <p className="mt-4 text-sm leading-7 text-base-content/70">{item.highlight}</p>
-              <div className="mt-5 flex items-center gap-2 text-sm text-primary">
-                <MapPinned className="size-4" />
-                Maharashtra coverage node
+      <section className="mt-10 grid gap-6 lg:grid-cols-4">
+        {categoryTiles.map(({ title, href, description, icon: Icon }) => (
+          <Link key={title} href={href} className="soft-card group p-6 transition hover:-translate-y-1">
+            <div className="flex size-12 items-center justify-center rounded-xl bg-[#fff1f4] text-[#ff385c]">
+              <Icon className="size-5" />
+            </div>
+            <h2 className="mt-5 text-xl font-semibold text-neutral">{title}</h2>
+            <p className="mt-3 text-sm leading-7 text-base-content/68">{description}</p>
+            <div className="mt-5 flex items-center gap-2 text-sm font-semibold text-[#ff385c]">
+              View now
+              <ArrowRight className="size-4 transition group-hover:translate-x-1" />
+            </div>
+          </Link>
+        ))}
+      </section>
+
+      <section className="mt-10 grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
+        <div className="soft-card p-8">
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#ff385c]">What are you looking for?</p>
+          <h2 className="mt-4 text-3xl font-bold text-neutral">RoomRent Maharashtra helps people and homes find each other</h2>
+          <div className="mt-8 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+            {popularMarkets.map((market) => (
+              <Link
+                key={market.name}
+                href={`/districts/${market.district.toLowerCase().replace(/\s+/g, "-")}`}
+                className="rounded-xl border border-base-300/70 bg-white p-5 transition hover:border-[#ff385c]/30"
+              >
+                <p className="text-lg font-semibold text-neutral">{market.name}</p>
+                <p className="mt-1 text-sm text-base-content/60">{market.district} district</p>
+                <p className="mt-4 text-sm font-semibold text-[#ff385c]">{market.count} properties</p>
+              </Link>
+            ))}
+          </div>
+        </div>
+
+        <div className="soft-card p-8">
+          <div className="flex items-center gap-3">
+            <SearchCheck className="size-5 text-[#ff385c]" />
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#ff385c]">Coverage</p>
+          </div>
+          <h3 className="mt-4 text-2xl font-bold text-neutral">All Maharashtra districts are wired in</h3>
+          <p className="mt-3 text-sm leading-7 text-base-content/68">
+            Homepage stays curated. Full district and city coverage lives in dedicated routes so the UI does not become cluttered.
+          </p>
+          <div className="mt-6 flex flex-wrap gap-3">
+            {allDistricts.map(([district]) => (
+              <Link
+                key={district}
+                href={`/districts/${district.toLowerCase().replace(/\s+/g, "-")}`}
+                className="rounded-lg border border-base-300/70 px-3 py-2 text-sm text-base-content/72 transition hover:border-[#ff385c]/30 hover:text-neutral"
+              >
+                {district}
+              </Link>
+            ))}
+          </div>
+          <Link href="/districts/pune" className="btn btn-outline mt-6 rounded-xl">
+            Explore district pages
+          </Link>
+        </div>
+      </section>
+
+      <section className="mt-10 soft-card p-8 md:p-10">
+        <div className="grid gap-8 lg:grid-cols-[0.95fr_1.05fr]">
+          <div>
+            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#ff385c]">Post property in just 2 steps</p>
+            <h2 className="mt-4 text-3xl font-bold text-neutral">A simpler owner flow for Maharashtra rentals</h2>
+            <p className="mt-4 text-sm leading-7 text-base-content/68">
+              Create your account and add property details with pricing, photos and location data. The listing form is ready for statewide categories.
+            </p>
+            <Link href="/register" className="btn pink-button mt-8 rounded-xl px-6">
+              Post Free Ad
+            </Link>
+          </div>
+
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="rounded-xl bg-base-200/60 p-6">
+              <span className="inline-flex size-10 items-center justify-center rounded-full bg-[#ff385c] text-sm font-bold text-white">1</span>
+              <h3 className="mt-4 text-xl font-semibold text-neutral">Create your account</h3>
+              <p className="mt-3 text-sm leading-7 text-base-content/68">Register as owner, seeker or room partner with a clean account setup flow.</p>
+            </div>
+            <div className="rounded-xl bg-base-200/60 p-6">
+              <span className="inline-flex size-10 items-center justify-center rounded-full bg-[#ff385c] text-sm font-bold text-white">2</span>
+              <h3 className="mt-4 text-xl font-semibold text-neutral">Add property details</h3>
+              <p className="mt-3 text-sm leading-7 text-base-content/68">Add price, photos, amenities, city, district and occupancy details from the owner dashboard.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="mt-10">
+        <div className="mb-6 flex items-center gap-3">
+          <ShieldCheck className="size-5 text-[#ff385c]" />
+          <h2 className="text-3xl font-bold text-neutral">What our clients say</h2>
+        </div>
+        <div className="grid gap-6 lg:grid-cols-3">
+          {testimonials.map((item) => (
+            <div key={item.name} className="soft-card p-6">
+              <p className="text-sm leading-7 text-base-content/70">“{item.quote}”</p>
+              <div className="mt-5">
+                <p className="font-semibold text-neutral">{item.name}</p>
+                <p className="text-sm text-base-content/60">{item.role}</p>
               </div>
             </div>
           ))}
         </div>
       </section>
 
-      <section className="page-shell mt-20">
-        <div className="grid gap-6 lg:grid-cols-[1fr_0.9fr]">
-          <div className="rounded-[36px] bg-[linear-gradient(135deg,#1f2937_0%,#334155_100%)] p-8 text-white shadow-card">
-            <p className="text-sm uppercase tracking-[0.22em] text-white/65">Category blueprint</p>
-            <h2 className="mt-4 text-3xl font-bold">The full Maharashtra inventory model is now defined</h2>
-            <div className="mt-8 grid gap-4 md:grid-cols-2">
-              {categoryBlueprint.map((group) => (
-                <div key={group.label} className="rounded-[24px] bg-white/8 p-4">
-                  <p className="font-semibold">{group.label}</p>
-                  <p className="mt-2 text-sm text-white/72">{group.items.join(", ")}</p>
-                </div>
-              ))}
-            </div>
+      <section className="mt-10 grid gap-6 lg:grid-cols-2">
+        <div className="soft-card p-8">
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#ff385c]">Featured city pages</p>
+          <div className="mt-5 flex flex-wrap gap-3">
+            {featuredMaharashtraCities.map((city) => (
+              <Link
+                key={city.slug}
+                href={`/cities/${city.slug}`}
+                className="rounded-lg border border-base-300/70 px-4 py-3 text-sm text-base-content/75 transition hover:border-[#ff385c]/30 hover:text-neutral"
+              >
+                {city.name}
+              </Link>
+            ))}
           </div>
+        </div>
 
-          <div className="grid gap-5">
-            <div className="panel p-6">
-              <div className="flex items-center gap-3">
-                <BadgeCheck className="size-5 text-primary" />
-                <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">Inventory snapshot</p>
-              </div>
-              <div className="mt-5 space-y-4">
-                <div className="flex items-center justify-between rounded-2xl bg-base-200/60 px-4 py-3">
-                  <span>Rooms</span>
-                  <span className="font-semibold">{inventoryStats.rooms}</span>
-                </div>
-                <div className="flex items-center justify-between rounded-2xl bg-base-200/60 px-4 py-3">
-                  <span>Flats</span>
-                  <span className="font-semibold">{inventoryStats.flats}</span>
-                </div>
-                <div className="flex items-center justify-between rounded-2xl bg-base-200/60 px-4 py-3">
-                  <span>PG / Hostels</span>
-                  <span className="font-semibold">{inventoryStats.pgHostels}</span>
-                </div>
-                <div className="flex items-center justify-between rounded-2xl bg-base-200/60 px-4 py-3">
-                  <span>Total Live</span>
-                  <span className="font-semibold">{inventoryStats.total}</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="panel p-6">
-              <div className="flex items-center gap-3">
-                <ShieldCheck className="size-5 text-primary" />
-                <p className="text-sm font-semibold uppercase tracking-[0.18em] text-primary">Original data path</p>
-              </div>
-              <div className="mt-4 space-y-3 text-sm leading-7 text-base-content/72">
-                <p>Official Maharashtra district and city reference data is added for rollout planning and routing.</p>
-                <p>Fake demo listing seeds are removed and purged from the backend bootstrap.</p>
-                <p>Real listing inventory should now come from owner submissions or compliant public-source ingestion.</p>
-              </div>
-            </div>
+        <div className="soft-card p-8">
+          <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#ff385c]">People’s need</p>
+          <div className="mt-5 grid gap-4 md:grid-cols-2">
+            <Link href="/register" className="rounded-xl bg-base-200/60 p-5 transition hover:bg-base-200">
+              <p className="text-lg font-semibold text-neutral">Room Seekers</p>
+              <p className="mt-2 text-sm leading-7 text-base-content/68">Search verified listings by city, district and property type.</p>
+            </Link>
+            <Link href="/register" className="rounded-xl bg-base-200/60 p-5 transition hover:bg-base-200">
+              <p className="text-lg font-semibold text-neutral">Room Partners</p>
+              <p className="mt-2 text-sm leading-7 text-base-content/68">Connect with people who want to share a room or a flat.</p>
+            </Link>
           </div>
         </div>
       </section>
