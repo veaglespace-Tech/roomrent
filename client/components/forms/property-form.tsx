@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { FormEvent, useState } from "react";
+import { ImagePlus, Save, Sparkles } from "lucide-react";
 import { createProperty, updateProperty } from "@/services/property-service";
 import { AvailabilityStatus, FurnishedStatus, GenderPreference, ListedByType, PropertyPayload, PropertyType } from "@/types";
 
@@ -83,53 +84,62 @@ export function PropertyForm({ initialValues, propertyId }: PropertyFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="panel space-y-5 p-6">
+    <form onSubmit={handleSubmit} className="panel space-y-6 p-6">
+      <div className="flex flex-wrap items-center justify-between gap-4 border-b border-base-300/70 pb-5">
+        <div>
+          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#ef3d81]">Listing details</p>
+          <h2 className="mt-2 text-2xl font-bold text-neutral">{propertyId ? "Update property" : "Publish a property"}</h2>
+        </div>
+        <div className="icon-tile">
+          <Sparkles className="size-5" />
+        </div>
+      </div>
       <div className="grid gap-5 md:grid-cols-2">
-        <input className="input input-bordered w-full" placeholder="Property title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
-        <input className="input input-bordered w-full" placeholder="Location" value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} />
-        <input className="input input-bordered w-full" type="number" placeholder="Monthly rent" value={form.price} onChange={(e) => setForm({ ...form, price: Number(e.target.value) })} />
-        <input className="input input-bordered w-full" type="number" placeholder="Security deposit" value={form.securityDeposit ?? 0} onChange={(e) => setForm({ ...form, securityDeposit: Number(e.target.value) })} />
-        <input className="input input-bordered w-full" placeholder="Area / Locality" value={form.areaLocality || ""} onChange={(e) => setForm({ ...form, areaLocality: e.target.value })} />
-        <input className="input input-bordered w-full" placeholder="City" value={form.city || ""} onChange={(e) => setForm({ ...form, city: e.target.value })} />
-        <input className="input input-bordered w-full" placeholder="District" value={form.district || ""} onChange={(e) => setForm({ ...form, district: e.target.value })} />
-        <input className="input input-bordered w-full" placeholder="State" value={form.state || ""} onChange={(e) => setForm({ ...form, state: e.target.value })} />
-        <select className="select select-bordered w-full" value={form.category || ""} onChange={(e) => setForm({ ...form, category: e.target.value })}>
+        <input className="form-input" placeholder="Property title" value={form.title} onChange={(e) => setForm({ ...form, title: e.target.value })} />
+        <input className="form-input" placeholder="Location" value={form.location} onChange={(e) => setForm({ ...form, location: e.target.value })} />
+        <input className="form-input" type="number" placeholder="Monthly rent" value={form.price} onChange={(e) => setForm({ ...form, price: Number(e.target.value) })} />
+        <input className="form-input" type="number" placeholder="Security deposit" value={form.securityDeposit ?? 0} onChange={(e) => setForm({ ...form, securityDeposit: Number(e.target.value) })} />
+        <input className="form-input" placeholder="Area / Locality" value={form.areaLocality || ""} onChange={(e) => setForm({ ...form, areaLocality: e.target.value })} />
+        <input className="form-input" placeholder="City" value={form.city || ""} onChange={(e) => setForm({ ...form, city: e.target.value })} />
+        <input className="form-input" placeholder="District" value={form.district || ""} onChange={(e) => setForm({ ...form, district: e.target.value })} />
+        <input className="form-input" placeholder="State" value={form.state || ""} onChange={(e) => setForm({ ...form, state: e.target.value })} />
+        <select className="form-select" value={form.category || ""} onChange={(e) => setForm({ ...form, category: e.target.value })}>
           {categoryOptions.map((category) => <option key={category} value={category}>{category}</option>)}
         </select>
-        <select className="select select-bordered w-full" value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value as PropertyType })}>
+        <select className="form-select" value={form.type} onChange={(e) => setForm({ ...form, type: e.target.value as PropertyType })}>
           {["PG", "ROOM", "FLAT", "HOSTEL"].map((type) => <option key={type} value={type}>{type}</option>)}
         </select>
-        <select className="select select-bordered w-full" value={form.sharingType || ""} onChange={(e) => setForm({ ...form, sharingType: e.target.value })}>
+        <select className="form-select" value={form.sharingType || ""} onChange={(e) => setForm({ ...form, sharingType: e.target.value })}>
           <option value="">Select sharing type</option>
           {sharingOptions.map((sharing) => <option key={sharing} value={sharing}>{sharing}</option>)}
         </select>
-        <select className="select select-bordered w-full" value={form.furnishedStatus || "SEMI_FURNISHED"} onChange={(e) => setForm({ ...form, furnishedStatus: e.target.value as FurnishedStatus })}>
+        <select className="form-select" value={form.furnishedStatus || "SEMI_FURNISHED"} onChange={(e) => setForm({ ...form, furnishedStatus: e.target.value as FurnishedStatus })}>
           {["UNFURNISHED", "SEMI_FURNISHED", "FULLY_FURNISHED"].map((status) => <option key={status} value={status}>{status.replaceAll("_", " ")}</option>)}
         </select>
-        <select className="select select-bordered w-full" value={form.listedByType || "OWNER"} onChange={(e) => setForm({ ...form, listedByType: e.target.value as ListedByType })}>
+        <select className="form-select" value={form.listedByType || "OWNER"} onChange={(e) => setForm({ ...form, listedByType: e.target.value as ListedByType })}>
           {["OWNER", "BROKER", "MANAGER"].map((listedBy) => <option key={listedBy} value={listedBy}>{listedBy}</option>)}
         </select>
-        <input className="input input-bordered w-full" placeholder="Contact number" value={form.contactNumber || ""} onChange={(e) => setForm({ ...form, contactNumber: e.target.value })} />
-        <select className="select select-bordered w-full" value={form.availabilityStatus || "AVAILABLE"} onChange={(e) => setForm({ ...form, availabilityStatus: e.target.value as AvailabilityStatus })}>
+        <input className="form-input" placeholder="Contact number" value={form.contactNumber || ""} onChange={(e) => setForm({ ...form, contactNumber: e.target.value })} />
+        <select className="form-select" value={form.availabilityStatus || "AVAILABLE"} onChange={(e) => setForm({ ...form, availabilityStatus: e.target.value as AvailabilityStatus })}>
           {["AVAILABLE", "OCCUPIED", "UPCOMING"].map((status) => <option key={status} value={status}>{status}</option>)}
         </select>
-        <input className="input input-bordered w-full" placeholder="Available from date" value={form.availableFromDate || ""} onChange={(e) => setForm({ ...form, availableFromDate: e.target.value })} />
-        <select className="select select-bordered w-full md:col-span-2" value={form.gender} onChange={(e) => setForm({ ...form, gender: e.target.value as GenderPreference })}>
+        <input className="form-input" placeholder="Available from date" value={form.availableFromDate || ""} onChange={(e) => setForm({ ...form, availableFromDate: e.target.value })} />
+        <select className="form-select md:col-span-2" value={form.gender} onChange={(e) => setForm({ ...form, gender: e.target.value as GenderPreference })}>
           {["ANY", "BOYS", "GIRLS"].map((gender) => <option key={gender} value={gender}>{gender}</option>)}
         </select>
-        <input className="input input-bordered w-full" type="number" step="0.000001" placeholder="Latitude" value={form.latitude ?? ""} onChange={(e) => setForm({ ...form, latitude: e.target.value ? Number(e.target.value) : null })} />
-        <input className="input input-bordered w-full" type="number" step="0.000001" placeholder="Longitude" value={form.longitude ?? ""} onChange={(e) => setForm({ ...form, longitude: e.target.value ? Number(e.target.value) : null })} />
-        <input className="input input-bordered w-full md:col-span-2" placeholder="Occupancy details" value={form.occupancyDetails || ""} onChange={(e) => setForm({ ...form, occupancyDetails: e.target.value })} />
-        <input className="input input-bordered w-full" placeholder="Listing source" value={form.listingSource || ""} onChange={(e) => setForm({ ...form, listingSource: e.target.value })} />
-        <input className="input input-bordered w-full" placeholder="Listing URL" value={form.listingUrl || ""} onChange={(e) => setForm({ ...form, listingUrl: e.target.value })} />
+        <input className="form-input" type="number" step="0.000001" placeholder="Latitude" value={form.latitude ?? ""} onChange={(e) => setForm({ ...form, latitude: e.target.value ? Number(e.target.value) : null })} />
+        <input className="form-input" type="number" step="0.000001" placeholder="Longitude" value={form.longitude ?? ""} onChange={(e) => setForm({ ...form, longitude: e.target.value ? Number(e.target.value) : null })} />
+        <input className="form-input md:col-span-2" placeholder="Occupancy details" value={form.occupancyDetails || ""} onChange={(e) => setForm({ ...form, occupancyDetails: e.target.value })} />
+        <input className="form-input" placeholder="Listing source" value={form.listingSource || ""} onChange={(e) => setForm({ ...form, listingSource: e.target.value })} />
+        <input className="form-input" placeholder="Listing URL" value={form.listingUrl || ""} onChange={(e) => setForm({ ...form, listingUrl: e.target.value })} />
       </div>
-      <div className="space-y-3">
-        <p className="text-sm font-semibold text-base-content/80">Amenities</p>
+      <div className="form-section space-y-3">
+        <p className="flex items-center gap-2 text-sm font-semibold text-base-content/80"><Sparkles className="size-4 text-[#ef3d81]" /> Amenities</p>
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {amenityOptions.map((amenity) => {
             const checked = form.amenities.includes(amenity);
             return (
-              <label key={amenity} className={`flex cursor-pointer items-center gap-3 rounded-2xl border px-4 py-3 ${checked ? "border-primary bg-primary/5" : "border-base-300"}`}>
+              <label key={amenity} className={`flex cursor-pointer items-center gap-3 rounded-[14px] border px-4 py-3 transition ${checked ? "border-[#ff5c8a]/35 bg-[#fff1f4] text-neutral" : "border-base-300 bg-white hover:border-[#ff5c8a]/25"}`}>
                 <input
                   type="checkbox"
                   className="checkbox checkbox-primary checkbox-sm"
@@ -149,10 +159,14 @@ export function PropertyForm({ initialValues, propertyId }: PropertyFormProps) {
           })}
         </div>
       </div>
-      <textarea className="textarea textarea-bordered min-h-40 w-full" placeholder="Description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
-      <textarea className="textarea textarea-bordered min-h-32 w-full" placeholder="One image URL per line" value={imagesText} onChange={(e) => setImagesText(e.target.value)} />
+      <textarea className="form-textarea min-h-40" placeholder="Description" value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} />
+      <label className="block">
+        <span className="mb-2 flex items-center gap-2 text-sm font-semibold text-base-content/80"><ImagePlus className="size-4 text-[#ef3d81]" /> Image URLs</span>
+        <textarea className="form-textarea min-h-32" placeholder="One image URL per line" value={imagesText} onChange={(e) => setImagesText(e.target.value)} />
+      </label>
       {error ? <p className="text-sm text-error">{error}</p> : null}
-      <button type="submit" className="btn btn-primary rounded-full" disabled={loading}>
+      <button type="submit" className="glow-button" disabled={loading}>
+        <Save className="relative size-4" />
         {loading ? "Saving..." : propertyId ? "Update Property" : "Publish Property"}
       </button>
     </form>

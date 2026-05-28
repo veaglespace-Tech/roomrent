@@ -20,6 +20,7 @@ app:
     expiration-ms: 86400000
   seed-demo-data: false
   purge-legacy-demo-listings: true
+  seed-real-source-records: false
 
 server:
   port: 8080

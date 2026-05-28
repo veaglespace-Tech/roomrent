@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
+import { Mail, Shield, UserRound, UserPlus } from "lucide-react";
 import { registerUser } from "@/services/auth-service";
 import { AuthCard } from "@/components/auth-card";
 import { useAppDispatch } from "@/store/hooks";
@@ -48,33 +49,24 @@ export default function RegisterPage() {
     <section className="page-shell flex min-h-[calc(100vh-220px)] items-center py-10">
       <AuthCard title="Register" description="Create an account as owner, buyer, room seeker, or room partner to start using the portal.">
         <form onSubmit={handleSubmit} className="grid gap-5 md:grid-cols-2">
-          <input
-            className="input input-bordered h-14 w-full rounded-[18px] border-base-300/60 bg-white"
-            placeholder="First Name *"
-            value={form.firstName}
-            onChange={(e) => setForm({ ...form, firstName: e.target.value })}
-          />
-          <input
-            className="input input-bordered h-14 w-full rounded-[18px] border-base-300/60 bg-white"
-            placeholder="Last Name"
-            value={form.lastName}
-            onChange={(e) => setForm({ ...form, lastName: e.target.value })}
-          />
-          <input
-            className="input input-bordered h-14 w-full rounded-[18px] border-base-300/60 bg-white md:col-span-2"
-            placeholder="Email address"
-            value={form.email}
-            onChange={(e) => setForm({ ...form, email: e.target.value })}
-          />
-          <input
-            className="input input-bordered h-14 w-full rounded-[18px] border-base-300/60 bg-white md:col-span-2"
-            type="password"
-            placeholder="Password *"
-            value={form.password}
-            onChange={(e) => setForm({ ...form, password: e.target.value })}
-          />
+          <label className="auth-field">
+            <UserRound className="auth-field-icon" />
+            <input className="form-input auth-field-control" placeholder="First Name *" value={form.firstName} onChange={(e) => setForm({ ...form, firstName: e.target.value })} />
+          </label>
+          <label className="auth-field">
+            <UserRound className="auth-field-icon" />
+            <input className="form-input auth-field-control" placeholder="Last Name" value={form.lastName} onChange={(e) => setForm({ ...form, lastName: e.target.value })} />
+          </label>
+          <label className="auth-field md:col-span-2">
+            <Mail className="auth-field-icon" />
+            <input className="form-input auth-field-control" placeholder="Email address" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
+          </label>
+          <label className="auth-field md:col-span-2">
+            <Shield className="auth-field-icon" />
+            <input className="form-input auth-field-control" type="password" placeholder="Password *" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} />
+          </label>
           <select
-            className="select select-bordered h-14 w-full rounded-[18px] border-base-300/60 bg-white md:col-span-2"
+            className="form-select md:col-span-2"
             value={form.accountType}
             onChange={(e) => setForm({ ...form, accountType: e.target.value as AccountType })}
           >
@@ -83,7 +75,8 @@ export default function RegisterPage() {
             <option value="PARTNER">Looking for Room Partner</option>
           </select>
           {error ? <p className="text-sm text-error md:col-span-2">{error}</p> : null}
-          <button className="btn pink-button h-14 rounded-[18px] md:col-span-2" disabled={loading}>
+          <button className="glow-button h-14 w-full md:col-span-2" disabled={loading}>
+            <UserPlus className="relative size-4" />
             {loading ? "Creating account..." : "Continue"}
           </button>
         </form>

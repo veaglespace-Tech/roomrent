@@ -15,7 +15,7 @@ const config: Config = {
         accent: "#F97316"
       },
       fontFamily: {
-        sans: ["Poppins", "ui-sans-serif", "system-ui"]
+        sans: ["Plus Jakarta Sans", "Inter", "ui-sans-serif", "system-ui"]
       },
       boxShadow: {
         card: "0 20px 40px -24px rgba(15, 23, 42, 0.28)"
@@ -49,4 +49,3 @@ const config: Config = {
 };
 
 export default config;
-

@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
+import { Pencil, Trash2 } from "lucide-react";
 import { deleteProperty, getOwnerProperties } from "@/services/property-service";
 import { Property } from "@/types";
 
@@ -34,14 +35,18 @@ export default function MyListingsPage() {
                 <td>{property.location}</td>
                 <td>₹{property.price}</td>
                 <td className="space-x-2">
-                  <Link className="btn btn-sm rounded-full" href={`/dashboard/owner/edit-property/${property.id}`}>Edit</Link>
+                  <Link className="btn btn-sm rounded-[10px]" href={`/dashboard/owner/edit-property/${property.id}`}>
+                    <Pencil className="size-3.5" />
+                    Edit
+                  </Link>
                   <button
-                    className="btn btn-sm btn-outline rounded-full"
+                    className="btn btn-sm btn-outline rounded-[10px]"
                     onClick={async () => {
                       await deleteProperty(property.id);
                       loadListings();
                     }}
                   >
+                    <Trash2 className="size-3.5" />
                     Delete
                   </button>
                 </td>
@@ -53,4 +58,3 @@ export default function MyListingsPage() {
     </div>
   );
 }
-

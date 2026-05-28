@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { BedDouble, Heart, MapPin, ShieldCheck, Wallet } from "lucide-react";
+import { ArrowUpRight, BedDouble, Heart, MapPin, ShieldCheck, Wallet } from "lucide-react";
 import { toggleSaveProperty } from "@/services/user-service";
 import { Property } from "@/types";
 
@@ -14,6 +14,7 @@ interface PropertyCardProps {
 
 export function PropertyCard({ property, onSavedChange }: PropertyCardProps) {
   const [isSaving, setIsSaving] = useState(false);
+  const displayPrice = property.price > 0 ? `Rs. ${property.price}` : "On request";
 
   const handleSave = async () => {
     try {
@@ -28,37 +29,38 @@ export function PropertyCard({ property, onSavedChange }: PropertyCardProps) {
   };
 
   return (
-    <div className="card overflow-hidden rounded-[28px] border border-base-300/60 bg-white shadow-[0_26px_60px_-38px_rgba(15,23,42,0.32)] transition duration-200 hover:-translate-y-1.5 hover:shadow-[0_35px_80px_-38px_rgba(15,23,42,0.4)]">
+    <div className="card light-bento-card group overflow-hidden p-0 hover:-translate-y-1">
       <figure className="relative h-64">
         <Image
           src={property.imageUrls[0] || "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85"}
           alt={property.title}
           fill
-          className="object-cover"
+          className="object-cover transition duration-500 group-hover:scale-105"
         />
-        <div className="absolute left-4 top-4 rounded-full bg-white/92 px-3 py-1 text-xs font-semibold text-green-700 shadow-sm">
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(16,23,32,0.05)_0%,rgba(16,23,32,0.0)_38%,rgba(16,23,32,0.78)_100%)]" />
+        <div className="absolute left-4 top-4 rounded-full border border-white/45 bg-white/92 px-3 py-1 text-xs font-bold text-green-700 shadow-sm backdrop-blur">
           {property.availableFromDate || "Available now"}
         </div>
         <button
-          className="btn btn-circle btn-sm absolute right-4 top-4 border-none bg-base-100/90"
+          className="btn btn-circle btn-sm absolute right-4 top-4 border-none bg-base-100/95 shadow-sm transition hover:scale-105 hover:bg-[#fff1f4] hover:text-[#ef3d81]"
           onClick={handleSave}
           disabled={isSaving}
         >
           <Heart className={`size-4 ${property.saved ? "fill-current text-secondary" : ""}`} />
         </button>
       </figure>
-      <div className="card-body gap-4 p-5">
+      <div className="card-body relative gap-4 p-5">
         <div className="space-y-3">
           <div className="flex flex-wrap gap-2">
-            <div className="badge border-none bg-green-50 px-3 text-green-700">{property.type}</div>
-            {property.category ? <div className="badge border-none bg-pink-50 px-3 text-[#d92f71]">{property.category}</div> : null}
-            {property.sharingType ? <div className="badge border-none bg-base-200 px-3 text-base-content/70">{property.sharingType}</div> : null}
+            <div className="pill-badge border-green-100 bg-green-50 text-green-700">{property.type}</div>
+            {property.category ? <div className="pill-badge border-pink-100 bg-pink-50 text-[#d92f71]">{property.category}</div> : null}
+            {property.sharingType ? <div className="pill-badge">{property.sharingType}</div> : null}
           </div>
           <h3 className="line-clamp-2 text-xl font-semibold leading-snug">{property.title}</h3>
         </div>
         <div>
-          <p className="text-3xl font-bold leading-none text-[#d92f71]">Rs. {property.price}</p>
-          <p className="mt-1 text-xs uppercase tracking-[0.15em] text-base-content/55">monthly rent</p>
+          <p className="bg-[linear-gradient(135deg,#d92f71,#ff7a35)] bg-clip-text text-3xl font-extrabold leading-none text-transparent">{displayPrice}</p>
+          <p className="mt-1 text-xs uppercase tracking-[0.15em] text-base-content/55">{property.price > 0 ? "monthly rent" : "source price"}</p>
         </div>
         <div className="flex items-center gap-2 text-sm text-base-content/70">
           <MapPin className="size-4" />
@@ -66,14 +68,14 @@ export function PropertyCard({ property, onSavedChange }: PropertyCardProps) {
         </div>
         <p className="line-clamp-2 text-sm text-base-content/70">{property.description}</p>
         <div className="grid gap-2 sm:grid-cols-2">
-          <div className="rounded-2xl bg-base-200/70 px-3 py-2 text-xs text-base-content/70">
+          <div className="rounded-[16px] border border-base-300/60 bg-white/80 px-3 py-2 text-xs text-base-content/70 shadow-[0_14px_28px_-24px_rgba(15,23,42,0.5)]">
             <div className="flex items-center gap-2">
               <Wallet className="size-3.5 text-primary" />
               Deposit
             </div>
             <p className="mt-1 font-semibold text-base-content">{property.securityDeposit ? `Rs. ${property.securityDeposit}` : "On request"}</p>
           </div>
-          <div className="rounded-2xl bg-base-200/70 px-3 py-2 text-xs text-base-content/70">
+          <div className="rounded-[16px] border border-base-300/60 bg-white/80 px-3 py-2 text-xs text-base-content/70 shadow-[0_14px_28px_-24px_rgba(15,23,42,0.5)]">
             <div className="flex items-center gap-2">
               <BedDouble className="size-3.5 text-primary" />
               Furnishing
@@ -83,7 +85,7 @@ export function PropertyCard({ property, onSavedChange }: PropertyCardProps) {
         </div>
         <div className="flex flex-wrap gap-2">
           {property.amenities.slice(0, 3).map((amenity) => (
-            <span key={amenity} className="rounded-full bg-base-200 px-3 py-1 text-xs text-base-content/70">
+            <span key={amenity} className="rounded-full border border-base-300/60 bg-base-200/70 px-3 py-1 text-xs text-base-content/70">
               {amenity}
             </span>
           ))}
@@ -93,8 +95,9 @@ export function PropertyCard({ property, onSavedChange }: PropertyCardProps) {
             <ShieldCheck className="size-4 text-primary" />
             {property.availabilityStatus || "AVAILABLE"} | {property.gender}
           </div>
-          <Link href={`/properties/${property.id}`} className="btn pink-button rounded-full px-5">
+          <Link href={`/properties/${property.id}`} className="glow-button min-h-11 px-5">
             View Details
+            <ArrowUpRight className="size-4" />
           </Link>
         </div>
       </div>

@@ -1,6 +1,7 @@
 "use client";
 
 import { FormEvent, useEffect, useState } from "react";
+import { ListPlus } from "lucide-react";
 import { enqueueIngestionRun, getIngestionRuns, getListingSources } from "@/services/user-service";
 import { IngestionRun, ListingSource } from "@/types";
 
@@ -36,12 +37,15 @@ export default function IngestionQueuePage() {
           <h1 className="text-3xl font-bold">Ingestion Queue</h1>
           <p className="mt-2 text-base-content/70">Queue compliant source runs for parsing, normalization, deduplication, and moderation.</p>
         </div>
-        <select className="select select-bordered w-full" value={sourceId} onChange={(e) => setSourceId(e.target.value)}>
+        <select className="form-select" value={sourceId} onChange={(e) => setSourceId(e.target.value)}>
           <option value="">Select source</option>
           {sources.map((source) => <option key={source.id} value={source.id}>{source.sourceName}</option>)}
         </select>
-        <input className="input input-bordered w-full" placeholder="Queue notes" value={notes} onChange={(e) => setNotes(e.target.value)} />
-        <button type="submit" className="btn btn-primary rounded-full">Queue Run</button>
+        <input className="form-input" placeholder="Queue notes" value={notes} onChange={(e) => setNotes(e.target.value)} />
+        <button type="submit" className="btn pink-button rounded-[14px]">
+          <ListPlus className="size-4" />
+          Queue Run
+        </button>
       </form>
 
       <div className="panel overflow-x-auto p-6">

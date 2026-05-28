@@ -2,6 +2,7 @@
 
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
+import { LogIn, Mail, Shield } from "lucide-react";
 import { loginUser } from "@/services/auth-service";
 import { useAppDispatch } from "@/store/hooks";
 import { setCredentials } from "@/store/slices/auth-slice";
@@ -35,10 +36,17 @@ export default function LoginPage() {
     <section className="page-shell flex min-h-[calc(100vh-220px)] items-center py-10">
       <AuthCard title="Login" description="Use your account to access saved properties, owner tools, enquiries, and admin controls.">
         <form onSubmit={handleSubmit} className="space-y-5">
-          <input className="input input-bordered h-14 w-full rounded-[18px] border-base-300/60 bg-white" placeholder="Email address" value={email} onChange={(e) => setEmail(e.target.value)} />
-          <input className="input input-bordered h-14 w-full rounded-[18px] border-base-300/60 bg-white" type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+          <label className="auth-field">
+            <Mail className="auth-field-icon" />
+            <input className="form-input auth-field-control" placeholder="Email address" value={email} onChange={(e) => setEmail(e.target.value)} />
+          </label>
+          <label className="auth-field">
+            <Shield className="auth-field-icon" />
+            <input className="form-input auth-field-control" type="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} />
+          </label>
           {error ? <p className="text-sm text-error">{error}</p> : null}
-          <button className="btn pink-button h-14 w-full rounded-[18px]" disabled={loading}>
+          <button className="glow-button h-14 w-full" disabled={loading}>
+            <LogIn className="relative size-4" />
             {loading ? "Logging in..." : "Continue"}
           </button>
         </form>
