@@ -330,7 +330,7 @@ export default function HomePage() {
         </div>
       </section>
 
-      <section className="mt-10 grid gap-5 rounded-[28px] border border-white/80 bg-white/75 p-5 shadow-[0_28px_80px_-56px_rgba(15,23,42,0.45)] backdrop-blur-xl md:grid-cols-[1fr_auto] md:items-center md:p-7">
+      <section className="landing-card mt-10 grid gap-5 p-5 md:grid-cols-[1fr_auto] md:items-center md:p-7">
         <div className="flex items-start gap-4">
           <div className="landing-icon">
             <Users className="size-5" />

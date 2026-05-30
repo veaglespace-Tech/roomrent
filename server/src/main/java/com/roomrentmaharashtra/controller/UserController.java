@@ -29,6 +29,7 @@ public class UserController {
         return Map.of(
             "id", user.getId(),
             "name", user.getName(),
+            "phone", user.getPhone(),
             "email", user.getEmail(),
             "role", user.getRole(),
             "createdAt", user.getCreatedAt()

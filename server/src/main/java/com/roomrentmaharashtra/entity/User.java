@@ -30,6 +30,9 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    @Column(length = 30)
+    private String phone;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 30)
     private Role role;
@@ -73,6 +76,14 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
     }
 
     public Role getRole() {

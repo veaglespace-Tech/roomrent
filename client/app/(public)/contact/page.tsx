@@ -3,6 +3,7 @@
 import { FormEvent, useState } from "react";
 import Link from "next/link";
 import { ArrowRight, Building2, Mail, MapPin, MessageCircle, Phone, SendHorizonal, Sparkles } from "lucide-react";
+import { contactSchema, firstZodError } from "@/lib/validation";
 
 const contactReasons = ["Room enquiry", "Post property", "Owner support", "Partnership"];
 
@@ -12,6 +13,18 @@ export default function ContactPage() {
 
   const handleSubmit = (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    const parsed = contactSchema.safeParse({
+      name: data.get("name"),
+      phone: data.get("phone"),
+      email: data.get("email"),
+      message: data.get("message")
+    });
+    if (!parsed.success) {
+      setStatus(firstZodError(parsed.error));
+      return;
+    }
+
     setStatus("Thanks. Your message is ready for the RoomRent Maharashtra team.");
     event.currentTarget.reset();
     setReason(contactReasons[0]);
@@ -73,7 +86,7 @@ export default function ContactPage() {
             </label>
             <label className="form-glass-field">
               <span className="block text-xs font-semibold uppercase tracking-[0.16em] text-base-content/50">Phone</span>
-              <input name="phone" required className="mt-2 w-full bg-transparent text-sm outline-none" placeholder="Mobile number" />
+              <input name="phone" required inputMode="numeric" maxLength={10} className="mt-2 w-full bg-transparent text-sm outline-none" placeholder="Mobile number" />
             </label>
             <label className="form-glass-field sm:col-span-2">
               <span className="block text-xs font-semibold uppercase tracking-[0.16em] text-base-content/50">Email</span>

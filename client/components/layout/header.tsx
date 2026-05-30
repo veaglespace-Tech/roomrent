@@ -1,7 +1,8 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
-import { Building2, ChevronDown, Facebook, Instagram, Linkedin, Mail, Menu, Twitter } from "lucide-react";
+import { Building2, ChevronDown, Facebook, Instagram, Linkedin, Menu, Twitter } from "lucide-react";
 
 const navGroups = [
   {
@@ -109,10 +110,10 @@ function NavDropdown({ group }: { group: (typeof navGroups)[number] }) {
 function ExploreDropdown() {
   return (
     <div className="nav-dropdown-parent relative">
-      <Link href="/properties" className="nav-link nav-link-featured">
+      <button type="button" className="nav-link nav-link-featured">
         Explore
         <ChevronDown className="size-4 transition duration-300" />
-      </Link>
+      </button>
       <div className="nav-dropdown">
         <div className="grid gap-2 p-2">
           {exploreLinks.map((link) => (
@@ -147,38 +148,63 @@ function DesktopNav() {
 }
 
 function MobileNav() {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [openGroup, setOpenGroup] = useState<string | null>(null);
+  const closeMenu = () => {
+    setMenuOpen(false);
+    setOpenGroup(null);
+  };
+
   return (
-    <div className="dropdown dropdown-end xl:hidden">
-      <div tabIndex={0} role="button" className="mobile-menu-button">
+    <div className="relative xl:hidden">
+      <button type="button" aria-expanded={menuOpen} className="mobile-menu-button" onClick={() => setMenuOpen((value) => !value)}>
         <Menu className="size-5" />
-      </div>
-      <ul tabIndex={0} className="mobile-nav-menu">
-        {navGroups.map((group) => (
-          <li key={group.label}>
-            <details>
-              <summary>{group.label}</summary>
-              <ul>
-                {group.links.map((link) => (
-                  <li key={link.label}>
-                    <Link href={link.href}>{link.label}</Link>
-                  </li>
+      </button>
+      {menuOpen ? (
+        <div className="mobile-nav-menu">
+          {navGroups.map((group) => {
+            const isOpen = openGroup === group.label;
+            return (
+              <div key={group.label} className="mobile-nav-group">
+                <button type="button" className="mobile-nav-trigger" onClick={() => setOpenGroup(isOpen ? null : group.label)}>
+                  {group.label}
+                  <ChevronDown className={`size-4 transition ${isOpen ? "rotate-180" : ""}`} />
+                </button>
+                {isOpen ? (
+                  <div className="mobile-nav-panel">
+                    {group.links.map((link) => (
+                      <Link key={link.label} href={link.href} onClick={closeMenu}>
+                        {link.label}
+                      </Link>
+                    ))}
+                  </div>
+                ) : null}
+              </div>
+            );
+          })}
+          <div className="mobile-nav-divider" />
+          {navLinks.filter((link) => !link.featured).map((link) => (
+            <Link key={link.label} href={link.href} className="mobile-nav-direct" onClick={closeMenu}>
+              {link.label}
+            </Link>
+          ))}
+          <div className="mobile-nav-group">
+            <button type="button" className="mobile-nav-trigger mobile-nav-trigger-featured" onClick={() => setOpenGroup(openGroup === "Explore" ? null : "Explore")}>
+              Explore
+              <ChevronDown className={`size-4 transition ${openGroup === "Explore" ? "rotate-180" : ""}`} />
+            </button>
+            {openGroup === "Explore" ? (
+              <div className="mobile-nav-panel">
+                {exploreLinks.map((link) => (
+                  <Link key={link.label} href={link.href} onClick={closeMenu}>
+                    {link.label}
+                  </Link>
                 ))}
-              </ul>
-            </details>
-          </li>
-        ))}
-        {navLinks.map((link) => (
-          <li key={link.label}>
-            <Link href={link.href}>{link.label}</Link>
-          </li>
-        ))}
-        <li className="menu-title mt-2">Explore</li>
-        {exploreLinks.map((link) => (
-          <li key={link.label}>
-            <Link href={link.href}>{link.label}</Link>
-          </li>
-        ))}
-      </ul>
+              </div>
+            ) : null}
+          </div>
+        </div>
+      ) : null}
     </div>
   );
 }
@@ -186,20 +212,18 @@ function MobileNav() {
 export function Header() {
   return (
     <header className="sticky top-0 z-50 px-3 pt-2 md:px-5">
+      <div className="social-dock flex">
+        <SocialIcons />
+      </div>
       <div className="header-shell">
-        <div className="page-shell flex min-h-11 items-center justify-between gap-4 border-b border-[#e2e8f0]/80">
-          <Link href="mailto:roomrentmaharashtra@gmail.com" className="inline-flex min-w-0 items-center gap-2 text-xs font-bold text-[#64748b] transition hover:text-[#ff385c]">
-            <Mail className="size-4" />
-            <span className="truncate">roomrentmaharashtra@gmail.com</span>
-          </Link>
-          <SocialIcons />
-        </div>
-        <div className="page-shell flex min-h-[50px] items-center justify-between gap-4">
+        <div className="page-shell flex min-h-[64px] items-center justify-between gap-4">
           <div className="-ml-3 sm:-ml-4">
             <Logo />
           </div>
           <DesktopNav />
-          <MobileNav />
+          <div className="flex items-center gap-3">
+            <MobileNav />
+          </div>
         </div>
       </div>
     </header>

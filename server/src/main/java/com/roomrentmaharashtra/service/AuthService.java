@@ -37,13 +37,14 @@ public class AuthService {
 
         User user = new User();
         user.setName(request.name());
+        user.setPhone(request.phone());
         user.setEmail(request.email().toLowerCase());
         user.setPassword(passwordEncoder.encode(request.password()));
         user.setRole(request.role() == null ? Role.USER : request.role());
 
         User savedUser = userRepository.save(user);
         String token = jwtService.generateToken(savedUser.getEmail(), savedUser.getRole().name());
-        return new AuthResponse(token, savedUser.getId(), savedUser.getName(), savedUser.getEmail(), savedUser.getRole());
+        return new AuthResponse(token, savedUser.getId(), savedUser.getName(), savedUser.getPhone(), savedUser.getEmail(), savedUser.getRole());
     }
 
     public AuthResponse login(LoginRequest request) {
@@ -55,7 +56,6 @@ public class AuthService {
             .orElseThrow(() -> new IllegalArgumentException("Invalid credentials"));
 
         String token = jwtService.generateToken(user.getEmail(), user.getRole().name());
-        return new AuthResponse(token, user.getId(), user.getName(), user.getEmail(), user.getRole());
+        return new AuthResponse(token, user.getId(), user.getName(), user.getPhone(), user.getEmail(), user.getRole());
     }
 }
-

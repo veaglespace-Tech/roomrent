@@ -3,6 +3,7 @@
 import { FormEvent, useState } from "react";
 import { MessageCircle, SendHorizonal } from "lucide-react";
 import { sendEnquiry } from "@/services/user-service";
+import { enquirySchema, firstZodError } from "@/lib/validation";
 
 export function EnquiryForm({ propertyId }: { propertyId: number }) {
   const [message, setMessage] = useState("");
@@ -11,14 +12,15 @@ export function EnquiryForm({ propertyId }: { propertyId: number }) {
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
-    if (message.trim().length < 10) {
-      setStatus("Please enter at least 10 characters.");
+    const parsed = enquirySchema.safeParse({ message });
+    if (!parsed.success) {
+      setStatus(firstZodError(parsed.error));
       return;
     }
 
     try {
       setLoading(true);
-      await sendEnquiry(propertyId, message);
+      await sendEnquiry(propertyId, parsed.data.message);
       setMessage("");
       setStatus("Enquiry sent successfully.");
     } catch {

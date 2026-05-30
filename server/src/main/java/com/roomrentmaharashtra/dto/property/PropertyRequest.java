@@ -6,6 +6,7 @@ import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 import java.math.BigDecimal;
@@ -25,7 +26,7 @@ public record PropertyRequest(
     @Size(max = 60) String sharingType,
     @Size(max = 40) String furnishedStatus,
     @Size(max = 40) String listedByType,
-    @Size(max = 30) String contactNumber,
+    @Size(max = 30) @Pattern(regexp = "^$|^[6-9]\\d{9}$", message = "Contact number must be a valid 10 digit Indian mobile number") String contactNumber,
     BigDecimal latitude,
     BigDecimal longitude,
     @Size(max = 40) String availabilityStatus,

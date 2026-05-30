@@ -2,22 +2,22 @@
 
 import { FormEvent, useState } from "react";
 import { useRouter } from "next/navigation";
-import { Mail, Shield, UserRound, UserPlus } from "lucide-react";
+import { CheckCircle2, Mail, Phone, Shield, UserRound, UserPlus } from "lucide-react";
 import { registerUser } from "@/services/auth-service";
 import { AuthCard } from "@/components/auth-card";
-import { useAppDispatch } from "@/store/hooks";
-import { setCredentials } from "@/store/slices/auth-slice";
+import { firstZodError, registerSchema } from "@/lib/validation";
 
 type AccountType = "OWNER" | "SEEKER" | "PARTNER";
 
 export default function RegisterPage() {
   const router = useRouter();
-  const dispatch = useAppDispatch();
   const [form, setForm] = useState({
     firstName: "",
     lastName: "",
+    phone: "",
     email: "",
     password: "",
+    confirmPassword: "",
     accountType: "OWNER" as AccountType
   });
   const [error, setError] = useState("");
@@ -25,19 +25,24 @@ export default function RegisterPage() {
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
+    const parsed = registerSchema.safeParse(form);
+    if (!parsed.success) {
+      setError(firstZodError(parsed.error));
+      return;
+    }
+
     try {
       setLoading(true);
-      const name = `${form.firstName} ${form.lastName}`.trim();
-      const data = await registerUser({
+      setError("");
+      const name = `${parsed.data.firstName} ${parsed.data.lastName || ""}`.trim();
+      await registerUser({
         name,
-        email: form.email,
-        password: form.password,
-        role: form.accountType === "OWNER" ? "OWNER" : "USER"
+        phone: parsed.data.phone,
+        email: parsed.data.email,
+        password: parsed.data.password,
+        role: parsed.data.accountType === "OWNER" ? "OWNER" : "USER"
       });
-      localStorage.setItem("roomrent_token", data.token);
-      localStorage.setItem("roomrent_user", JSON.stringify(data));
-      dispatch(setCredentials(data));
-      router.push("/dashboard/profile");
+      router.push("/login?registered=1");
     } catch {
       setError("Unable to register. Use a different email or verify the form.");
     } finally {
@@ -58,12 +63,20 @@ export default function RegisterPage() {
             <input className="form-input auth-field-control" placeholder="Last Name" value={form.lastName} onChange={(e) => setForm({ ...form, lastName: e.target.value })} />
           </label>
           <label className="auth-field md:col-span-2">
+            <Phone className="auth-field-icon" />
+            <input className="form-input auth-field-control" inputMode="numeric" placeholder="Mobile number (10 digits)" value={form.phone} onChange={(e) => setForm({ ...form, phone: e.target.value.replace(/\D/g, "").slice(0, 10) })} />
+          </label>
+          <label className="auth-field md:col-span-2">
             <Mail className="auth-field-icon" />
             <input className="form-input auth-field-control" placeholder="Email address" value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
           </label>
           <label className="auth-field md:col-span-2">
             <Shield className="auth-field-icon" />
             <input className="form-input auth-field-control" type="password" placeholder="Password *" value={form.password} onChange={(e) => setForm({ ...form, password: e.target.value })} />
+          </label>
+          <label className="auth-field md:col-span-2">
+            <CheckCircle2 className="auth-field-icon" />
+            <input className="form-input auth-field-control" type="password" placeholder="Confirm password *" value={form.confirmPassword} onChange={(e) => setForm({ ...form, confirmPassword: e.target.value })} />
           </label>
           <select
             className="form-select md:col-span-2"

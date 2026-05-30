@@ -5,6 +5,7 @@ import { FormEvent, useState } from "react";
 import { ImagePlus, Save, Sparkles } from "lucide-react";
 import { createProperty, updateProperty } from "@/services/property-service";
 import { AvailabilityStatus, FurnishedStatus, GenderPreference, ListedByType, PropertyPayload, PropertyType } from "@/types";
+import { firstZodError, propertySchema } from "@/lib/validation";
 
 const defaultImages = [
   "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267",
@@ -63,6 +64,11 @@ export function PropertyForm({ initialValues, propertyId }: PropertyFormProps) {
     }
     if (form.amenities.length === 0) {
       setError("Select at least one amenity.");
+      return;
+    }
+    const parsed = propertySchema.safeParse({ ...form, imageUrls });
+    if (!parsed.success) {
+      setError(firstZodError(parsed.error));
       return;
     }
 

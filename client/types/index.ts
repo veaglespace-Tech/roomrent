@@ -8,6 +8,7 @@ export type AvailabilityStatus = "AVAILABLE" | "OCCUPIED" | "UPCOMING";
 export interface AuthUser {
   id: number;
   name: string;
+  phone?: string | null;
   email: string;
   role: Role;
   token: string;
@@ -73,6 +74,7 @@ export interface AdminDashboard {
 export interface UserProfile {
   id: number;
   name: string;
+  phone?: string | null;
   email: string;
   role: Role;
   createdAt: string;
