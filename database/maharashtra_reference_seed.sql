@@ -8,10 +8,10 @@ INSERT INTO districts (state_id, name, slug)
 SELECT s.id, d.name, d.slug
 FROM states s
 JOIN (
-    SELECT 'Ahmednagar' AS name, 'ahmednagar' AS slug UNION ALL
+    SELECT 'Ahilyanagar' AS name, 'ahilyanagar' AS slug UNION ALL
     SELECT 'Akola', 'akola' UNION ALL
     SELECT 'Amravati', 'amravati' UNION ALL
-    SELECT 'Aurangabad', 'aurangabad' UNION ALL
+    SELECT 'Chhatrapati Sambhajinagar', 'chhatrapati-sambhajinagar' UNION ALL
     SELECT 'Beed', 'beed' UNION ALL
     SELECT 'Bhandara', 'bhandara' UNION ALL
     SELECT 'Buldhana', 'buldhana' UNION ALL
@@ -30,7 +30,7 @@ JOIN (
     SELECT 'Nanded', 'nanded' UNION ALL
     SELECT 'Nandurbar', 'nandurbar' UNION ALL
     SELECT 'Nashik', 'nashik' UNION ALL
-    SELECT 'Osmanabad', 'osmanabad' UNION ALL
+    SELECT 'Dharashiv', 'dharashiv' UNION ALL
     SELECT 'Palghar', 'palghar' UNION ALL
     SELECT 'Parbhani', 'parbhani' UNION ALL
     SELECT 'Pune', 'pune' UNION ALL
@@ -58,12 +58,12 @@ JOIN (
     SELECT 'Nashik', 'Nashik', 'nashik', 19.9975, 73.7898 UNION ALL
     SELECT 'Thane', 'Thane', 'thane', 19.2183, 72.9781 UNION ALL
     SELECT 'Thane', 'Navi Mumbai', 'navi-mumbai', 19.0330, 73.0297 UNION ALL
-    SELECT 'Aurangabad', 'Aurangabad', 'aurangabad', 19.8762, 75.3433 UNION ALL
+    SELECT 'Chhatrapati Sambhajinagar', 'Chhatrapati Sambhajinagar', 'chhatrapati-sambhajinagar', 19.8762, 75.3433 UNION ALL
     SELECT 'Kolhapur', 'Kolhapur', 'kolhapur', 16.7050, 74.2433 UNION ALL
     SELECT 'Solapur', 'Solapur', 'solapur', 17.6599, 75.9064 UNION ALL
     SELECT 'Sangli', 'Sangli', 'sangli', 16.8524, 74.5815 UNION ALL
     SELECT 'Satara', 'Satara', 'satara', 17.6805, 74.0183 UNION ALL
-    SELECT 'Ahmednagar', 'Ahmednagar', 'ahmednagar', 19.0952, 74.7496 UNION ALL
+    SELECT 'Ahilyanagar', 'Ahilyanagar', 'ahilyanagar', 19.0952, 74.7496 UNION ALL
     SELECT 'Jalgaon', 'Jalgaon', 'jalgaon', 21.0077, 75.5626 UNION ALL
     SELECT 'Amravati', 'Amravati', 'amravati', 20.9374, 77.7796 UNION ALL
     SELECT 'Akola', 'Akola', 'akola', 20.7002, 77.0082 UNION ALL
@@ -76,7 +76,7 @@ JOIN (
     SELECT 'Yavatmal', 'Yavatmal', 'yavatmal', 20.3899, 78.1307 UNION ALL
     SELECT 'Buldhana', 'Buldhana', 'buldhana', 20.5293, 76.1840 UNION ALL
     SELECT 'Beed', 'Beed', 'beed', 18.9891, 75.7601 UNION ALL
-    SELECT 'Osmanabad', 'Osmanabad', 'osmanabad', 18.1861, 76.0419 UNION ALL
+    SELECT 'Dharashiv', 'Dharashiv', 'dharashiv', 18.1861, 76.0419 UNION ALL
     SELECT 'Dhule', 'Dhule', 'dhule', 20.9042, 74.7749 UNION ALL
     SELECT 'Gondia', 'Gondia', 'gondia', 21.4602, 80.1920 UNION ALL
     SELECT 'Bhandara', 'Bhandara', 'bhandara', 21.1702, 79.6501

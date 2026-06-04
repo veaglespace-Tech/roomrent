@@ -3,9 +3,10 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowUpRight, BedDouble, Heart, MapPin, ShieldCheck, Wallet } from "lucide-react";
+import { ArrowUpRight, BedDouble, Heart, MapPin, ShieldCheck, Star, Wallet } from "lucide-react";
 import { toggleSaveProperty } from "@/services/user-service";
 import { Property } from "@/types";
+import { CompareButton } from "@/components/property/compare-button";
 
 interface PropertyCardProps {
   property: Property;
@@ -51,10 +52,14 @@ export function PropertyCard({ property, onSavedChange }: PropertyCardProps) {
       </figure>
       <div className="card-body relative gap-4 p-5">
         <div className="space-y-3">
-          <div className="flex flex-wrap gap-2">
+        <div className="flex flex-wrap gap-2">
             <div className="pill-badge border-green-100 bg-green-50 text-green-700">{property.type}</div>
             {property.category ? <div className="pill-badge border-pink-100 bg-pink-50 text-[#d92f71]">{property.category}</div> : null}
             {property.sharingType ? <div className="pill-badge">{property.sharingType}</div> : null}
+            <div className="pill-badge border-amber-100 bg-amber-50 text-amber-700">
+              <Star className="mr-1 size-3.5" />
+              Verified listing
+            </div>
           </div>
           <h3 className="line-clamp-2 text-xl font-semibold leading-snug">{property.title}</h3>
         </div>
@@ -90,15 +95,18 @@ export function PropertyCard({ property, onSavedChange }: PropertyCardProps) {
             </span>
           ))}
         </div>
-        <div className="flex items-center justify-between border-t border-base-300/60 pt-4">
+        <div className="flex flex-wrap items-center justify-between gap-3 border-t border-base-300/60 pt-4">
           <div className="flex items-center gap-2 text-sm text-base-content/70">
             <ShieldCheck className="size-4 text-primary" />
             {property.availabilityStatus || "AVAILABLE"} | {property.gender}
           </div>
-          <Link href={`/properties/${property.id}`} className="glow-button min-h-11 px-5">
-            View Details
-            <ArrowUpRight className="size-4" />
-          </Link>
+          <div className="flex flex-wrap items-center gap-2">
+            <CompareButton propertyId={property.id} compact />
+            <Link href={`/property/${property.id}`} className="glow-button min-h-11 px-5">
+              View Details
+              <ArrowUpRight className="size-4" />
+            </Link>
+          </div>
         </div>
       </div>
     </div>

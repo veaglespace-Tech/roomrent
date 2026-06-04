@@ -1,8 +1,13 @@
 import api from "@/services/api";
-import { AdminDashboard, Enquiry, IngestionRun, ListingSource, Property, UserProfile } from "@/types";
+import { AdminDashboard, Enquiry, IngestionRun, Lead, ListingSource, Property, SubscriptionPlan, UserProfile } from "@/types";
 
 export const getProfile = async () => {
   const { data } = await api.get<UserProfile>("/users/me");
+  return data;
+};
+
+export const activateSubscription = async (plan: SubscriptionPlan) => {
+  const { data } = await api.post<UserProfile>("/users/subscription", { plan });
   return data;
 };
 
@@ -21,6 +26,11 @@ export const sendEnquiry = async (propertyId: number, message: string) => {
   return data;
 };
 
+export const requestLead = async (propertyId: number) => {
+  const { data } = await api.post<Lead>("/leads", { propertyId });
+  return data;
+};
+
 export const getMyEnquiries = async () => {
   const { data } = await api.get<Enquiry[]>("/users/enquiries");
   return data;
@@ -28,6 +38,11 @@ export const getMyEnquiries = async () => {
 
 export const getOwnerEnquiries = async () => {
   const { data } = await api.get<Enquiry[]>("/owner/enquiries");
+  return data;
+};
+
+export const getOwnerLeads = async () => {
+  const { data } = await api.get<Lead[]>("/owner/leads");
   return data;
 };
 

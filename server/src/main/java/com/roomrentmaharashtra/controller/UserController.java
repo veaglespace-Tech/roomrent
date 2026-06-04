@@ -1,13 +1,19 @@
 package com.roomrentmaharashtra.controller;
 
+import com.roomrentmaharashtra.dto.user.SubscriptionRequest;
+import com.roomrentmaharashtra.entity.Role;
 import com.roomrentmaharashtra.entity.User;
 import com.roomrentmaharashtra.service.PropertyService;
 import com.roomrentmaharashtra.service.UserService;
+import jakarta.validation.Valid;
 import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -26,14 +32,29 @@ public class UserController {
     @GetMapping("/users/me")
     public Map<String, Object> getProfile(Authentication authentication) {
         User user = userService.getCurrentUser(authentication);
-        return Map.of(
-            "id", user.getId(),
-            "name", user.getName(),
-            "phone", user.getPhone(),
-            "email", user.getEmail(),
-            "role", user.getRole(),
-            "createdAt", user.getCreatedAt()
-        );
+        return profileResponse(user);
+    }
+
+    @PostMapping("/users/subscription")
+    public Map<String, Object> activateSubscription(@Valid @RequestBody SubscriptionRequest request,
+                                                    Authentication authentication) {
+        User user = userService.activateSubscription(authentication, request.plan());
+        return profileResponse(user);
+    }
+
+    private Map<String, Object> profileResponse(User user) {
+        Map<String, Object> body = new HashMap<>();
+        body.put("id", user.getId());
+        body.put("name", user.getName());
+        body.put("phone", user.getPhone());
+        body.put("email", user.getEmail());
+        body.put("role", user.getRole());
+        body.put("isSuperAdmin", user.getRole() == Role.ADMIN);
+        body.put("subscriptionPlan", user.getSubscriptionPlan());
+        body.put("subscriptionActive", userService.hasActiveListingPlan(user));
+        body.put("subscriptionExpiresAt", user.getSubscriptionExpiresAt());
+        body.put("createdAt", user.getCreatedAt());
+        return body;
     }
 
     @GetMapping("/owner/properties")

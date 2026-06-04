@@ -1,26 +1,33 @@
 spring:
-  datasource:
-    url: jdbc:mysql://localhost:3306/roomrent_maharashtra?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Kolkata
-    username: root
-    password: YBpmk@2702
-  jpa:
-    hibernate:
-      ddl-auto: update
-    show-sql: false
-    properties:
-      hibernate:
-        format_sql: true
+  config:
+    import: optional:file:.env
   jackson:
     serialization:
       fail-on-empty-beans: false
+  profiles:
+    active: ${SPRING_PROFILES_ACTIVE:dev}
+  mail:
+    host: ${SPRING_MAIL_HOST:smtp.gmail.com}
+    port: ${SPRING_MAIL_PORT:587}
+    username: ${SPRING_MAIL_USERNAME:}
+    password: ${SPRING_MAIL_PASSWORD:}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+          connectiontimeout: 5000
+          timeout: 5000
+          writetimeout: 5000
 
 app:
   jwt:
-    secret: 32a0b9ab1ddf4e7e8ef9a1db0c3d2cf632a0b9ab1ddf4e7e8ef9a1db0c3d2cf6
-    expiration-ms: 86400000
-  seed-demo-data: false
-  purge-legacy-demo-listings: true
-  seed-real-source-records: false
+    secret: ${APP_JWT_SECRET:roomrent-dev-jwt-secret-change-me-1234567890}
+    expiration-ms: ${APP_JWT_EXPIRATION_MS:86400000}
+  frontend-base-url: ${APP_FRONTEND_BASE_URL:http://localhost:3000}
+  mail:
+    from: ${APP_MAIL_FROM:${SPRING_MAIL_USERNAME:}}
 
 server:
-  port: 8080
+  port: ${SERVER_PORT:8080}

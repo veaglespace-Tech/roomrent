@@ -44,6 +44,10 @@ CREATE TABLE IF NOT EXISTS users (
     password VARCHAR(255) NOT NULL,
     role VARCHAR(30) NOT NULL,
     phone VARCHAR(30) NULL,
+    subscription_plan VARCHAR(40) NULL,
+    subscription_active BOOLEAN NOT NULL DEFAULT FALSE,
+    subscription_started_at TIMESTAMP NULL,
+    subscription_expires_at TIMESTAMP NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 

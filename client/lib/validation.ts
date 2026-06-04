@@ -14,27 +14,41 @@ export const phoneSchema = z
   .trim()
   .regex(/^[6-9]\d{9}$/, "Mobile number must be exactly 10 digits and start with 6, 7, 8, or 9.");
 
-export const emailDotComSchema = z
+export const emailSchema = z
   .string()
   .trim()
   .toLowerCase()
-  .email("Enter a valid email address.")
-  .regex(/\.com$/i, "Email must end with .com.");
+  .email("Enter a valid email address.");
 
 export const loginSchema = z.object({
-  email: emailDotComSchema,
+  email: emailSchema,
   password: z.string().min(1, "Password is required.")
 });
+
+export const forgotPasswordSchema = z.object({
+  email: emailSchema
+});
+
+export const resetPasswordSchema = z
+  .object({
+    token: z.string().trim().min(8, "Reset token is required."),
+    newPassword: strongPassword,
+    confirmPassword: z.string().min(1, "Confirm your password.")
+  })
+  .refine((data) => data.newPassword === data.confirmPassword, {
+    message: "Passwords do not match.",
+    path: ["confirmPassword"]
+  });
 
 export const registerSchema = z
   .object({
     firstName: z.string().trim().min(2, "First name must be at least 2 characters."),
     lastName: z.string().trim().optional(),
     phone: phoneSchema,
-    email: emailDotComSchema,
+    email: emailSchema,
     password: strongPassword,
     confirmPassword: z.string().min(1, "Confirm your password."),
-    accountType: z.enum(["OWNER", "SEEKER", "PARTNER"])
+    accountType: z.enum(["OWNER", "USER"])
   })
   .refine((data) => data.password === data.confirmPassword, {
     message: "Passwords do not match.",
@@ -47,9 +61,9 @@ export const propertySchema = z.object({
   price: z.number().positive("Monthly rent must be greater than 0."),
   securityDeposit: z.number().min(0, "Security deposit cannot be negative.").nullable().optional(),
   location: z.string().trim().min(3, "Location is required."),
-  city: z.string().trim().min(2, "City is required.").optional().or(z.literal("")),
-  district: z.string().trim().min(2, "District is required.").optional().or(z.literal("")),
-  state: z.string().trim().min(2, "State is required.").optional().or(z.literal("")),
+  city: z.string().trim().min(2, "City is required."),
+  district: z.string().trim().min(2, "District is required."),
+  state: z.string().trim().min(2, "State is required."),
   contactNumber: phoneSchema.optional().or(z.literal("")),
   amenities: z.array(z.string()).min(1, "Select at least one amenity."),
   imageUrls: z.array(z.string().url("Each image URL must be valid.")).min(1, "Add at least one image URL.")
@@ -62,7 +76,7 @@ export const enquirySchema = z.object({
 export const contactSchema = z.object({
   name: z.string().trim().min(2, "Full name must be at least 2 characters."),
   phone: phoneSchema,
-  email: emailDotComSchema,
+  email: emailSchema,
   message: z.string().trim().min(10, "Message must be at least 10 characters.")
 });
 

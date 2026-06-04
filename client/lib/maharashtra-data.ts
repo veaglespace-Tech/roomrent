@@ -1,8 +1,22 @@
+type CityOption = { name: string; slug: string; highlight: string };
+
+const slugify = (value: string) =>
+  value
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+
+const city = (name: string, highlight = "Rooms, PGs, flats and local rental demand"): CityOption => ({
+  name,
+  slug: slugify(name),
+  highlight
+});
+
 export const maharashtraDistricts = [
-  "Ahmednagar",
+  "Ahilyanagar",
   "Akola",
   "Amravati",
-  "Aurangabad",
+  "Chhatrapati Sambhajinagar",
   "Beed",
   "Bhandara",
   "Buldhana",
@@ -21,7 +35,7 @@ export const maharashtraDistricts = [
   "Nanded",
   "Nandurbar",
   "Nashik",
-  "Osmanabad",
+  "Dharashiv",
   "Palghar",
   "Parbhani",
   "Pune",
@@ -37,134 +51,474 @@ export const maharashtraDistricts = [
   "Yavatmal"
 ] as const;
 
-export const majorCitiesByDistrict: Record<string, Array<{ name: string; slug: string; highlight: string }>> = {
-  Ahmednagar: [
-    { name: "Ahmednagar", slug: "ahmednagar", highlight: "Affordable rooms, PGs, shops and flats" },
-    { name: "Shrirampur", slug: "shrirampur", highlight: "Student rooms and family rentals" }
+export const majorCitiesByDistrict: Record<string, CityOption[]> = {
+  Ahilyanagar: [
+    city("Ahilyanagar", "Affordable rooms, PGs, shops and flats"),
+    city("Ahmednagar", "Legacy city search alias for Ahilyanagar"),
+    city("Akole"),
+    city("Jamkhed"),
+    city("Karjat"),
+    city("Kopargaon"),
+    city("Nevasa"),
+    city("Parner"),
+    city("Pathardi"),
+    city("Rahata"),
+    city("Rahuri"),
+    city("Sangamner", "Student, family and working professional rentals"),
+    city("Shevgaon"),
+    city("Shrigonda"),
+    city("Shrirampur", "Student rooms and family rentals")
   ],
   Akola: [
-    { name: "Akola", slug: "akola", highlight: "Budget rooms, hostels and compact flats" }
+    city("Akola", "Budget rooms, hostels and compact flats"),
+    city("Akot"),
+    city("Balapur"),
+    city("Barshitakli"),
+    city("Murtizapur"),
+    city("Patur"),
+    city("Telhara")
   ],
   Amravati: [
-    { name: "Amravati", slug: "amravati", highlight: "Hostels, shared rooms and family homes" },
-    { name: "Achalpur", slug: "achalpur", highlight: "Local rentals and working professional stays" }
+    city("Amravati", "Hostels, shared rooms and family homes"),
+    city("Achalpur", "Local rentals and working professional stays"),
+    city("Anjangaon Surji"),
+    city("Bhatkuli"),
+    city("Chandur Bazar"),
+    city("Chandur Railway"),
+    city("Chikhaldara"),
+    city("Daryapur"),
+    city("Dhamangaon Railway"),
+    city("Dharni"),
+    city("Morshi"),
+    city("Nandgaon Khandeshwar"),
+    city("Tiosa"),
+    city("Warud")
   ],
-  Aurangabad: [
-    { name: "Aurangabad", slug: "aurangabad", highlight: "Hostels, PGs, student rentals, family homes" }
+  "Chhatrapati Sambhajinagar": [
+    city("Chhatrapati Sambhajinagar", "Hostels, PGs, student rentals and family homes"),
+    city("Aurangabad", "Legacy city search alias for Chhatrapati Sambhajinagar"),
+    city("Chhatrapati Sambhajinagar Cantonment"),
+    city("Gangapur"),
+    city("Kannad"),
+    city("Khuldabad"),
+    city("Paithan"),
+    city("Phulambri"),
+    city("Sillod"),
+    city("Soegaon"),
+    city("Vaijapur")
   ],
   Beed: [
-    { name: "Beed", slug: "beed", highlight: "Room rentals, small flats and family housing" }
+    city("Beed", "Room rentals, small flats and family housing"),
+    city("Ambejogai"),
+    city("Ashti"),
+    city("Dharur"),
+    city("Georai"),
+    city("Kaij"),
+    city("Majalgaon"),
+    city("Parli"),
+    city("Patoda"),
+    city("Shirur Kasar"),
+    city("Wadwani")
   ],
   Bhandara: [
-    { name: "Bhandara", slug: "bhandara", highlight: "Affordable rooms and family rentals" }
+    city("Bhandara", "Affordable rooms and family rentals"),
+    city("Lakhandur"),
+    city("Lakhani"),
+    city("Mohadi"),
+    city("Pauni"),
+    city("Sakoli"),
+    city("Tumsar")
   ],
   Buldhana: [
-    { name: "Buldhana", slug: "buldhana", highlight: "Town rentals and compact apartments" },
-    { name: "Malkapur", slug: "malkapur", highlight: "Rooms and family flats for local demand" }
+    city("Buldhana", "Town rentals and compact apartments"),
+    city("Chikhli"),
+    city("Deulgaon Raja"),
+    city("Jalgaon Jamod"),
+    city("Khamgaon", "Commercial and family rental demand"),
+    city("Lonar"),
+    city("Malkapur", "Rooms and family flats for local demand"),
+    city("Mehkar"),
+    city("Motala"),
+    city("Nandura"),
+    city("Sangrampur"),
+    city("Shegaon"),
+    city("Sindkhed Raja")
   ],
   Chandrapur: [
-    { name: "Chandrapur", slug: "chandrapur", highlight: "Working professional rooms and family homes" },
-    { name: "Ballarpur", slug: "ballarpur", highlight: "Industrial workforce and town rentals" }
+    city("Chandrapur", "Working professional rooms and family homes"),
+    city("Ballarpur", "Industrial workforce and town rentals"),
+    city("Bhadravati"),
+    city("Brahmapuri"),
+    city("Chimur"),
+    city("Gondpipri"),
+    city("Jiwati"),
+    city("Korpana"),
+    city("Mul"),
+    city("Nagbhid"),
+    city("Pombhurna"),
+    city("Rajura"),
+    city("Saoli"),
+    city("Sindewahi"),
+    city("Warora")
   ],
   Dhule: [
-    { name: "Dhule", slug: "dhule", highlight: "Budget rentals, hostels and family flats" },
-    { name: "Shirpur", slug: "shirpur", highlight: "Student-focused rooms and apartments" }
+    city("Dhule", "Budget rentals, hostels and family flats"),
+    city("Sakri"),
+    city("Shindkheda"),
+    city("Shirpur", "Student-focused rooms and apartments")
   ],
   Gadchiroli: [
-    { name: "Gadchiroli", slug: "gadchiroli", highlight: "Town rentals and rooms for working tenants" }
+    city("Gadchiroli", "Town rentals and rooms for working tenants"),
+    city("Aheri"),
+    city("Armori"),
+    city("Bhamragad"),
+    city("Chamorshi"),
+    city("Desaiganj"),
+    city("Dhanora"),
+    city("Etapalli"),
+    city("Kurkheda"),
+    city("Korchi"),
+    city("Mulchera"),
+    city("Sironcha")
   ],
   Gondia: [
-    { name: "Gondia", slug: "gondia", highlight: "Rooms, family flats and local market rentals" }
+    city("Gondia", "Rooms, family flats and local market rentals"),
+    city("Amgaon"),
+    city("Arjuni Morgaon"),
+    city("Deori"),
+    city("Goregaon"),
+    city("Sadak Arjuni"),
+    city("Salekasa"),
+    city("Tirora")
   ],
   Hingoli: [
-    { name: "Hingoli", slug: "hingoli", highlight: "Local rentals, hostels and compact homes" }
+    city("Hingoli", "Local rentals, hostels and compact homes"),
+    city("Aundha Nagnath"),
+    city("Basmath"),
+    city("Kalamnuri"),
+    city("Sengaon")
   ],
   Jalgaon: [
-    { name: "Jalgaon", slug: "jalgaon", highlight: "Student rooms, family flats and shop rentals" },
-    { name: "Bhusawal", slug: "bhusawal", highlight: "Railway workforce and family housing demand" }
+    city("Jalgaon", "Student rooms, family flats and shop rentals"),
+    city("Amalner"),
+    city("Bhadgaon"),
+    city("Bhusawal", "Railway workforce and family housing demand"),
+    city("Bodwad"),
+    city("Chalisgaon"),
+    city("Chopda"),
+    city("Dharangaon"),
+    city("Erandol"),
+    city("Jamner"),
+    city("Muktainagar"),
+    city("Pachora"),
+    city("Parola"),
+    city("Raver"),
+    city("Yawal")
   ],
   Jalna: [
-    { name: "Jalna", slug: "jalna", highlight: "Town rentals, rooms and family apartments" }
+    city("Jalna", "Town rentals, rooms and family apartments"),
+    city("Ambad"),
+    city("Badnapur"),
+    city("Bhokardan"),
+    city("Ghansawangi"),
+    city("Jafrabad"),
+    city("Mantha"),
+    city("Partur")
   ],
   Kolhapur: [
-    { name: "Kolhapur", slug: "kolhapur", highlight: "Rooms, flats, hostels and mixed-use demand" }
+    city("Kolhapur", "Rooms, flats, hostels and mixed-use demand"),
+    city("Ajra"),
+    city("Bhudargad"),
+    city("Chandgad"),
+    city("Gadhinglaj"),
+    city("Gaganbawada"),
+    city("Hatkanangale"),
+    city("Ichalkaranji", "Textile workforce and commercial rental demand"),
+    city("Kagal"),
+    city("Karvir"),
+    city("Panhala"),
+    city("Radhanagari"),
+    city("Shahuwadi"),
+    city("Shirol")
   ],
   Latur: [
-    { name: "Latur", slug: "latur", highlight: "Student rentals, PGs and family homes" },
-    { name: "Udgir", slug: "udgir", highlight: "Town rooms and compact flats" }
+    city("Latur", "Student rentals, PGs and family homes"),
+    city("Ahmadpur"),
+    city("Ausa"),
+    city("Chakur"),
+    city("Deoni"),
+    city("Jalkot"),
+    city("Nilanga"),
+    city("Renapur"),
+    city("Shirur Anantpal"),
+    city("Udgir", "Town rooms and compact flats")
   ],
   "Mumbai City": [
-    { name: "Mumbai", slug: "mumbai", highlight: "Hostels, PGs, shared flats and studio rentals" }
+    city("Mumbai", "Hostels, PGs, shared flats and studio rentals"),
+    city("Colaba"),
+    city("Fort"),
+    city("Byculla"),
+    city("Dadar"),
+    city("Girgaon"),
+    city("Marine Lines"),
+    city("Mahalaxmi"),
+    city("Parel"),
+    city("Worli")
   ],
   "Mumbai Suburban": [
-    { name: "Andheri", slug: "andheri", highlight: "Shared flats, rooms and studio rentals" },
-    { name: "Borivali", slug: "borivali", highlight: "Family homes and local apartment rentals" }
+    city("Andheri", "Shared flats, rooms and studio rentals"),
+    city("Bandra"),
+    city("Borivali", "Family homes and local apartment rentals"),
+    city("Chembur"),
+    city("Ghatkopar"),
+    city("Goregaon"),
+    city("Jogeshwari"),
+    city("Kandivali"),
+    city("Kurla"),
+    city("Malad"),
+    city("Mulund"),
+    city("Powai"),
+    city("Santacruz"),
+    city("Vile Parle")
   ],
   Nagpur: [
-    { name: "Nagpur", slug: "nagpur", highlight: "Rooms, hostels, PGs and family flats" }
+    city("Nagpur", "Rooms, hostels, PGs and family flats"),
+    city("Bhiwapur"),
+    city("Hingna"),
+    city("Kalameshwar"),
+    city("Kamptee"),
+    city("Katol"),
+    city("Kuhi"),
+    city("Mauda"),
+    city("Narkhed"),
+    city("Parseoni"),
+    city("Ramtek"),
+    city("Savner"),
+    city("Umred")
   ],
   Nanded: [
-    { name: "Nanded", slug: "nanded", highlight: "Budget rooms, family apartments and hostels" }
+    city("Nanded", "Budget rooms, family apartments and hostels"),
+    city("Ardhapur"),
+    city("Bhokar"),
+    city("Biloli"),
+    city("Deglur"),
+    city("Dharmabad"),
+    city("Hadgaon"),
+    city("Himayatnagar"),
+    city("Kandhar"),
+    city("Kinwat"),
+    city("Loha"),
+    city("Mahur"),
+    city("Mudkhed"),
+    city("Mukhed"),
+    city("Naigaon"),
+    city("Umri")
   ],
   Nandurbar: [
-    { name: "Nandurbar", slug: "nandurbar", highlight: "Compact rentals and local housing" }
+    city("Nandurbar", "Compact rentals and local housing"),
+    city("Akkalkuwa"),
+    city("Akrani"),
+    city("Dhadgaon"),
+    city("Navapur"),
+    city("Shahada"),
+    city("Taloda")
   ],
   Nashik: [
-    { name: "Nashik", slug: "nashik", highlight: "Affordable rooms, hostels, flats and commercial rentals" },
-    { name: "Malegaon", slug: "malegaon", highlight: "Town rentals and budget apartments" }
+    city("Nashik", "Affordable rooms, hostels, flats and commercial rentals"),
+    city("Baglan"),
+    city("Chandwad"),
+    city("Deola"),
+    city("Dindori"),
+    city("Igatpuri"),
+    city("Kalwan"),
+    city("Malegaon", "Town rentals and budget apartments"),
+    city("Nandgaon"),
+    city("Niphad"),
+    city("Peth"),
+    city("Sinnar"),
+    city("Surgana"),
+    city("Trimbakeshwar"),
+    city("Yeola")
   ],
-  Osmanabad: [
-    { name: "Osmanabad", slug: "osmanabad", highlight: "Rooms, family homes and local market rentals" }
+  Dharashiv: [
+    city("Dharashiv", "Rooms, family homes and local market rentals"),
+    city("Osmanabad", "Legacy city search alias for Dharashiv"),
+    city("Bhum"),
+    city("Kalamb"),
+    city("Lohara"),
+    city("Omerga"),
+    city("Paranda"),
+    city("Tuljapur"),
+    city("Umarga"),
+    city("Washi")
   ],
   Palghar: [
-    { name: "Palghar", slug: "palghar", highlight: "Emerging housing demand and budget rentals" },
-    { name: "Vasai", slug: "vasai", highlight: "Apartments, family homes and daily commute rentals" }
+    city("Palghar", "Emerging housing demand and budget rentals"),
+    city("Boisar"),
+    city("Dahanu"),
+    city("Jawhar"),
+    city("Mokhada"),
+    city("Talasari"),
+    city("Vada"),
+    city("Vasai", "Apartments, family homes and daily commute rentals"),
+    city("Virar"),
+    city("Vikramgad")
   ],
   Parbhani: [
-    { name: "Parbhani", slug: "parbhani", highlight: "Student rooms, hostels and compact apartments" }
+    city("Parbhani", "Student rooms, hostels and compact apartments"),
+    city("Gangakhed"),
+    city("Jintur"),
+    city("Manwath"),
+    city("Palam"),
+    city("Pathri"),
+    city("Purna"),
+    city("Sailu"),
+    city("Sonpeth")
   ],
   Pune: [
-    { name: "Pune", slug: "pune", highlight: "Students, IT rentals, co-living, 1 BHK and PG demand" },
-    { name: "Pimpri-Chinchwad", slug: "pimpri-chinchwad", highlight: "Tech workforce rentals and family flats" },
-    { name: "Baramati", slug: "baramati", highlight: "Local rentals and growing apartment demand" }
+    city("Pune", "Students, IT rentals, co-living, 1 BHK and PG demand"),
+    city("Ambegaon"),
+    city("Baramati", "Local rentals and growing apartment demand"),
+    city("Bhor"),
+    city("Daund"),
+    city("Haveli"),
+    city("Indapur"),
+    city("Junnar"),
+    city("Khed"),
+    city("Lonavala"),
+    city("Maval"),
+    city("Mulshi"),
+    city("Pimpri-Chinchwad", "Tech workforce rentals and family flats"),
+    city("Purandar"),
+    city("Shirur"),
+    city("Velhe")
   ],
   Raigad: [
-    { name: "Panvel", slug: "panvel", highlight: "Transit rentals, flats and working tenant housing" },
-    { name: "Alibag", slug: "alibag", highlight: "Coastal homes and leisure stay demand" }
+    city("Alibag", "Coastal homes and leisure stay demand"),
+    city("Karjat"),
+    city("Khalapur"),
+    city("Mahad", "Industrial and town rental demand"),
+    city("Mangaon"),
+    city("Mhasala"),
+    city("Murud"),
+    city("Panvel", "Transit rentals, flats and working tenant housing"),
+    city("Pen"),
+    city("Poladpur"),
+    city("Roha"),
+    city("Shrivardhan"),
+    city("Sudhagad Pali"),
+    city("Tala"),
+    city("Uran")
   ],
   Ratnagiri: [
-    { name: "Ratnagiri", slug: "ratnagiri", highlight: "Coastal rentals, rooms and family homes" },
-    { name: "Chiplun", slug: "chiplun", highlight: "Town apartments and local room rentals" }
+    city("Ratnagiri", "Coastal rentals, rooms and family homes"),
+    city("Chiplun", "Town apartments and local room rentals"),
+    city("Dapoli"),
+    city("Guhagar"),
+    city("Khed"),
+    city("Lanja"),
+    city("Mandangad"),
+    city("Rajapur"),
+    city("Sangameshwar")
   ],
   Sangli: [
-    { name: "Sangli", slug: "sangli", highlight: "Student rentals, hostels and small flats" },
-    { name: "Miraj", slug: "miraj", highlight: "Medical and education-driven room demand" }
+    city("Sangli", "Student rentals, hostels and small flats"),
+    city("Atpadi"),
+    city("Jat"),
+    city("Kadegaon"),
+    city("Kavathe Mahankal"),
+    city("Khanapur"),
+    city("Miraj", "Medical and education-driven room demand"),
+    city("Palus"),
+    city("Shirala"),
+    city("Tasgaon"),
+    city("Vita"),
+    city("Walwa")
   ],
   Satara: [
-    { name: "Satara", slug: "satara", highlight: "Town rentals, rooms, flats and hostels" },
-    { name: "Karad", slug: "karad", highlight: "Student housing and family apartments" }
+    city("Satara", "Town rentals, rooms, flats and hostels"),
+    city("Jaoli"),
+    city("Karad", "Student housing and family apartments"),
+    city("Khandala"),
+    city("Khatav"),
+    city("Koregaon"),
+    city("Mahabaleshwar"),
+    city("Man"),
+    city("Patan"),
+    city("Phaltan"),
+    city("Wai")
   ],
   Sindhudurg: [
-    { name: "Kudal", slug: "kudal", highlight: "Town rentals and local family homes" },
-    { name: "Sawantwadi", slug: "sawantwadi", highlight: "Coastal rental demand and compact homes" }
+    city("Kankavli"),
+    city("Devgad"),
+    city("Dodamarg"),
+    city("Kudal", "Town rentals and local family homes"),
+    city("Malvan"),
+    city("Sawantwadi", "Coastal rental demand and compact homes"),
+    city("Vaibhavwadi"),
+    city("Vengurla")
   ],
   Solapur: [
-    { name: "Solapur", slug: "solapur", highlight: "Budget rentals, family flats and room sharing" },
-    { name: "Pandharpur", slug: "pandharpur", highlight: "Pilgrim-town stays and local rentals" }
+    city("Solapur", "Budget rentals, family flats and room sharing"),
+    city("Akkalkot"),
+    city("Barshi"),
+    city("Karmala"),
+    city("Madha"),
+    city("Malshiras"),
+    city("Mangalvedhe"),
+    city("Mohol"),
+    city("Pandharpur", "Pilgrim-town stays and local rentals"),
+    city("Sangole"),
+    city("South Solapur")
   ],
   Thane: [
-    { name: "Thane", slug: "thane", highlight: "Urban apartments, PGs, offices and co-working spaces" },
-    { name: "Navi Mumbai", slug: "navi-mumbai", highlight: "Rental apartments, office units and student accommodation" },
-    { name: "Kalyan", slug: "kalyan", highlight: "Commuter apartments and affordable family homes" }
+    city("Thane", "Urban apartments, PGs, offices and co-working spaces"),
+    city("Ambarnath"),
+    city("Badlapur"),
+    city("Bhiwandi"),
+    city("Dombivli"),
+    city("Kalyan", "Commuter apartments and affordable family homes"),
+    city("Mira-Bhayandar"),
+    city("Murbad"),
+    city("Navi Mumbai", "Rental apartments, office units and student accommodation"),
+    city("Shahapur"),
+    city("Ulhasnagar")
   ],
   Wardha: [
-    { name: "Wardha", slug: "wardha", highlight: "Student rooms, hostels and local rentals" }
+    city("Wardha", "Student rooms, hostels and local rentals"),
+    city("Arvi"),
+    city("Ashti"),
+    city("Deoli"),
+    city("Hinganghat"),
+    city("Karanja"),
+    city("Samudrapur"),
+    city("Seloo")
   ],
   Washim: [
-    { name: "Washim", slug: "washim", highlight: "Town rentals, family homes and budget rooms" }
+    city("Washim", "Town rentals, family homes and budget rooms"),
+    city("Karanja"),
+    city("Malegaon"),
+    city("Mangrulpir"),
+    city("Manora"),
+    city("Risod")
   ],
   Yavatmal: [
-    { name: "Yavatmal", slug: "yavatmal", highlight: "Affordable rooms, flats and local rental demand" }
+    city("Yavatmal", "Affordable rooms, flats and local rental demand"),
+    city("Arni"),
+    city("Babulgaon"),
+    city("Darwha"),
+    city("Digras"),
+    city("Ghatanji"),
+    city("Kalamb"),
+    city("Kelapur"),
+    city("Mahagaon"),
+    city("Maregaon"),
+    city("Ner"),
+    city("Pusad"),
+    city("Ralegaon"),
+    city("Umarkhed"),
+    city("Wani"),
+    city("Zari Jamani")
   ]
 };
 
@@ -174,23 +528,23 @@ export const featuredMaharashtraCities = [
   majorCitiesByDistrict.Nagpur[0],
   majorCitiesByDistrict.Nashik[0],
   majorCitiesByDistrict.Thane[0],
-  majorCitiesByDistrict.Thane[1],
-  majorCitiesByDistrict.Aurangabad[0],
+  majorCitiesByDistrict.Thane.find((item) => item.name === "Navi Mumbai") || majorCitiesByDistrict.Thane[1],
+  majorCitiesByDistrict["Chhatrapati Sambhajinagar"][0],
   majorCitiesByDistrict.Kolhapur[0]
 ] as const;
 
 export const cityPages = Object.entries(majorCitiesByDistrict).flatMap(([district, cities]) =>
-  cities.map((city) => ({
-    city: city.name,
+  cities.map((item) => ({
+    city: item.name,
     district,
-    slug: city.slug,
-    highlight: city.highlight
+    slug: item.slug,
+    highlight: item.highlight
   }))
 );
 
 export const districtPages = maharashtraDistricts.map((district) => ({
   name: district,
-  slug: district.toLowerCase().replace(/\s+/g, "-")
+  slug: slugify(district)
 }));
 
 export const categoryBlueprint = [

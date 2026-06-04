@@ -14,7 +14,7 @@ export function SearchBar({ dark = false }: { dark?: boolean }) {
     if (location) {
       params.set("location", location);
     }
-    router.push(`/properties?${params.toString()}`);
+    router.push(`/search?${params.toString()}`);
   };
 
   return (

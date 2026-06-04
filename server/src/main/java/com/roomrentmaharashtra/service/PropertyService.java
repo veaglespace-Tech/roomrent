@@ -64,8 +64,8 @@ public class PropertyService {
 
     public PropertyResponse createProperty(PropertyRequest request, Authentication authentication) {
         User owner = userService.getCurrentUser(authentication);
-        if (owner.getRole() == Role.USER) {
-            throw new UnauthorizedException("Only owners or admins can add properties");
+        if (!userService.hasActiveListingPlan(owner)) {
+            throw new UnauthorizedException("Choose an active listing plan before adding a property");
         }
 
         Property property = new Property();
@@ -111,10 +111,10 @@ public class PropertyService {
 
     public AdminDashboardResponse getAdminDashboard() {
         long totalUsers = userRepository.count();
-        long totalOwners = userService.countUsersByRole(Role.OWNER);
+        long totalSubscribers = userService.countActiveListingPlanUsers();
         long totalProperties = propertyRepository.count();
         long totalEnquiries = enquiryRepository.count();
-        return new AdminDashboardResponse(totalUsers, totalOwners, totalProperties, totalEnquiries);
+        return new AdminDashboardResponse(totalUsers, totalSubscribers, totalProperties, totalEnquiries);
     }
 
     public List<PropertyResponse> getAllAdminProperties(Authentication authentication) {
@@ -125,33 +125,39 @@ public class PropertyService {
     }
 
     private void applyRequest(Property property, PropertyRequest request, User owner) {
-        property.setTitle(request.title());
-        property.setDescription(request.description());
+        property.setTitle(clean(request.title()));
+        property.setDescription(clean(request.description()));
         property.setPrice(request.price());
         property.setSecurityDeposit(request.securityDeposit());
-        property.setLocation(request.location());
-        property.setAreaLocality(request.areaLocality());
-        property.setCity(request.city());
-        property.setDistrict(request.district());
-        property.setState(request.state());
-        property.setCategory(request.category());
-        property.setSharingType(request.sharingType());
-        property.setFurnishedStatus(request.furnishedStatus());
-        property.setListedByType(request.listedByType());
-        property.setContactNumber(request.contactNumber());
+        property.setLocation(clean(request.location()));
+        property.setAreaLocality(cleanOptional(request.areaLocality()));
+        property.setCity(cleanOptional(request.city()));
+        property.setDistrict(cleanOptional(request.district()));
+        property.setState(cleanOptional(request.state()));
+        property.setCategory(cleanOptional(request.category()));
+        property.setSharingType(cleanOptional(request.sharingType()));
+        property.setFurnishedStatus(cleanOptional(request.furnishedStatus()));
+        property.setListedByType(cleanOptional(request.listedByType()));
+        property.setContactNumber(cleanOptional(request.contactNumber()));
         property.setLatitude(request.latitude());
         property.setLongitude(request.longitude());
-        property.setAvailabilityStatus(request.availabilityStatus());
-        property.setAvailableFromDate(request.availableFromDate());
-        property.setOccupancyDetails(request.occupancyDetails());
-        property.setListingSource(request.listingSource());
-        property.setListingUrl(request.listingUrl());
+        property.setAvailabilityStatus(cleanOptional(request.availabilityStatus()));
+        property.setAvailableFromDate(cleanOptional(request.availableFromDate()));
+        property.setOccupancyDetails(cleanOptional(request.occupancyDetails()));
+        property.setListingSource(cleanOptional(request.listingSource()));
+        property.setListingUrl(cleanOptional(request.listingUrl()));
         property.setType(request.type());
         property.setGender(request.gender());
-        property.setAmenities(new ArrayList<>(new LinkedHashSet<>(request.amenities())));
+        property.setAmenities(request.amenities().stream()
+            .map(this::clean)
+            .filter(value -> !value.isBlank())
+            .collect(Collectors.collectingAndThen(
+                Collectors.toCollection(LinkedHashSet::new),
+                ArrayList::new
+            )));
         property.setCreatedBy(owner);
         property.clearImages();
-        request.imageUrls().forEach(url -> {
+        request.imageUrls().stream().map(this::clean).forEach(url -> {
             PropertyImage image = new PropertyImage();
             image.setImageUrl(url);
             property.addImage(image);
@@ -230,5 +236,14 @@ public class PropertyService {
             query.distinct(true);
             return cb.and(predicates.toArray(Predicate[]::new));
         };
+    }
+
+    private String clean(String value) {
+        return value == null ? "" : value.trim();
+    }
+
+    private String cleanOptional(String value) {
+        String cleaned = clean(value);
+        return cleaned.isBlank() ? null : cleaned;
     }
 }

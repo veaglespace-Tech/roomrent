@@ -6,13 +6,15 @@ import { PropertyFilters, PropertyType, GenderPreference } from "@/types";
 interface FiltersSidebarProps {
   filters: PropertyFilters;
   onChange: (filters: PropertyFilters) => void;
+  mobile?: boolean;
+  onClose?: () => void;
 }
 
 const propertyTypes: Array<PropertyType | ""> = ["", "PG", "ROOM", "FLAT", "HOSTEL"];
 const genders: Array<GenderPreference | ""> = ["", "BOYS", "GIRLS", "ANY"];
 const amenities = ["WiFi", "Meals", "Housekeeping", "Attached Bath", "Laundry", "Parking", "Balcony", "Power Backup"];
 
-export function FiltersSidebar({ filters, onChange }: FiltersSidebarProps) {
+export function FiltersSidebar({ filters, onChange, mobile = false, onClose }: FiltersSidebarProps) {
   const selectedAmenities = filters.amenities || [];
 
   const toggleAmenity = (amenity: string) => {
@@ -23,13 +25,20 @@ export function FiltersSidebar({ filters, onChange }: FiltersSidebarProps) {
   };
 
   return (
-    <aside className="filter-shell sticky top-24 h-fit space-y-5 p-5">
+    <aside className={mobile ? "filter-shell flex max-h-[85vh] flex-col space-y-5 overflow-y-auto p-5" : "filter-shell sticky top-24 h-fit space-y-5 p-5"}>
       <div className="border-b border-base-300 pb-4">
-        <div className="flex items-center gap-3">
-          <div className="icon-tile">
-            <Filter className="size-5" />
+        <div className="flex items-start justify-between gap-3">
+          <div className="flex items-center gap-3">
+            <div className="icon-tile">
+              <Filter className="size-5" />
+            </div>
+            <h3 className="text-lg font-extrabold text-[#111827]">Filters</h3>
           </div>
-          <h3 className="text-lg font-extrabold text-[#111827]">Filters</h3>
+          {mobile && onClose ? (
+            <button className="text-sm font-semibold text-[#ef3d81]" onClick={onClose} type="button">
+              Done
+            </button>
+          ) : null}
         </div>
         <p className="text-sm font-medium leading-6 text-[#64748b]">Refine by city, district, locality, budget, property type, and preference.</p>
       </div>
@@ -109,7 +118,20 @@ export function FiltersSidebar({ filters, onChange }: FiltersSidebarProps) {
         </div>
       </div>
 
-      <button className="landing-secondary-button" onClick={() => onChange({ amenities: [] })}>
+      <button
+        className="landing-secondary-button"
+        type="button"
+        onClick={() =>
+          onChange({
+            location: "",
+            minPrice: "",
+            maxPrice: "",
+            type: "",
+            gender: "",
+            amenities: []
+          })
+        }
+      >
         <RotateCcw className="size-4" />
         Reset Filters
       </button>

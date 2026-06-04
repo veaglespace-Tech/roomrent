@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
@@ -52,8 +53,14 @@ public class DataSeeder {
                                    PasswordEncoder passwordEncoder,
                                    @Value("${app.seed-demo-data:false}") boolean seedDemoData,
                                    @Value("${app.purge-legacy-demo-listings:true}") boolean purgeLegacyDemoListings,
-                                   @Value("${app.seed-real-source-records:true}") boolean seedRealSourceRecords) {
+                                   @Value("${app.seed-real-source-records:true}") boolean seedRealSourceRecords,
+                                   @Value("${app.admin.email:admin@roomrentmaharashtra.com}") String adminEmail,
+                                   @Value("${app.admin.password:Admin@12345}") String adminPassword,
+                                   @Value("${app.admin.name:RoomRent Maharashtra Admin}") String adminName,
+                                   @Value("${app.admin.phone:9876543210}") String adminPhone) {
         return args -> {
+            seedSuperAdmin(userRepository, passwordEncoder, adminEmail, adminPassword, adminName, adminPhone);
+
             if (purgeLegacyDemoListings) {
                 List<Property> legacyDemoProperties = propertyRepository.findAll().stream()
                     .filter(this::isLegacyDemoProperty)
@@ -74,6 +81,36 @@ public class DataSeeder {
         };
     }
 
+    private void seedSuperAdmin(UserRepository userRepository,
+                                PasswordEncoder passwordEncoder,
+                                String adminEmail,
+                                String adminPassword,
+                                String adminName,
+                                String adminPhone) {
+        userRepository.findByEmailIgnoreCase(adminEmail)
+            .map(user -> {
+                user.setRole(Role.ADMIN);
+                user.setSubscriptionPlan("BUSINESS");
+                user.setSubscriptionActive(true);
+                if (user.getSubscriptionStartedAt() == null) {
+                    user.setSubscriptionStartedAt(LocalDateTime.now());
+                }
+                return userRepository.save(user);
+            })
+            .orElseGet(() -> {
+                User user = new User();
+                user.setName(adminName);
+                user.setPhone(adminPhone);
+                user.setEmail(adminEmail.toLowerCase(Locale.ROOT));
+                user.setPassword(passwordEncoder.encode(adminPassword));
+                user.setRole(Role.ADMIN);
+                user.setSubscriptionPlan("BUSINESS");
+                user.setSubscriptionActive(true);
+                user.setSubscriptionStartedAt(LocalDateTime.now());
+                return userRepository.save(user);
+            });
+    }
+
     private void seedMahaReraProjectRecords(PropertyRepository propertyRepository,
                                             UserRepository userRepository,
                                             PasswordEncoder passwordEncoder) {
@@ -82,8 +119,11 @@ public class DataSeeder {
                 User user = new User();
                 user.setName("RoomRent Maharashtra Source Data");
                 user.setEmail("source-data@roomrentmaharashtra.com");
-                user.setPassword(passwordEncoder.encode("source-data-only"));
+                user.setPassword(passwordEncoder.encode("SourceData@123"));
                 user.setRole(Role.ADMIN);
+                user.setSubscriptionPlan("BUSINESS");
+                user.setSubscriptionActive(true);
+                user.setSubscriptionStartedAt(LocalDateTime.now());
                 return userRepository.save(user);
             });
 

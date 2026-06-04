@@ -46,6 +46,7 @@ const navGroups = [
 
 const navLinks = [
   { label: "Shops & Offices", href: "/properties?category=Commercial" },
+  { label: "Compare", href: "/compare" },
   { label: "For Sale", href: "/properties?listing=SALE" },
   { label: "Explore", href: "/properties", featured: true }
 ];

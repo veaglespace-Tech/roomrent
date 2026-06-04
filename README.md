@@ -37,8 +37,8 @@ MySQL defaults are configured for:
 - password: `YBpmk@2702`
 - database: `roomrent_maharashtra`
 
-## Demo Accounts
+## Seeded Admin
 
-- Admin: `admin@roomrent.in` / `admin123`
-- Owner: `owner@roomrent.in` / `owner123`
-- User: `user@roomrent.in` / `user123`
+- Superadmin: `admin@roomrentmaharashtra.com` / `Admin@12345`
+
+Public registration always creates a normal `USER`. A user must activate a listing plan before adding properties; the seeded admin has full website-owner access.

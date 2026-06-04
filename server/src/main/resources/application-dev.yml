@@ -1,0 +1,22 @@
+spring:
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/roomrent_maharashtra?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=Asia/Kolkata}
+    username: ${SPRING_DATASOURCE_USERNAME:root}
+    password: ${SPRING_DATASOURCE_PASSWORD:}
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: true
+
+app:
+  seed-demo-data: false
+  purge-legacy-demo-listings: true
+  seed-real-source-records: false
+  admin:
+    email: ${APP_ADMIN_EMAIL:admin@roomrentmaharashtra.com}
+    password: ${APP_ADMIN_PASSWORD:Admin@12345}
+    name: ${APP_ADMIN_NAME:RoomRent Maharashtra Admin}
+    phone: ${APP_ADMIN_PHONE:9876543210}

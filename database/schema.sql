@@ -8,6 +8,10 @@ CREATE TABLE IF NOT EXISTS users (
     password VARCHAR(255) NOT NULL,
     phone VARCHAR(30) NULL,
     role VARCHAR(30) NOT NULL,
+    subscription_plan VARCHAR(40) NULL,
+    subscription_active BOOLEAN NOT NULL DEFAULT FALSE,
+    subscription_started_at TIMESTAMP NULL,
+    subscription_expires_at TIMESTAMP NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -89,6 +93,17 @@ CREATE TABLE IF NOT EXISTS enquiries (
     CONSTRAINT fk_enquiry_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
 
+CREATE TABLE IF NOT EXISTS leads (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    property_id BIGINT NOT NULL,
+    user_id BIGINT NOT NULL,
+    contact_name VARCHAR(120) NOT NULL,
+    contact_phone VARCHAR(30) NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_lead_property FOREIGN KEY (property_id) REFERENCES properties (id) ON DELETE CASCADE,
+    CONSTRAINT fk_lead_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+);
+
 CREATE TABLE IF NOT EXISTS saved_properties (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     user_id BIGINT NOT NULL,
@@ -96,4 +111,33 @@ CREATE TABLE IF NOT EXISTS saved_properties (
     CONSTRAINT uq_saved UNIQUE (user_id, property_id),
     CONSTRAINT fk_saved_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
     CONSTRAINT fk_saved_property FOREIGN KEY (property_id) REFERENCES properties (id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS compare_properties (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    user_id BIGINT NOT NULL,
+    property_id BIGINT NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT uq_compare UNIQUE (user_id, property_id),
+    CONSTRAINT fk_compare_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE,
+    CONSTRAINT fk_compare_property FOREIGN KEY (property_id) REFERENCES properties (id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS saved_search_alerts (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    user_id BIGINT NOT NULL,
+    label VARCHAR(180) NOT NULL,
+    filters_json TEXT NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_saved_search_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS password_reset_tokens (
+    id BIGINT PRIMARY KEY AUTO_INCREMENT,
+    user_id BIGINT NOT NULL,
+    token VARCHAR(120) NOT NULL UNIQUE,
+    expires_at TIMESTAMP NOT NULL,
+    used_at TIMESTAMP NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_password_reset_user FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );

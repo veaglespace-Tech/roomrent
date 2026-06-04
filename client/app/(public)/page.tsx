@@ -2,34 +2,37 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { FormEvent, useState } from "react";
+import { useRouter } from "next/navigation";
 import { ArrowRight, BedDouble, Building2, Camera, CheckCircle2, Home, KeyRound, MapPin, Search, ShieldCheck, Store, Users } from "lucide-react";
 
 const searchTypes = ["Any type", "Houses", "Flats", "Boys PG / Hostel", "Girls PG / Hostel", "Office / Shops"];
+const searchTypeValues = ["", "PG", "ROOM", "FLAT", "HOSTEL"] as const;
 
 const imageCards = [
   {
     title: "City apartments",
     label: "Mumbai | Pune",
     image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=1000&q=80",
-    href: "/properties?type=FLAT"
+    href: "/search?type=FLAT"
   },
   {
     title: "Private rooms",
     label: "Single rooms",
     image: "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1000&q=80",
-    href: "/properties?type=ROOM"
+    href: "/search?type=ROOM"
   },
   {
     title: "PG and hostels",
     label: "Students | Working",
     image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1000&q=80",
-    href: "/properties?type=PG"
+    href: "/search?type=PG"
   },
   {
     title: "Work spaces",
     label: "Shops | Offices",
     image: "https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1000&q=80",
-    href: "/properties?category=Commercial"
+    href: "/search"
   }
 ];
 
@@ -66,13 +69,13 @@ const actionCards = [
     title: "Rent out a room",
     description: "List a spare room, PG bed, hostel, flat or commercial space with photos, price and location details.",
     href: "/register",
-    action: "Post Free Ad",
+    action: "Choose Listing Plan",
     icon: Home
   },
   {
     title: "Find a room",
     description: "Search rentals by city, locality, budget, sharing type and property category from one focused page.",
-    href: "/properties",
+    href: "/search",
     action: "Explore Rentals",
     icon: BedDouble
   }
@@ -107,28 +110,86 @@ function SectionHeader({ eyebrow, title, copy }: { eyebrow: string; title: strin
 }
 
 function HeroSearch() {
+  const router = useRouter();
+  const [location, setLocation] = useState("");
+  const [area, setArea] = useState("");
+  const [budget, setBudget] = useState("");
+  const [type, setType] = useState<(typeof searchTypeValues)[number]>("");
+  const [moveInDate, setMoveInDate] = useState("");
+
+  const handleSubmit = (event: FormEvent) => {
+    event.preventDefault();
+    const params = new URLSearchParams();
+    if (location) params.set("location", location);
+    if (area) params.set("area", area);
+    if (budget) params.set("maxPrice", budget);
+    if (type) params.set("type", type);
+    if (moveInDate) params.set("availableFromDate", moveInDate);
+    router.push(`/search?${params.toString()}`);
+  };
+
   return (
     <div className="mx-auto mt-8 max-w-4xl">
       <div className="flex flex-wrap justify-center gap-2">
         {searchTypes.map((type) => (
-          <Link key={type} href="/properties" className="rounded-full border border-[#e2e8f0] bg-white/80 px-4 py-2 text-xs font-bold text-[#64748b] transition hover:border-[#ff385c]/30 hover:text-[#ff385c]">
+          <Link key={type} href="/search" className="rounded-full border border-[#e2e8f0] bg-white/80 px-4 py-2 text-xs font-bold text-[#64748b] transition hover:border-[#ff385c]/30 hover:text-[#ff385c]">
             {type}
           </Link>
         ))}
       </div>
-      <form className="landing-search mx-auto mt-4">
-        <label className="flex min-h-14 flex-1 items-center gap-3 px-5">
+      <form onSubmit={handleSubmit} className="mx-auto mt-4 grid gap-3 rounded-[28px] border border-base-300/70 bg-white/92 p-3 shadow-[0_28px_70px_-48px_rgba(15,23,42,0.5)] md:grid-cols-[1.3fr_1fr_0.9fr_0.8fr_auto]">
+        <label className="flex min-h-14 items-center gap-3 rounded-[18px] bg-base-200/70 px-4">
           <Search className="size-5 text-[#ff385c]" />
-          <input className="w-full bg-transparent text-sm font-medium text-[#111827] outline-none placeholder:text-[#94a3b8]" placeholder="Search by city, area or property type" />
+          <input
+            value={location}
+            onChange={(event) => setLocation(event.target.value)}
+            className="w-full bg-transparent text-sm font-medium text-[#111827] outline-none placeholder:text-[#94a3b8]"
+            placeholder="City or area"
+          />
         </label>
-        <Link href="/properties" className="landing-primary-button">
+        <label className="flex min-h-14 items-center gap-3 rounded-[18px] bg-base-200/70 px-4">
+          <MapPin className="size-5 text-[#0f9f8f]" />
+          <input
+            value={area}
+            onChange={(event) => setArea(event.target.value)}
+            className="w-full bg-transparent text-sm font-medium text-[#111827] outline-none placeholder:text-[#94a3b8]"
+            placeholder="Locality"
+          />
+        </label>
+        <label className="flex min-h-14 items-center gap-3 rounded-[18px] bg-base-200/70 px-4">
+          <Home className="size-5 text-[#ff7a35]" />
+          <input
+            value={budget}
+            onChange={(event) => setBudget(event.target.value.replace(/\D/g, ""))}
+            className="w-full bg-transparent text-sm font-medium text-[#111827] outline-none placeholder:text-[#94a3b8]"
+            placeholder="Max budget"
+            inputMode="numeric"
+          />
+        </label>
+        <select value={type} onChange={(event) => setType(event.target.value as (typeof searchTypeValues)[number])} className="form-select min-h-14 rounded-[18px] border-base-300/70 bg-base-200/70 px-4 text-sm font-medium">
+          <option value="">Any type</option>
+          <option value="PG">PG</option>
+          <option value="ROOM">Room</option>
+          <option value="FLAT">Flat</option>
+          <option value="HOSTEL">Hostel</option>
+        </select>
+        <label className="flex min-h-14 items-center gap-3 rounded-[18px] bg-base-200/70 px-4">
+          <span className="whitespace-nowrap text-xs font-bold uppercase tracking-[0.14em] text-[#64748b]">Move-in</span>
+          <input
+            type="date"
+            value={moveInDate}
+            onChange={(event) => setMoveInDate(event.target.value)}
+            className="w-full bg-transparent text-sm font-medium text-[#111827] outline-none"
+          />
+        </label>
+        <button type="submit" className="landing-primary-button md:justify-self-end">
           Search
           <ArrowRight className="size-4" />
-        </Link>
+        </button>
       </form>
       <div className="mt-4 flex flex-wrap items-center justify-center gap-3 text-sm font-semibold text-[#64748b]">
         <span>Owner-published listings appear live after verification.</span>
-        <Link href="/properties" className="text-[#ff385c] hover:underline">Advanced Search</Link>
+        <Link href="/search" className="text-[#ff385c] hover:underline">Advanced Search</Link>
       </div>
     </div>
   );
@@ -293,8 +354,8 @@ export default function HomePage() {
           <div className="grid gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:items-center">
             <div>
               <p className="landing-eyebrow">Post property in just 2 steps</p>
-              <h2 className="mt-3 text-3xl font-bold leading-tight text-[#111827] md:text-4xl">It is free to advertise your rental space.</h2>
-              <p className="mt-4 text-sm font-medium leading-7 text-[#64748b]">Owners can publish room, PG, hostel, flat and shop details with pricing, photos and location data.</p>
+              <h2 className="mt-3 text-3xl font-bold leading-tight text-[#111827] md:text-4xl">Publish only after choosing a listing plan.</h2>
+              <p className="mt-4 text-sm font-medium leading-7 text-[#64748b]">Users can browse freely; property publishers activate a plan before adding room, PG, hostel, flat or shop details.</p>
               <Link href="/register" className="landing-primary-button mt-7 w-fit">
                 Get Started
                 <CheckCircle2 className="size-4" />
@@ -321,7 +382,7 @@ export default function HomePage() {
         <SectionHeader
           eyebrow="Trusted renters"
           title="What our clients say"
-          copy="Demo reviews from owners and tenants show how the platform helps both sides move faster with less clutter."
+          copy="Owner and tenant feedback shows how the platform helps both sides move faster with less clutter."
         />
         <div className="mt-8 grid gap-5 md:grid-cols-3">
           {testimonials.map((item) => (

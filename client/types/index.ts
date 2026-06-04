@@ -1,4 +1,5 @@
 export type Role = "USER" | "OWNER" | "ADMIN";
+export type SubscriptionPlan = "STARTER" | "PRO" | "BUSINESS";
 export type PropertyType = "PG" | "ROOM" | "FLAT" | "HOSTEL";
 export type GenderPreference = "BOYS" | "GIRLS" | "ANY";
 export type ListedByType = "OWNER" | "BROKER" | "MANAGER";
@@ -12,6 +13,9 @@ export interface AuthUser {
   email: string;
   role: Role;
   token: string;
+  subscriptionPlan?: SubscriptionPlan | "";
+  subscriptionActive: boolean;
+  subscriptionExpiresAt?: string | null;
 }
 
 export interface OwnerSummary {
@@ -64,9 +68,18 @@ export interface Enquiry {
   createdAt: string;
 }
 
+export interface Lead {
+  id: number;
+  propertyId: number;
+  propertyTitle: string;
+  contactName: string;
+  contactPhone: string;
+  createdAt: string;
+}
+
 export interface AdminDashboard {
   totalUsers: number;
-  totalOwners: number;
+  totalSubscribers: number;
   totalProperties: number;
   totalEnquiries: number;
 }
@@ -77,6 +90,10 @@ export interface UserProfile {
   phone?: string | null;
   email: string;
   role: Role;
+  isSuperAdmin: boolean;
+  subscriptionPlan?: SubscriptionPlan | "";
+  subscriptionActive: boolean;
+  subscriptionExpiresAt?: string | null;
   createdAt: string;
 }
 

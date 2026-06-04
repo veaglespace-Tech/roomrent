@@ -8,7 +8,8 @@ const api = axios.create({
 
 api.interceptors.request.use((config) => {
   if (typeof window !== "undefined") {
-    const token = localStorage.getItem("roomrent_token");
+    const isAuthRequest = config.url?.includes("/auth/");
+    const token = isAuthRequest ? null : localStorage.getItem("roomrent_token");
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -17,4 +18,3 @@ api.interceptors.request.use((config) => {
 });
 
 export default api;
-

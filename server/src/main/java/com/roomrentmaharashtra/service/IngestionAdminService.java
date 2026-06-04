@@ -72,9 +72,9 @@ public class IngestionAdminService {
         run.setErrorCount(0);
         run.setNotes(request.notes());
         IngestionRun saved = ingestionRunRepository.save(run);
-        ingestionWorkerService.enqueue(saved.getId());
-        dedupeJobService.scheduleForRun(saved.getId());
-        return toRunResponse(saved);
+        IngestionRun processed = ingestionWorkerService.enqueue(saved.getId());
+        IngestionRun deduped = dedupeJobService.scheduleForRun(processed.getId());
+        return toRunResponse(deduped);
     }
 
     private ListingSourceResponse toSourceResponse(ListingSource source) {
