@@ -11,6 +11,10 @@ export interface CompareToggleResponse {
 let cachedIds: number[] | null = null;
 let pendingLoad: Promise<number[]> | null = null;
 
+function hasAuthToken() {
+  return typeof window !== "undefined" && Boolean(window.localStorage.getItem("roomrent_token"));
+}
+
 function emitCompareUpdated() {
   if (typeof window !== "undefined") {
     window.dispatchEvent(new Event("roomrent-compare-updated"));
@@ -18,6 +22,11 @@ function emitCompareUpdated() {
 }
 
 async function loadCompareIds(force = false) {
+  if (!hasAuthToken()) {
+    cachedIds = [];
+    return cachedIds;
+  }
+
   if (!force && cachedIds) {
     return cachedIds;
   }
@@ -53,6 +62,9 @@ export async function isCompared(propertyId: number) {
 }
 
 export async function toggleCompared(propertyId: number) {
+  if (!hasAuthToken()) {
+    throw new Error("Login required to compare properties.");
+  }
   const { data } = await api.post<CompareToggleResponse>(`/compare/${propertyId}`);
   cachedIds = await loadCompareIds(true);
   emitCompareUpdated();
@@ -60,12 +72,19 @@ export async function toggleCompared(propertyId: number) {
 }
 
 export async function removeCompared(propertyId: number) {
+  if (!hasAuthToken()) {
+    return;
+  }
   await api.delete(`/compare/${propertyId}`);
   cachedIds = await loadCompareIds(true);
   emitCompareUpdated();
 }
 
 export async function clearCompareIds() {
+  if (!hasAuthToken()) {
+    cachedIds = [];
+    return;
+  }
   await api.delete("/compare");
   cachedIds = [];
   emitCompareUpdated();
