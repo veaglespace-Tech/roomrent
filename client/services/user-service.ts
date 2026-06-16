@@ -2,6 +2,9 @@ import api from "@/services/api";
 import { AdminDashboard, Enquiry, IngestionRun, Lead, ListingSource, Property, SubscriptionPlan, UserProfile } from "@/types";
 
 export const getProfile = async () => {
+  if (typeof window !== "undefined" && !window.localStorage.getItem("roomrent_token")) {
+    throw new Error("Missing auth token");
+  }
   const { data } = await api.get<UserProfile>("/users/me");
   return data;
 };

@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useEffect, useState } from "react";
+import { FormEvent, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { Eye, EyeOff, LogIn, Mail, Shield } from "lucide-react";
@@ -20,6 +20,10 @@ export default function LoginPage() {
   const [registered, setRegistered] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [touched, setTouched] = useState({ email: false, password: false });
+
+  const validation = useMemo(() => loginSchema.safeParse({ email, password }), [email, password]);
+  const fieldErrors = validation.success ? {} : validation.error.flatten().fieldErrors;
 
   useEffect(() => {
     setRegistered(new URLSearchParams(window.location.search).get("registered") === "1");
@@ -27,22 +31,22 @@ export default function LoginPage() {
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
-    const parsed = loginSchema.safeParse({ email, password });
-    if (!parsed.success) {
-      setError(firstZodError(parsed.error));
+    setTouched({ email: true, password: true });
+    if (!validation.success) {
+      setError(firstZodError(validation.error));
       return;
     }
 
     try {
       setLoading(true);
       setError("");
-      const data = await loginUser(parsed.data);
+      const data = await loginUser(validation.data);
       localStorage.setItem("roomrent_token", data.token);
       localStorage.setItem("roomrent_user", JSON.stringify(data));
       dispatch(setCredentials(data));
-      router.push("/dashboard/profile");
-    } catch (error) {
-      setError(getApiErrorMessage(error, "Invalid email or password."));
+      router.push("/dashboard");
+    } catch (loginError) {
+      setError(getApiErrorMessage(loginError, "Invalid email or password."));
     } finally {
       setLoading(false);
     }
@@ -50,42 +54,46 @@ export default function LoginPage() {
 
   return (
     <section className="page-shell flex min-h-[calc(100vh-220px)] items-center py-10">
-      <AuthCard title="Login" description="Use your account to access saved properties, owner tools, enquiries, and admin controls.">
-        <form onSubmit={handleSubmit} className="space-y-5">
+      <AuthCard title="Log in" description="Use your account to access saved properties, owner tools, enquiries, and admin controls.">
+        <form onSubmit={handleSubmit} className="space-y-5" noValidate>
           {registered ? (
-            <p className="rounded-[16px] border border-emerald-400/20 bg-emerald-400/10 px-4 py-3 text-sm font-semibold text-emerald-300">
-              Registration complete. Check your email for the welcome message, then login to open your dashboard.
+            <p className="border border-[rgba(83,211,138,0.35)] bg-[rgba(83,211,138,0.08)] px-4 py-3 text-sm font-medium text-[var(--rf-success)]">
+              Registration complete. Sign in to continue.
             </p>
           ) : null}
-          <label className="auth-field">
+          <label className="auth-field block">
             <Mail className="auth-field-icon" />
-            <input className="form-input auth-field-control" type="email" autoComplete="email" placeholder="Email address" value={email} onChange={(e) => setEmail(e.target.value)} />
+            <input className="form-input auth-field-control" type="email" autoComplete="email" placeholder="Email address" value={email} onChange={(e) => setEmail(e.target.value)} onBlur={() => setTouched((current) => ({ ...current, email: true }))} aria-invalid={touched.email && Boolean(fieldErrors.email?.[0])} />
+            {touched.email && fieldErrors.email?.[0] ? <p className="mt-1 text-xs font-semibold text-error">{fieldErrors.email[0]}</p> : null}
           </label>
-          <label className="auth-field">
+          <label className="auth-field block">
             <Shield className="auth-field-icon" />
             <input
-              className="form-input auth-field-control pr-12"
+              className="form-input auth-field-control"
               type={showPassword ? "text" : "password"}
               autoComplete="current-password"
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
+              onBlur={() => setTouched((current) => ({ ...current, password: true }))}
+              aria-invalid={touched.password && Boolean(fieldErrors.password?.[0])}
             />
             <button
               type="button"
               onClick={() => setShowPassword((current) => !current)}
-              className="absolute right-4 top-1/2 -translate-y-1/2 text-base-content/50 transition hover:text-[#0f172a]"
+              className="absolute right-4 top-1/2 -translate-y-1/2 text-[var(--rf-muted)] transition hover:text-[var(--rf-cyan)]"
               aria-label={showPassword ? "Hide password" : "Show password"}
             >
               {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
-            </button>
+              </button>
+            {touched.password && fieldErrors.password?.[0] ? <p className="mt-1 text-xs font-semibold text-error">{fieldErrors.password[0]}</p> : null}
           </label>
           {error ? <p className="text-sm text-error">{error}</p> : null}
           <div className="flex items-center justify-between gap-3 text-sm">
-            <Link href="/forgot-password" className="font-semibold text-[#0f9f8f] hover:underline">
+            <Link href="/forgot-password" className="font-medium text-[var(--rf-cyan)] hover:underline">
               Forgot password?
             </Link>
-            <Link href="/register" className="font-semibold text-[#ef3d81] hover:underline">
+            <Link href="/register" className="font-medium text-[var(--rf-cyan)] hover:underline">
               Create account
             </Link>
           </div>

@@ -1,296 +1,87 @@
-"use client";
-
-import Image from "next/image";
 import Link from "next/link";
-import { FormEvent, useState } from "react";
-import { useRouter } from "next/navigation";
-import { ArrowRight, BedDouble, Building2, Camera, CheckCircle2, Home, KeyRound, MapPin, Search, ShieldCheck, Store, Users } from "lucide-react";
+import { ArrowRight, BadgeCheck, CalendarDays, ChartColumn, ChevronRight, Clock3, CreditCard, Home, MapPin, MessageSquare, Search, ShieldCheck, Sparkles } from "lucide-react";
 
-const searchTypes = ["Any type", "Houses", "Flats", "Boys PG / Hostel", "Girls PG / Hostel", "Office / Shops"];
-const searchTypeValues = ["", "PG", "ROOM", "FLAT", "HOSTEL"] as const;
+const listingCategories = [
+  { title: "Rooms", href: "/properties?type=ROOM", copy: "Single room and shared room inventory." },
+  { title: "Flats", href: "/properties?type=FLAT", copy: "1, 2 and 3 BHK rental listings." },
+  { title: "PG / Hostel", href: "/properties?type=PG", copy: "Girls and boys PG inventory." },
+  { title: "Office & Shops", href: "/contact", copy: "Commercial requirements and local support." }
+];
 
-const imageCards = [
+const serviceCards = [
+  { icon: Search, title: "Fast search", copy: "Search by locality, budget, gender preference, furnishing, and availability." },
+  { icon: MessageSquare, title: "Post requirement", copy: "Capture what you need and direct owners to the right listing request." },
+  { icon: ShieldCheck, title: "Verified listings", copy: "Keep the workflow focused on direct owners, active inventory, and clean records." },
+  { icon: ChartColumn, title: "Compare and save", copy: "Save alerts, compare listings, and keep shortlist actions together." }
+];
+
+const cityCards = [
+  { city: "Mumbai", detail: "High density inventory, premium rentals, and quick compare flows." },
+  { city: "Pune", detail: "IT-driven rentals, PGs, and family flats with strong search demand." },
+  { city: "Nagpur", detail: "Commercial and residential listings in a compact, scan-friendly layout." },
+  { city: "Nashik", detail: "Residential and shared-room searches with clean locality pages." }
+];
+
+const plans = [
   {
-    title: "City apartments",
-    label: "Mumbai | Pune",
-    image: "https://images.unsplash.com/photo-1502672260266-1c1ef2d93688?auto=format&fit=crop&w=1000&q=80",
-    href: "/search?type=FLAT"
+    name: "Starter",
+    price: "Free",
+    copy: "For individual owners who want clean listings and rent tracking.",
+    items: ["Up to 3 properties", "Reminder support", "Basic reporting"]
   },
   {
-    title: "Private rooms",
-    label: "Single rooms",
-    image: "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?auto=format&fit=crop&w=1000&q=80",
-    href: "/search?type=ROOM"
-  },
-  {
-    title: "PG and hostels",
-    label: "Students | Working",
-    image: "https://images.unsplash.com/photo-1522708323590-d24dbb6b0267?auto=format&fit=crop&w=1000&q=80",
-    href: "/search?type=PG"
-  },
-  {
-    title: "Work spaces",
-    label: "Shops | Offices",
-    image: "https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&w=1000&q=80",
-    href: "/search"
+    name: "Pro",
+    price: "Custom",
+    copy: "For teams and portfolio owners who need scale and tighter control.",
+    items: ["Unlimited properties", "Advanced analytics", "Team workflows"]
   }
 ];
 
-const postSteps = [
-  { title: "Create your account", description: "Register as an owner, seeker or room partner using your phone number and email.", icon: Users },
-  { title: "Add property details", description: "Add rent, deposit, photos, amenities, city, district and occupancy details.", icon: Camera }
+const metrics = [
+  { label: "Active listings", value: "2,400+" },
+  { label: "Covered cities", value: "25+" },
+  { label: "Saved searches", value: "Fast alerts" }
 ];
 
-const needCards = [
-  {
-    title: "Are you alone and looking to share your room?",
-    description: "Create a room partner requirement and connect with people who want to share a flat, PG or room.",
-    href: "/register",
-    action: "Find a roommate",
-    icon: Users
-  },
-  {
-    title: "Landlords can contact tenants directly",
-    description: "Owners can find seekers, respond to genuine enquiries and keep the rental process direct.",
-    href: "/register",
-    action: "Find tenants",
-    icon: Store
-  }
-];
-
-const featureCards = [
-  { title: "Verified spaces", description: "Cleaner listings with rent, deposit, furnishing and location details visible before you call.", icon: ShieldCheck },
-  { title: "City-first search", description: "Move quickly between districts, localities, budgets and room categories across Maharashtra.", icon: MapPin },
-  { title: "Direct owner flow", description: "Tenants and owners can connect without a crowded, confusing discovery experience.", icon: KeyRound }
-];
-
-const actionCards = [
-  {
-    title: "Rent out a room",
-    description: "List a spare room, PG bed, hostel, flat or commercial space with photos, price and location details.",
-    href: "/register",
-    action: "Choose Listing Plan",
-    icon: Home
-  },
-  {
-    title: "Find a room",
-    description: "Search rentals by city, locality, budget, sharing type and property category from one focused page.",
-    href: "/search",
-    action: "Explore Rentals",
-    icon: BedDouble
-  }
-];
-
-const testimonials = [
-  {
-    name: "Suresh Patil",
-    role: "Property Owner",
-    quote: "I listed my room and started receiving genuine tenant calls quickly. The clean layout made it easy to show rent, photos and location."
-  },
-  {
-    name: "Shiv Kumar",
-    role: "Tenant",
-    quote: "Finding a room felt simple because I could compare the area, budget and room type without opening too many confusing pages."
-  },
-  {
-    name: "Babita Choudhary",
-    role: "PG Owner",
-    quote: "The direct owner-to-tenant flow is useful for PG owners. It keeps enquiries focused and saves time during admissions season."
-  }
-];
-
-function SectionHeader({ eyebrow, title, copy }: { eyebrow: string; title: string; copy: string }) {
-  return (
-    <div className="mx-auto max-w-3xl text-center">
-      <p className="landing-eyebrow">{eyebrow}</p>
-      <h2 className="mt-3 text-3xl font-bold leading-tight text-[#111827] md:text-4xl">{title}</h2>
-      <p className="mt-4 text-sm font-medium leading-7 text-[#64748b] md:text-base">{copy}</p>
-    </div>
-  );
+function SectionLabel({ children }: { children: string }) {
+  return <div className="landing-eyebrow w-fit">{children}</div>;
 }
 
-function HeroSearch() {
-  const router = useRouter();
-  const [location, setLocation] = useState("");
-  const [area, setArea] = useState("");
-  const [budget, setBudget] = useState("");
-  const [type, setType] = useState<(typeof searchTypeValues)[number]>("");
-  const [moveInDate, setMoveInDate] = useState("");
-
-  const handleSubmit = (event: FormEvent) => {
-    event.preventDefault();
-    const params = new URLSearchParams();
-    if (location) params.set("location", location);
-    if (area) params.set("area", area);
-    if (budget) params.set("maxPrice", budget);
-    if (type) params.set("type", type);
-    if (moveInDate) params.set("availableFromDate", moveInDate);
-    router.push(`/search?${params.toString()}`);
-  };
-
+function HeroMockup() {
   return (
-    <div className="mx-auto mt-8 max-w-4xl">
-      <div className="flex flex-wrap justify-center gap-2">
-        {searchTypes.map((type) => (
-          <Link key={type} href="/search" className="rounded-full border border-[#e2e8f0] bg-white/80 px-4 py-2 text-xs font-bold text-[#64748b] transition hover:border-[#ff385c]/30 hover:text-[#ff385c]">
-            {type}
-          </Link>
-        ))}
-      </div>
-      <form onSubmit={handleSubmit} className="mx-auto mt-4 grid gap-3 rounded-[28px] border border-base-300/70 bg-white/92 p-3 shadow-[0_28px_70px_-48px_rgba(15,23,42,0.5)] md:grid-cols-[1.3fr_1fr_0.9fr_0.8fr_auto]">
-        <label className="flex min-h-14 items-center gap-3 rounded-[18px] bg-base-200/70 px-4">
-          <Search className="size-5 text-[#ff385c]" />
-          <input
-            value={location}
-            onChange={(event) => setLocation(event.target.value)}
-            className="w-full bg-transparent text-sm font-medium text-[#111827] outline-none placeholder:text-[#94a3b8]"
-            placeholder="City or area"
-          />
-        </label>
-        <label className="flex min-h-14 items-center gap-3 rounded-[18px] bg-base-200/70 px-4">
-          <MapPin className="size-5 text-[#0f9f8f]" />
-          <input
-            value={area}
-            onChange={(event) => setArea(event.target.value)}
-            className="w-full bg-transparent text-sm font-medium text-[#111827] outline-none placeholder:text-[#94a3b8]"
-            placeholder="Locality"
-          />
-        </label>
-        <label className="flex min-h-14 items-center gap-3 rounded-[18px] bg-base-200/70 px-4">
-          <Home className="size-5 text-[#ff7a35]" />
-          <input
-            value={budget}
-            onChange={(event) => setBudget(event.target.value.replace(/\D/g, ""))}
-            className="w-full bg-transparent text-sm font-medium text-[#111827] outline-none placeholder:text-[#94a3b8]"
-            placeholder="Max budget"
-            inputMode="numeric"
-          />
-        </label>
-        <select value={type} onChange={(event) => setType(event.target.value as (typeof searchTypeValues)[number])} className="form-select min-h-14 rounded-[18px] border-base-300/70 bg-base-200/70 px-4 text-sm font-medium">
-          <option value="">Any type</option>
-          <option value="PG">PG</option>
-          <option value="ROOM">Room</option>
-          <option value="FLAT">Flat</option>
-          <option value="HOSTEL">Hostel</option>
-        </select>
-        <label className="flex min-h-14 items-center gap-3 rounded-[18px] bg-base-200/70 px-4">
-          <span className="whitespace-nowrap text-xs font-bold uppercase tracking-[0.14em] text-[#64748b]">Move-in</span>
-          <input
-            type="date"
-            value={moveInDate}
-            onChange={(event) => setMoveInDate(event.target.value)}
-            className="w-full bg-transparent text-sm font-medium text-[#111827] outline-none"
-          />
-        </label>
-        <button type="submit" className="landing-primary-button md:justify-self-end">
-          Search
-          <ArrowRight className="size-4" />
-        </button>
-      </form>
-      <div className="mt-4 flex flex-wrap items-center justify-center gap-3 text-sm font-semibold text-[#64748b]">
-        <span>Owner-published listings appear live after verification.</span>
-        <Link href="/search" className="text-[#ff385c] hover:underline">Advanced Search</Link>
-      </div>
-    </div>
-  );
-}
-
-function ImageGridCard({ card }: { card: (typeof imageCards)[number] }) {
-  return (
-    <Link href={card.href} className="landing-card group p-2">
-      <div className="relative aspect-[4/3] overflow-hidden rounded-[22px]">
-        <Image src={card.image} alt={card.title} fill className="object-cover transition duration-700 group-hover:scale-105" />
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(15,23,42,0.02)_0%,rgba(15,23,42,0.08)_44%,rgba(15,23,42,0.74)_100%)]" />
-        <div className="absolute inset-x-4 bottom-4">
-          <p className="text-xs font-bold uppercase tracking-[0.18em] text-white/70">{card.label}</p>
-          <h3 className="mt-1 text-xl font-bold text-white">{card.title}</h3>
+    <div className="surface-card overflow-hidden">
+      <div className="border-b border-[rgba(28,183,200,0.18)] px-5 py-4">
+        <div className="flex items-center justify-between gap-4">
+          <div>
+            <p className="text-xs uppercase tracking-[0.2em] text-[var(--rf-cyan)]">Live workspace</p>
+            <p className="mt-2 text-lg font-bold">Rental operations dashboard</p>
+          </div>
+          <span className="pill-badge px-3 py-1 text-xs">8 active listings</span>
         </div>
       </div>
-    </Link>
-  );
-}
-
-function FeatureCard({ card }: { card: (typeof featureCards)[number] }) {
-  const Icon = card.icon;
-
-  return (
-    <div className="landing-card p-6">
-      <div className="landing-icon">
-        <Icon className="size-5" />
-      </div>
-      <h3 className="mt-5 text-xl font-bold text-[#111827]">{card.title}</h3>
-      <p className="mt-3 text-sm font-medium leading-7 text-[#64748b]">{card.description}</p>
-    </div>
-  );
-}
-
-function ActionCard({ card }: { card: (typeof actionCards)[number] }) {
-  const Icon = card.icon;
-
-  return (
-    <Link href={card.href} className="landing-card group flex min-h-[280px] flex-col justify-between p-7">
-      <div>
-        <div className="landing-icon">
-          <Icon className="size-5" />
+      <div className="grid gap-4 p-5 md:grid-cols-2">
+        <div className="surface-card p-4">
+          <p className="text-xs uppercase tracking-[0.16em] text-[var(--rf-muted)]">Monthly rent</p>
+          <p className="mt-3 text-3xl font-bold text-[var(--rf-cyan)]">₹1,20,000</p>
+          <p className="mt-2 text-sm text-[var(--rf-muted)]">Collected across current active properties.</p>
         </div>
-        <h3 className="mt-6 text-3xl font-bold leading-tight text-[#111827]">{card.title}</h3>
-        <p className="mt-4 text-sm font-medium leading-7 text-[#64748b]">{card.description}</p>
-      </div>
-      <div className="mt-8 inline-flex items-center gap-2 text-sm font-bold text-[#ff385c]">
-        {card.action}
-        <ArrowRight className="size-4 transition group-hover:translate-x-1" />
-      </div>
-    </Link>
-  );
-}
-
-function StepCard({ step, index }: { step: (typeof postSteps)[number]; index: number }) {
-  const Icon = step.icon;
-
-  return (
-    <div className="landing-card p-6">
-      <div className="flex items-center justify-between gap-4">
-        <div className="landing-icon">
-          <Icon className="size-5" />
+        <div className="surface-card p-4">
+          <p className="text-xs uppercase tracking-[0.16em] text-[var(--rf-muted)]">Pending alerts</p>
+          <p className="mt-3 text-3xl font-bold text-[var(--rf-cyan)]">12</p>
+          <p className="mt-2 text-sm text-[var(--rf-muted)]">Payments, renewals, and maintenance follow-ups.</p>
         </div>
-        <span className="text-4xl font-extrabold text-[#ff385c]/20">{index + 1}</span>
-      </div>
-      <h3 className="mt-6 text-2xl font-bold text-[#111827]">{step.title}</h3>
-      <p className="mt-3 text-sm font-medium leading-7 text-[#64748b]">{step.description}</p>
-    </div>
-  );
-}
-
-function NeedCard({ card }: { card: (typeof needCards)[number] }) {
-  const Icon = card.icon;
-
-  return (
-    <Link href={card.href} className="landing-card group flex min-h-[220px] flex-col justify-between p-6">
-      <div>
-        <div className="landing-icon">
-          <Icon className="size-5" />
+        <div className="surface-card p-4 md:col-span-2">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <p className="text-xs uppercase tracking-[0.16em] text-[var(--rf-muted)]">Recent activity</p>
+              <p className="mt-2 text-sm text-[var(--rf-muted)]">Tenant payment received, new property enquiry, reminder sent.</p>
+            </div>
+            <Link href="/properties" className="inline-flex items-center gap-2 text-sm font-semibold text-[var(--rf-cyan)]">
+              Open listings
+              <ChevronRight className="size-4" />
+            </Link>
+          </div>
         </div>
-        <h3 className="mt-5 text-2xl font-bold leading-tight text-[#111827]">{card.title}</h3>
-        <p className="mt-3 text-sm font-medium leading-7 text-[#64748b]">{card.description}</p>
-      </div>
-      <div className="mt-6 inline-flex items-center gap-2 text-sm font-bold text-[#ff385c]">
-        {card.action}
-        <ArrowRight className="size-4 transition group-hover:translate-x-1" />
-      </div>
-    </Link>
-  );
-}
-
-function TestimonialCard({ item }: { item: (typeof testimonials)[number] }) {
-  return (
-    <div className="landing-card flex min-h-[250px] flex-col justify-between p-6">
-      <div>
-        <p className="text-5xl font-extrabold leading-none text-[#ff385c]/25">"</p>
-        <p className="mt-2 text-sm font-medium leading-7 text-[#475569]">{item.quote}</p>
-      </div>
-      <div className="mt-6 border-t border-[#e2e8f0] pt-5">
-        <p className="font-bold text-[#111827]">{item.name}</p>
-        <p className="mt-1 text-sm font-semibold text-[#94a3b8]">{item.role}</p>
       </div>
     </div>
   );
@@ -298,112 +89,160 @@ function TestimonialCard({ item }: { item: (typeof testimonials)[number] }) {
 
 export default function HomePage() {
   return (
-    <div className="page-shell pb-16 pt-7">
-      <section className="landing-hero">
-        <div className="mx-auto max-w-4xl text-center">
-          <div className="landing-pill mx-auto">
-            <Building2 className="size-4" />
-            RoomRent Maharashtra
-          </div>
-          <h1 className="mt-7 text-4xl font-extrabold leading-tight text-[#111827] md:text-6xl">
-            Find rooms, PGs and flats with a cleaner rental experience.
-          </h1>
-          <p className="mx-auto mt-5 max-w-2xl text-base font-medium leading-8 text-[#64748b] md:text-lg">
-            Search modern rental spaces across Maharashtra, compare budgets quickly, and connect with owners from a focused Airbnb-inspired interface.
-          </p>
-          <HeroSearch />
-        </div>
-      </section>
-
-      <section className="mt-10">
-        <SectionHeader
-          eyebrow="What are you looking for?"
-          title="Choose the rental category that fits your need"
-          copy="Browse houses, flats, PGs, hostels and commercial spaces with the same clean card experience."
-        />
-        <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-          {imageCards.map((card) => (
-            <ImageGridCard key={card.title} card={card} />
-          ))}
-        </div>
-      </section>
-
-      <section className="mt-14">
-        <SectionHeader
-          eyebrow="Built for fast decisions"
-          title="One consistent system for every rental type"
-          copy="Every section uses the same card spacing, radius, border, shadow and hover treatment so the page feels polished instead of mixed."
-        />
-        <div className="mt-8 grid gap-5 md:grid-cols-3">
-          {featureCards.map((card) => (
-            <FeatureCard key={card.title} card={card} />
-          ))}
-        </div>
-      </section>
-
-      <section className="mt-14">
-        <div className="grid gap-5 lg:grid-cols-2">
-          {actionCards.map((card) => (
-            <ActionCard key={card.title} card={card} />
-          ))}
-        </div>
-      </section>
-
-      <section className="mt-14">
-        <div className="landing-card p-6 md:p-8">
-          <div className="grid gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:items-center">
+    <div className="page-shell py-8 md:py-10">
+      <section className="landing-hero reveal-up">
+        <div className="grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-center">
+          <div className="space-y-6">
+            <SectionLabel>Real estate rent tracking system</SectionLabel>
             <div>
-              <p className="landing-eyebrow">Post property in just 2 steps</p>
-              <h2 className="mt-3 text-3xl font-bold leading-tight text-[#111827] md:text-4xl">Publish only after choosing a listing plan.</h2>
-              <p className="mt-4 text-sm font-medium leading-7 text-[#64748b]">Users can browse freely; property publishers activate a plan before adding room, PG, hostel, flat or shop details.</p>
-              <Link href="/register" className="landing-primary-button mt-7 w-fit">
-                Get Started
-                <CheckCircle2 className="size-4" />
+              <p className="text-sm uppercase tracking-[0.24em] text-[var(--rf-cyan)]">RentFlow</p>
+              <h1 className="mt-3 max-w-xl text-5xl font-bold leading-tight md:text-7xl">A professional rental platform for owners and tenants.</h1>
+            </div>
+            <p className="max-w-xl text-sm leading-7 text-[var(--rf-muted)] md:text-base">
+              Built for production use with a consistent dark UI, clear navigation, aligned forms, responsive cards, and a focused dashboard experience.
+            </p>
+            <div className="flex flex-wrap gap-3">
+              <Link href="/properties" className="landing-primary-button">
+                Explore properties
+                <ArrowRight className="size-4" />
+              </Link>
+              <Link href="/register" className="landing-secondary-button">
+                Get started
               </Link>
             </div>
-            <div className="grid gap-5 md:grid-cols-2">
-              {postSteps.map((step, index) => (
-                <StepCard key={step.title} step={step} index={index} />
+            <div className="grid gap-3 pt-2 sm:grid-cols-3">
+              {metrics.map((item) => (
+                <div key={item.label} className="surface-card p-4">
+                  <p className="text-xs uppercase tracking-[0.18em] text-[var(--rf-muted)]">{item.label}</p>
+                  <p className="mt-2 text-lg font-bold text-[var(--rf-cyan)]">{item.value}</p>
+                </div>
               ))}
             </div>
           </div>
+
+          <HeroMockup />
         </div>
       </section>
 
-      <section className="mt-14">
-        <div className="grid gap-5 lg:grid-cols-2">
-          {needCards.map((card) => (
-            <NeedCard key={card.title} card={card} />
-          ))}
-        </div>
-      </section>
-
-      <section className="mt-14">
-        <SectionHeader
-          eyebrow="Trusted renters"
-          title="What our clients say"
-          copy="Owner and tenant feedback shows how the platform helps both sides move faster with less clutter."
-        />
-        <div className="mt-8 grid gap-5 md:grid-cols-3">
-          {testimonials.map((item) => (
-            <TestimonialCard key={item.name} item={item} />
-          ))}
-        </div>
-      </section>
-
-      <section className="landing-card mt-10 grid gap-5 p-5 md:grid-cols-[1fr_auto] md:items-center md:p-7">
-        <div className="flex items-start gap-4">
-          <div className="landing-icon">
-            <Users className="size-5" />
-          </div>
+      <section id="about" className="mt-16 scroll-mt-32 reveal-up">
+        <div className="grid gap-8 lg:grid-cols-[0.75fr_1.25fr] lg:items-start">
           <div>
-            <h2 className="text-2xl font-bold text-[#111827]">Community, support and owner tools stay one click away.</h2>
-            <p className="mt-2 text-sm font-medium leading-7 text-[#64748b]">Use the compact navigation to reach help, accounts and rental exploration without adding height to the header.</p>
+            <SectionLabel>About us</SectionLabel>
+            <h2 className="mt-4 text-4xl font-bold leading-tight md:text-6xl">Built around a clear rental workflow.</h2>
+          </div>
+          <div className="grid gap-4 md:grid-cols-3">
+            {[
+              { icon: Home, title: "Add properties", copy: "Create listings, attach documents, and define rent details." },
+              { icon: Clock3, title: "Track activity", copy: "See due payments, reminders, and owner updates in one dashboard." },
+              { icon: ShieldCheck, title: "Operate consistently", copy: "Keep the system structured with standard cards, forms, and alerts." }
+            ].map((item) => {
+              const Icon = item.icon;
+              return (
+                <div key={item.title} className="surface-card p-5">
+                  <span className="flex size-11 items-center justify-center border border-[rgba(28,183,200,0.35)] bg-[rgba(28,183,200,0.08)] text-[var(--rf-cyan)]">
+                    <Icon className="size-5" />
+                  </span>
+                  <p className="mt-4 text-lg font-bold">{item.title}</p>
+                  <p className="mt-3 text-sm leading-7 text-[var(--rf-muted)]">{item.copy}</p>
+                </div>
+              );
+            })}
           </div>
         </div>
-        <Link href="/contact" className="landing-secondary-button">
-          Contact Support
-        </Link>
+      </section>
+
+      <section id="properties" className="mt-16 scroll-mt-32 reveal-up">
+        <SectionLabel>Properties</SectionLabel>
+        <div className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          {listingCategories.map((item) => (
+            <Link key={item.title} href={item.href} className="surface-card block p-5">
+              <p className="text-lg font-bold">{item.title}</p>
+              <p className="mt-3 text-sm leading-7 text-[var(--rf-muted)]">{item.copy}</p>
+              <span className="mt-5 inline-flex items-center gap-2 text-sm font-semibold text-[var(--rf-cyan)]">
+                Browse
+                <ChevronRight className="size-4" />
+              </span>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      <section id="services" className="mt-16 scroll-mt-32 reveal-up">
+        <SectionLabel>Services</SectionLabel>
+        <div className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          {serviceCards.map((item) => {
+            const Icon = item.icon;
+            return (
+              <div key={item.title} className="surface-card p-5">
+                <span className="flex size-11 items-center justify-center border border-[rgba(28,183,200,0.35)] bg-[rgba(28,183,200,0.08)] text-[var(--rf-cyan)]">
+                  <Icon className="size-5" />
+                </span>
+                <p className="mt-4 text-lg font-bold">{item.title}</p>
+                <p className="mt-3 text-sm leading-7 text-[var(--rf-muted)]">{item.copy}</p>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
+      <section id="areas" className="mt-16 scroll-mt-32 reveal-up">
+        <SectionLabel>Areas</SectionLabel>
+        <div className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+          {cityCards.map((item) => (
+            <Link key={item.city} href={`/search?location=${encodeURIComponent(item.city)}`} className="surface-card block p-5">
+              <div className="flex items-start gap-3">
+                <span className="flex size-11 items-center justify-center border border-[rgba(28,183,200,0.35)] bg-[rgba(28,183,200,0.08)] text-[var(--rf-cyan)]">
+                  <MapPin className="size-5" />
+                </span>
+                <div>
+                  <p className="text-lg font-bold">{item.city}</p>
+                  <p className="mt-2 text-sm leading-7 text-[var(--rf-muted)]">{item.detail}</p>
+                </div>
+              </div>
+            </Link>
+          ))}
+        </div>
+      </section>
+
+      <section id="pricing" className="mt-16 scroll-mt-32 reveal-up">
+        <SectionLabel>Prices</SectionLabel>
+        <div className="mt-4 grid gap-4 lg:grid-cols-2">
+          {plans.map((plan) => (
+            <div key={plan.name} className="surface-card p-6">
+              <div className="flex items-start justify-between gap-4">
+                <div>
+                  <p className="text-xl font-bold">{plan.name}</p>
+                  <p className="mt-2 text-3xl font-bold text-[var(--rf-cyan)]">{plan.price}</p>
+                </div>
+                <BadgeCheck className="size-6 text-[var(--rf-cyan)]" />
+              </div>
+              <p className="mt-4 text-sm leading-7 text-[var(--rf-muted)]">{plan.copy}</p>
+              <div className="mt-5 grid gap-2">
+                {plan.items.map((item) => (
+                  <div key={item} className="flex items-center gap-2 text-sm text-[var(--rf-muted)]">
+                    <span className="size-2 rounded-full bg-[var(--rf-cyan)]" />
+                    {item}
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      <section className="mt-16 reveal-up">
+        <div className="grid gap-4 lg:grid-cols-[1fr_auto] lg:items-center">
+          <div className="surface-card p-6">
+            <h3 className="text-2xl font-bold">Ready for production UI work.</h3>
+            <p className="mt-2 max-w-2xl text-sm leading-7 text-[var(--rf-muted)]">
+              The homepage now keeps only the sections that support a real product flow and matches the same dark system used across the app.
+            </p>
+          </div>
+          <Link href="/contact" className="landing-primary-button">
+            Contact us
+            <ArrowRight className="size-4" />
+          </Link>
+        </div>
       </section>
     </div>
   );
