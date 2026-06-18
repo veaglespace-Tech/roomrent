@@ -25,16 +25,6 @@ const navTabs = [
     ]
   },
   {
-    label: "Areas",
-    href: "/#areas",
-    children: [
-      { label: "Mumbai", href: "/search?location=Mumbai" },
-      { label: "Pune", href: "/search?location=Pune" },
-      { label: "Nagpur", href: "/search?location=Nagpur" },
-      { label: "Nashik", href: "/search?location=Nashik" }
-    ]
-  },
-  {
     label: "Services",
     href: "/#services",
     children: [
@@ -44,7 +34,6 @@ const navTabs = [
       { label: "Owner tools", href: "/dashboard/owner/add-property" }
     ]
   },
-  { label: "Pricing", href: "/#pricing" },
   { label: "Contact", href: "/contact" }
 ];
 
@@ -133,9 +122,7 @@ function MobileNav() {
           <Link href="/compare" className="mobile-nav-direct" onClick={() => setOpen(false)}>
             Compare
           </Link>
-          <Link href="/login" className="mobile-nav-direct" onClick={() => setOpen(false)}>
-            Log in
-          </Link>
+          <Link href="/login" className="mobile-nav-direct" onClick={() => setOpen(false)}>Log in</Link>
           <Link href="/register" className="mobile-nav-direct mobile-nav-trigger-featured" onClick={() => setOpen(false)}>
             Get Started
           </Link>

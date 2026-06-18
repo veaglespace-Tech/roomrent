@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, BadgeCheck, CalendarDays, ChartColumn, ChevronRight, Clock3, CreditCard, Home, MapPin, MessageSquare, Search, ShieldCheck, Sparkles } from "lucide-react";
+import { ArrowRight, ChartColumn, ChevronRight, Clock3, Home, MessageSquare, Search, ShieldCheck } from "lucide-react";
 
 const listingCategories = [
   { title: "Rooms", href: "/properties?type=ROOM", copy: "Single room and shared room inventory." },
@@ -13,28 +13,6 @@ const serviceCards = [
   { icon: MessageSquare, title: "Post requirement", copy: "Capture what you need and direct owners to the right listing request." },
   { icon: ShieldCheck, title: "Verified listings", copy: "Keep the workflow focused on direct owners, active inventory, and clean records." },
   { icon: ChartColumn, title: "Compare and save", copy: "Save alerts, compare listings, and keep shortlist actions together." }
-];
-
-const cityCards = [
-  { city: "Mumbai", detail: "High density inventory, premium rentals, and quick compare flows." },
-  { city: "Pune", detail: "IT-driven rentals, PGs, and family flats with strong search demand." },
-  { city: "Nagpur", detail: "Commercial and residential listings in a compact, scan-friendly layout." },
-  { city: "Nashik", detail: "Residential and shared-room searches with clean locality pages." }
-];
-
-const plans = [
-  {
-    name: "Starter",
-    price: "Free",
-    copy: "For individual owners who want clean listings and rent tracking.",
-    items: ["Up to 3 properties", "Reminder support", "Basic reporting"]
-  },
-  {
-    name: "Pro",
-    price: "Custom",
-    copy: "For teams and portfolio owners who need scale and tighter control.",
-    items: ["Unlimited properties", "Advanced analytics", "Team workflows"]
-  }
 ];
 
 const metrics = [
@@ -62,7 +40,7 @@ function HeroMockup() {
       <div className="grid gap-4 p-5 md:grid-cols-2">
         <div className="surface-card p-4">
           <p className="text-xs uppercase tracking-[0.16em] text-[var(--rf-muted)]">Monthly rent</p>
-          <p className="mt-3 text-3xl font-bold text-[var(--rf-cyan)]">₹1,20,000</p>
+          <p className="mt-3 text-3xl font-bold text-[var(--rf-cyan)]">Rs. 1,20,000</p>
           <p className="mt-2 text-sm text-[var(--rf-muted)]">Collected across current active properties.</p>
         </div>
         <div className="surface-card p-4">
@@ -110,6 +88,7 @@ export default function HomePage() {
                 Get started
               </Link>
             </div>
+            <p className="text-sm uppercase tracking-[0.24em] text-[var(--rf-muted)]">Trusted rental operations for Maharashtra</p>
             <div className="grid gap-3 pt-2 sm:grid-cols-3">
               {metrics.map((item) => (
                 <div key={item.label} className="surface-card p-4">
@@ -182,51 +161,6 @@ export default function HomePage() {
               </div>
             );
           })}
-        </div>
-      </section>
-
-      <section id="areas" className="mt-16 scroll-mt-32 reveal-up">
-        <SectionLabel>Areas</SectionLabel>
-        <div className="mt-4 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-          {cityCards.map((item) => (
-            <Link key={item.city} href={`/search?location=${encodeURIComponent(item.city)}`} className="surface-card block p-5">
-              <div className="flex items-start gap-3">
-                <span className="flex size-11 items-center justify-center border border-[rgba(28,183,200,0.35)] bg-[rgba(28,183,200,0.08)] text-[var(--rf-cyan)]">
-                  <MapPin className="size-5" />
-                </span>
-                <div>
-                  <p className="text-lg font-bold">{item.city}</p>
-                  <p className="mt-2 text-sm leading-7 text-[var(--rf-muted)]">{item.detail}</p>
-                </div>
-              </div>
-            </Link>
-          ))}
-        </div>
-      </section>
-
-      <section id="pricing" className="mt-16 scroll-mt-32 reveal-up">
-        <SectionLabel>Prices</SectionLabel>
-        <div className="mt-4 grid gap-4 lg:grid-cols-2">
-          {plans.map((plan) => (
-            <div key={plan.name} className="surface-card p-6">
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <p className="text-xl font-bold">{plan.name}</p>
-                  <p className="mt-2 text-3xl font-bold text-[var(--rf-cyan)]">{plan.price}</p>
-                </div>
-                <BadgeCheck className="size-6 text-[var(--rf-cyan)]" />
-              </div>
-              <p className="mt-4 text-sm leading-7 text-[var(--rf-muted)]">{plan.copy}</p>
-              <div className="mt-5 grid gap-2">
-                {plan.items.map((item) => (
-                  <div key={item} className="flex items-center gap-2 text-sm text-[var(--rf-muted)]">
-                    <span className="size-2 rounded-full bg-[var(--rf-cyan)]" />
-                    {item}
-                  </div>
-                ))}
-              </div>
-            </div>
-          ))}
         </div>
       </section>
 
