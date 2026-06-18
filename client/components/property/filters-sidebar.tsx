@@ -61,7 +61,7 @@ export function FiltersSidebar({ filters, onChange, mobile = false, onClose }: F
     <aside
       className={
         mobile
-          ? "filter-shell flex max-h-[90vh] min-h-0 flex-col space-y-5 !overflow-y-auto !overflow-x-hidden p-5"
+          ? "filter-shell flex h-full min-h-0 flex-col space-y-5 !overflow-y-auto !overflow-x-hidden p-5"
           : "filter-shell sticky top-24 h-[calc(100vh-7rem)] w-full min-h-0 space-y-5 !overflow-y-auto !overflow-x-hidden p-5 lg:max-w-[300px] xl:max-w-[312px]"
       }
     >

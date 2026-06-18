@@ -292,10 +292,10 @@ function PropertiesContent({ title, subtitle }: PropertiesBrowserProps) {
           <button
             type="button"
             aria-label="Close filters"
-            className="absolute inset-0 bg-black/45"
+            className="absolute inset-0 bg-slate-950/20"
             onClick={() => setMobileFiltersOpen(false)}
           />
-          <div className="absolute inset-x-0 bottom-0 rounded-t-[18px] border border-[rgba(21,197,206,0.22)] bg-[rgba(8,15,19,0.98)] p-4 shadow-[0_-24px_80px_-30px_rgba(0,0,0,0.55)]">
+          <div className="absolute left-0 top-0 h-full w-[min(86vw,340px)] border-r border-[var(--rf-line)] bg-[var(--rf-panel)] shadow-[18px_0_48px_-30px_rgba(15,23,42,0.38)]">
             <FiltersSidebar
               filters={filters}
               onChange={setFilters}

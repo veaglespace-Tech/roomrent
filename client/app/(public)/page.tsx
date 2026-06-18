@@ -77,7 +77,7 @@ export default function HomePage() {
               <h1 className="mt-3 max-w-xl text-5xl font-bold leading-tight md:text-7xl">A professional rental platform for owners and tenants.</h1>
             </div>
             <p className="max-w-xl text-sm leading-7 text-[var(--rf-muted)] md:text-base">
-              Built for production use with a consistent dark UI, clear navigation, aligned forms, responsive cards, and a focused dashboard experience.
+              Built for production use with a consistent light UI, clear navigation, aligned forms, responsive cards, and a focused dashboard experience.
             </p>
             <div className="flex flex-wrap gap-3">
               <Link href="/properties" className="landing-primary-button">
@@ -118,7 +118,7 @@ export default function HomePage() {
               const Icon = item.icon;
               return (
                 <div key={item.title} className="surface-card p-5">
-                  <span className="flex size-11 items-center justify-center border border-[rgba(28,183,200,0.35)] bg-[rgba(28,183,200,0.08)] text-[var(--rf-cyan)]">
+                  <span className="flex size-11 items-center justify-center border border-[rgba(15,118,110,0.18)] bg-[rgba(15,118,110,0.08)] text-[var(--rf-cyan)]">
                     <Icon className="size-5" />
                   </span>
                   <p className="mt-4 text-lg font-bold">{item.title}</p>
@@ -153,7 +153,7 @@ export default function HomePage() {
             const Icon = item.icon;
             return (
               <div key={item.title} className="surface-card p-5">
-                <span className="flex size-11 items-center justify-center border border-[rgba(28,183,200,0.35)] bg-[rgba(28,183,200,0.08)] text-[var(--rf-cyan)]">
+                <span className="flex size-11 items-center justify-center border border-[rgba(15,118,110,0.18)] bg-[rgba(15,118,110,0.08)] text-[var(--rf-cyan)]">
                   <Icon className="size-5" />
                 </span>
                 <p className="mt-4 text-lg font-bold">{item.title}</p>
@@ -169,7 +169,7 @@ export default function HomePage() {
           <div className="surface-card p-6">
             <h3 className="text-2xl font-bold">Ready for production UI work.</h3>
             <p className="mt-2 max-w-2xl text-sm leading-7 text-[var(--rf-muted)]">
-              The homepage now keeps only the sections that support a real product flow and matches the same dark system used across the app.
+              The homepage now keeps only the sections that support a real product flow and matches the same light system used across the app.
             </p>
           </div>
           <Link href="/contact" className="landing-primary-button">

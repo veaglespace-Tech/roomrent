@@ -1,50 +1,52 @@
 import Link from "next/link";
+import { Building2, Mail, MapPin, Sparkles } from "lucide-react";
 
 export function Footer() {
   return (
     <footer className="px-3 pb-8 pt-16 md:px-5">
       <div className="footer-shell">
-        <div className="page-shell grid gap-10 py-14 md:grid-cols-[1.5fr_1fr_1fr]">
-          <div>
-            <h3 className="bg-[linear-gradient(135deg,#00a99a,#ff385c,#ff7a2f)] bg-clip-text text-2xl font-extrabold text-transparent">RoomRent Maharashtra</h3>
-            <p className="mt-3 max-w-md text-sm font-medium leading-7 text-[#64748b]">
-              Discover rooms, PG accommodation, hostels, flats and rental workspaces across Maharashtra with a clean search experience and city-first navigation.
+        <div className="page-shell grid gap-10 py-12 md:grid-cols-[1.2fr_0.8fr_0.8fr]">
+          <div className="space-y-4">
+            <div className="flex items-center gap-3">
+              <span className="flex size-10 items-center justify-center border border-[var(--rf-cyan)] bg-[rgba(21,197,206,0.12)] text-[var(--rf-cyan)]">
+                <Building2 className="size-4" />
+              </span>
+              <h3 className="text-2xl font-bold tracking-wide">RentFlow</h3>
+            </div>
+            <p className="max-w-md text-sm leading-7 text-[var(--rf-muted)]">
+              A light, focused rental workspace for owners, seekers, and administrators across Maharashtra.
             </p>
-            <p className="mt-5 text-sm font-semibold text-[#475569]">Email: roomrentmaharashtra@gmail.com</p>
-            <p className="mt-2 text-sm font-medium text-[#64748b]">Office: Maharashtra rental support desk, Mumbai - Pune growth corridor.</p>
-            <p className="mt-2 text-sm font-medium text-[#64748b]">Serving Mumbai, Pune, Nagpur, Nashik, Thane, Navi Mumbai and statewide growth markets.</p>
+            <div className="space-y-2 text-sm text-[var(--rf-muted)]">
+              <p className="flex items-center gap-2"><Mail className="size-4 text-[var(--rf-cyan)]" /> roomrentmaharashtra@gmail.com</p>
+              <p className="flex items-center gap-2"><MapPin className="size-4 text-[var(--rf-cyan)]" /> Mumbai, Pune, Nagpur and statewide</p>
+            </div>
           </div>
 
           <div>
-            <h4 className="font-extrabold text-[#111827]">Explore</h4>
-            <ul className="mt-4 space-y-2 text-sm font-semibold text-[#64748b]">
-              <li><Link className="footer-link" href="/properties">Browse Properties</Link></li>
-              <li><Link className="footer-link" href="/cities/mumbai">City Pages</Link></li>
-              <li><Link className="footer-link" href="/districts/pune">District Pages</Link></li>
-              <li><Link className="footer-link" href="/register">Post Your Property</Link></li>
-              <li><Link className="footer-link" href="/register">Room Partners</Link></li>
-              <li><Link className="footer-link" href="/register">Room Seekers</Link></li>
-              <li><Link className="footer-link" href="/contact">Contact Us</Link></li>
+            <h4 className="text-sm font-bold uppercase tracking-[0.2em] text-[var(--rf-cyan)]">Explore</h4>
+            <ul className="mt-4 space-y-2 text-sm">
+              <li><Link className="footer-link" href="/properties">Browse properties</Link></li>
+              <li><Link className="footer-link" href="/compare">Compare listings</Link></li>
+              <li><Link className="footer-link" href="/register">Create account</Link></li>
+              <li><Link className="footer-link" href="/contact">Contact support</Link></li>
             </ul>
           </div>
 
           <div>
-            <h4 className="font-extrabold text-[#111827]">Account</h4>
-            <ul className="mt-4 space-y-2 text-sm font-semibold text-[#64748b]">
-              <li><Link className="footer-link" href="/properties">Browse Properties</Link></li>
-              <li><Link className="footer-link" href="/dashboard/profile">My Account</Link></li>
-              <li><Link className="footer-link" href="/dashboard/saved-properties">Saved Properties</Link></li>
-              <li><Link className="footer-link" href="/login">Login</Link></li>
-              <li><Link className="footer-link" href="/contact">Support</Link></li>
-              <li><Link className="footer-link" href="/contact">Privacy Policy</Link></li>
+            <h4 className="text-sm font-bold uppercase tracking-[0.2em] text-[var(--rf-cyan)]">Workspace</h4>
+            <ul className="mt-4 space-y-2 text-sm">
+              <li><Link className="footer-link" href="/dashboard">Dashboard</Link></li>
+              <li><Link className="footer-link" href="/dashboard/saved-properties">Saved properties</Link></li>
+              <li><Link className="footer-link" href="/dashboard/owner/add-property">Add property</Link></li>
+              <li><Link className="footer-link" href="/dashboard/admin">Admin tools</Link></li>
             </ul>
           </div>
         </div>
 
-        <div className="border-t border-[#e2e8f0]/80">
-          <div className="page-shell flex flex-col gap-2 py-4 text-sm font-medium text-[#64748b] md:flex-row md:items-center md:justify-between">
-            <p>Copyright (c) 2026 RoomRent Maharashtra. All rights reserved.</p>
-            <p>Search rentals by city, district, locality and budget.</p>
+        <div className="border-t border-[rgba(21,197,206,0.22)]">
+          <div className="page-shell flex flex-col gap-2 py-4 text-sm text-[var(--rf-muted)] md:flex-row md:items-center md:justify-between">
+            <p>Copyright (c) 2026 RentFlow Maharashtra.</p>
+            <p className="flex items-center gap-2"><Sparkles className="size-4 text-[var(--rf-cyan)]" /> Light dashboard system inspired by the reference.</p>
           </div>
         </div>
       </div>

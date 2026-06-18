@@ -1,12 +1,13 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
+import { Bookmark, Building2, CreditCard, Gauge, Inbox, LayoutDashboard, ListPlus, Menu, ShieldCheck, UserRound, Users, X } from "lucide-react";
 import { usePathname } from "next/navigation";
-import { Bookmark, Building2, CreditCard, Gauge, Inbox, LayoutDashboard, ListPlus, ShieldCheck, UserRound, Users } from "lucide-react";
 import { cn } from "@/lib/cn";
 import { useAppSelector } from "@/store/hooks";
 
-export function DashboardSidebar() {
+function SidebarContent() {
   const pathname = usePathname();
   const user = useAppSelector((state) => state.auth.user);
 
@@ -42,15 +43,15 @@ export function DashboardSidebar() {
   ];
 
   return (
-    <aside className="dashboard-shell w-full min-w-0 lg:sticky lg:top-24 lg:h-[calc(100vh-7rem)] lg:overflow-y-auto">
+    <div className="flex h-full min-h-0 flex-col">
       <div className="dashboard-sidebar-head">
         <p className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--rf-cyan)]">Workspace</p>
-        <h2 className="mt-3 text-2xl font-bold tracking-wide">Dashboard</h2>
+        <h2 className="mt-3 text-2xl font-bold tracking-wide text-[var(--rf-ink)]">Dashboard</h2>
         <p className="mt-2 text-sm leading-6 text-[var(--rf-muted)]">
           Manage listings, enquiries, saved items, and admin queues from one shell.
         </p>
       </div>
-      <div className="p-4">
+      <div className="min-h-0 p-4">
         <ul className="menu gap-2 pr-1">
           {links.map((link) => {
             const Icon = link.icon;
@@ -68,6 +69,56 @@ export function DashboardSidebar() {
           })}
         </ul>
       </div>
-    </aside>
+    </div>
+  );
+}
+
+export function DashboardSidebar() {
+  const [open, setOpen] = useState(false);
+  const pathname = usePathname();
+
+  useEffect(() => {
+    setOpen(false);
+  }, [pathname]);
+
+  return (
+    <>
+      <div className="mb-4 flex justify-end lg:hidden">
+        <button type="button" className="mobile-menu-button" aria-expanded={open} onClick={() => setOpen(true)}>
+          <Menu className="size-5" />
+        </button>
+      </div>
+
+      {open ? (
+        <div className="fixed inset-0 z-50 lg:hidden">
+          <button
+            type="button"
+            aria-label="Close dashboard sidebar"
+            className="absolute inset-0 bg-slate-950/20"
+            onClick={() => setOpen(false)}
+          />
+          <aside className="absolute left-0 top-0 h-full w-[min(86vw,320px)] overflow-hidden border-r border-[var(--rf-line)] bg-[var(--rf-panel)] shadow-[18px_0_48px_-30px_rgba(15,23,42,0.38)]">
+            <div className="flex items-center justify-between border-b border-[var(--rf-line)] px-4 py-4">
+              <span className="inline-flex items-center gap-3">
+                <span className="flex size-10 items-center justify-center border border-[var(--rf-line)] bg-[var(--rf-panel)] text-[var(--rf-cyan)]">
+                  <Building2 className="size-4" />
+                </span>
+                <span className="text-sm font-bold tracking-wide text-[var(--rf-ink)]">RentFlow</span>
+              </span>
+              <button type="button" className="mobile-menu-button" onClick={() => setOpen(false)}>
+                <X className="size-5" />
+              </button>
+            </div>
+            <div className="h-[calc(100%-73px)] overflow-y-auto">
+              <SidebarContent />
+            </div>
+          </aside>
+        </div>
+      ) : null}
+
+      <aside className="dashboard-shell hidden w-full min-w-0 lg:sticky lg:top-24 lg:block lg:h-[calc(100vh-7rem)] lg:overflow-y-auto">
+        <SidebarContent />
+      </aside>
+    </>
   );
 }
