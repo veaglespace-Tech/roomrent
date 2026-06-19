@@ -111,50 +111,6 @@ function DesktopTabs() {
   );
 }
 
-function CompactTabs() {
-  const [activeMenu, setActiveMenu] = useState<string | null>(null);
-  const pathname = usePathname();
-  const activeItem = navTabs.find((item) => item.label === activeMenu);
-  const activeChildren = activeItem && "children" in activeItem ? activeItem.children : null;
-
-  useEffect(() => {
-    setActiveMenu(null);
-  }, [pathname]);
-
-  return (
-    <div className="lg:hidden">
-      <div className="compact-nav-strip">
-        {navTabs.map((item) =>
-          "children" in item ? (
-            <button
-              key={item.label}
-              type="button"
-              className={`compact-nav-tab ${activeMenu === item.label ? "compact-nav-tab-active" : ""}`}
-              onClick={() => setActiveMenu((current) => (current === item.label ? null : item.label))}
-            >
-              {item.label}
-              <ChevronDown className="size-3.5" />
-            </button>
-          ) : (
-            <Link key={item.label} href={item.href} className={`compact-nav-tab ${pathname === item.href ? "compact-nav-tab-active" : ""}`}>
-              {item.label}
-            </Link>
-          )
-        )}
-      </div>
-      {activeChildren ? (
-        <div className="compact-nav-panel">
-          {activeChildren.map((child) => (
-              <Link key={child.label} href={child.href} className="compact-nav-link" onClick={() => setActiveMenu(null)}>
-                {child.label}
-              </Link>
-            ))}
-        </div>
-      ) : null}
-    </div>
-  );
-}
-
 function MobileNav() {
   const [open, setOpen] = useState(false);
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
@@ -172,8 +128,8 @@ function MobileNav() {
       </button>
       {open ? (
         <div className="fixed inset-0 z-50">
-          <button type="button" aria-label="Close menu" className="absolute inset-0 bg-slate-950/20" onClick={() => setOpen(false)} />
-          <div className="absolute left-0 top-0 h-full w-[min(86vw,320px)] border-r border-[var(--rf-line)] bg-[var(--rf-panel)] shadow-[18px_0_48px_-30px_rgba(15,23,42,0.38)]">
+          <button type="button" aria-label="Close menu" className="drawer-overlay" onClick={() => setOpen(false)} />
+          <div className="drawer-panel w-[min(86vw,340px)]">
             <div className="flex items-center justify-between border-b border-[var(--rf-line)] px-4 py-4">
               <Logo />
               <button type="button" className="mobile-menu-button" onClick={() => setOpen(false)}>
@@ -260,7 +216,6 @@ export function Header() {
             <MobileNav />
           </div>
           <DesktopTabs />
-          <CompactTabs />
         </div>
       </div>
     </header>

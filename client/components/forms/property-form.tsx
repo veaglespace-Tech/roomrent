@@ -254,7 +254,7 @@ export function PropertyForm({ initialValues, propertyId }: PropertyFormProps) {
     <form onSubmit={handleSubmit} className="panel space-y-6 p-6">
       <div className="flex flex-wrap items-center justify-between gap-4 border-b border-base-300/70 pb-5">
         <div>
-          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[#ef3d81]">Listing details</p>
+          <p className="text-sm font-semibold uppercase tracking-[0.18em] text-[var(--rf-cyan)]">Listing details</p>
           <h2 className="mt-2 text-2xl font-bold text-neutral">{propertyId ? "Update property" : "Publish a property"}</h2>
         </div>
         <div className="icon-tile">
@@ -264,16 +264,16 @@ export function PropertyForm({ initialValues, propertyId }: PropertyFormProps) {
       <div className="rounded-[24px] border border-base-300 bg-white/80 p-4 shadow-[0_18px_48px_-34px_rgba(15,23,42,0.35)]">
         <div className="flex flex-wrap items-center justify-between gap-3">
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#ef3d81]">Progress</p>
-            <p className="mt-1 text-sm font-semibold text-[#111827]">
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--rf-cyan)]">Progress</p>
+            <p className="mt-1 text-sm font-semibold text-[var(--rf-ink)]">
               {completedStepCount} of {wizardSteps.length} steps complete
             </p>
           </div>
-          <p className="text-sm font-bold text-[#ef3d81]">{completionPercent}%</p>
+          <p className="text-sm font-bold text-[var(--rf-cyan)]">{completionPercent}%</p>
         </div>
         <div className="mt-3 h-2 overflow-hidden rounded-full bg-base-200">
           <div
-            className="h-full rounded-full bg-gradient-to-r from-[#ef3d81] via-[#ff7a35] to-[#0f9f8f] transition-all duration-500 ease-out"
+            className="h-full rounded-full bg-gradient-to-r from-[var(--rf-cyan)] via-[var(--rf-accent)] to-[var(--rf-cyan)] transition-all duration-500 ease-out"
             style={{ width: `${completionPercent}%` }}
           />
         </div>
@@ -289,28 +289,28 @@ export function PropertyForm({ initialValues, propertyId }: PropertyFormProps) {
             }}
             className={`rounded-[18px] border px-4 py-3 text-left transition-all duration-300 ${
               step === item.id
-                ? "border-[#ef3d81]/25 bg-[#fff1f4] shadow-[0_16px_40px_-32px_rgba(239,61,129,0.8)]"
+                ? "border-[rgba(15,118,110,0.28)] bg-[rgba(15,118,110,0.08)] shadow-[0_16px_40px_-32px_rgba(239,61,129,0.8)]"
                 : "border-base-300 bg-white"
             }`}
           >
             <div className="flex items-start justify-between gap-3">
               <div>
-                <p className="text-xs font-bold uppercase tracking-[0.16em] text-[#ef3d81]">Step {item.id}</p>
-                <p className="mt-1 font-semibold text-[#111827]">{item.title}</p>
+                <p className="text-xs font-bold uppercase tracking-[0.16em] text-[var(--rf-cyan)]">Step {item.id}</p>
+                <p className="mt-1 font-semibold text-[var(--rf-ink)]">{item.title}</p>
               </div>
               <div
                 className={`mt-0.5 flex size-7 items-center justify-center rounded-full text-xs font-extrabold ${
                   getStepMessages(item.id as WizardStep).length === 0
                     ? "bg-emerald-50 text-emerald-600"
                     : step === item.id
-                      ? "bg-[#ef3d81] text-white"
+                      ? "bg-[var(--rf-cyan)] text-white"
                       : "bg-base-200 text-base-content/50"
                 }`}
               >
-                {getStepMessages(item.id as WizardStep).length === 0 ? "✓" : item.id}
+                {getStepMessages(item.id as WizardStep).length === 0 ? "?" : item.id}
               </div>
             </div>
-            <p className="mt-1 text-xs text-[#64748b]">{item.hint}</p>
+            <p className="mt-1 text-xs text-[var(--rf-muted)]">{item.hint}</p>
           </button>
         ))}
       </div>
@@ -545,14 +545,14 @@ export function PropertyForm({ initialValues, propertyId }: PropertyFormProps) {
               <div className="space-y-6">
                 <div className="form-section space-y-3">
                   <div className="flex items-center justify-between gap-3">
-                    <p className="flex items-center gap-2 text-sm font-semibold text-base-content/80"><Sparkles className="size-4 text-[#ef3d81]" /> Amenities</p>
+                    <p className="flex items-center gap-2 text-sm font-semibold text-base-content/80"><Sparkles className="size-4 text-[var(--rf-cyan)]" /> Amenities</p>
                     {stepFieldErrors.amenities ? <p className="text-xs font-semibold text-error">{stepFieldErrors.amenities}</p> : null}
                   </div>
                   <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
                     {amenityOptions.map((amenity) => {
                       const checked = form.amenities.includes(amenity);
                       return (
-                        <label key={amenity} className={`flex cursor-pointer items-center gap-3 rounded-[14px] border px-4 py-3 transition ${checked ? "border-[#ff5c8a]/35 bg-[#fff1f4] text-neutral" : "border-base-300 bg-white hover:border-[#ff5c8a]/25"}`}>
+                        <label key={amenity} className={`flex cursor-pointer items-center gap-3 rounded-[14px] border px-4 py-3 transition ${checked ? "border-[rgba(15,118,110,0.24)] bg-[rgba(15,118,110,0.08)] text-neutral" : "border-base-300 bg-white hover:border-[rgba(15,118,110,0.28)]"}`}>
                           <input
                             type="checkbox"
                             className="checkbox checkbox-primary checkbox-sm"
@@ -583,7 +583,7 @@ export function PropertyForm({ initialValues, propertyId }: PropertyFormProps) {
                   </label>
                 </div>
                 <label className="block">
-                  <span className="mb-2 flex items-center gap-2 text-sm font-semibold text-base-content/80"><ImagePlus className="size-4 text-[#ef3d81]" /> Image URLs</span>
+                  <span className="mb-2 flex items-center gap-2 text-sm font-semibold text-base-content/80"><ImagePlus className="size-4 text-[var(--rf-cyan)]" /> Image URLs</span>
                   <textarea
                     className={`form-textarea min-h-32 ${stepFieldErrors.imageUrls ? "border-error/40" : ""}`}
                     placeholder="One image URL per line"
@@ -601,7 +601,7 @@ export function PropertyForm({ initialValues, propertyId }: PropertyFormProps) {
             <div className="flex gap-3">
               <button
                 type="button"
-                className="rounded-2xl border border-base-300 bg-white px-5 py-3 text-sm font-bold text-[#111827] disabled:cursor-not-allowed disabled:opacity-50"
+                className="rounded-2xl border border-base-300 bg-white px-5 py-3 text-sm font-bold text-[var(--rf-ink)] disabled:cursor-not-allowed disabled:opacity-50"
                 onClick={() => {
                   setSubmitError("");
                   setStepErrors((current) => ({ ...current, [step]: [] }));
@@ -613,7 +613,7 @@ export function PropertyForm({ initialValues, propertyId }: PropertyFormProps) {
                 </button>
               <button
                 type="button"
-                className="rounded-2xl border border-base-300 bg-white px-5 py-3 text-sm font-bold text-[#111827] transition hover:border-[#ef3d81]/25 hover:text-[#ef3d81] disabled:cursor-not-allowed disabled:opacity-50"
+                className="rounded-2xl border border-base-300 bg-white px-5 py-3 text-sm font-bold text-[var(--rf-ink)] transition hover:border-[rgba(15,118,110,0.28)] hover:text-[var(--rf-cyan)] disabled:cursor-not-allowed disabled:opacity-50"
                 onClick={() => persistDraft(true)}
                 disabled={loading}
               >
@@ -640,7 +640,7 @@ export function PropertyForm({ initialValues, propertyId }: PropertyFormProps) {
               <div className="mx-auto grid max-w-5xl grid-cols-3 gap-2">
                 <button
                   type="button"
-                  className="rounded-2xl border border-base-300 bg-white px-3 py-3 text-xs font-bold text-[#111827] disabled:cursor-not-allowed disabled:opacity-50"
+                  className="rounded-2xl border border-base-300 bg-white px-3 py-3 text-xs font-bold text-[var(--rf-ink)] disabled:cursor-not-allowed disabled:opacity-50"
                   onClick={() => {
                     setSubmitError("");
                     setStepErrors((current) => ({ ...current, [step]: [] }));
@@ -652,7 +652,7 @@ export function PropertyForm({ initialValues, propertyId }: PropertyFormProps) {
                 </button>
                 <button
                   type="button"
-                  className="rounded-2xl border border-base-300 bg-white px-3 py-3 text-xs font-bold text-[#111827] transition hover:border-[#ef3d81]/25 hover:text-[#ef3d81] disabled:cursor-not-allowed disabled:opacity-50"
+                  className="rounded-2xl border border-base-300 bg-white px-3 py-3 text-xs font-bold text-[var(--rf-ink)] transition hover:border-[rgba(15,118,110,0.28)] hover:text-[var(--rf-cyan)] disabled:cursor-not-allowed disabled:opacity-50"
                   onClick={() => persistDraft(true)}
                   disabled={loading}
                 >
@@ -675,9 +675,9 @@ export function PropertyForm({ initialValues, propertyId }: PropertyFormProps) {
 
         <aside className="panel sticky top-24 h-fit space-y-4 p-5">
           <div>
-            <p className="text-xs font-bold uppercase tracking-[0.2em] text-[#ef3d81]">Live preview</p>
-            <h3 className="mt-2 text-2xl font-bold text-[#111827]">How the listing will look</h3>
-            <p className="mt-2 text-sm font-medium leading-6 text-[#64748b]">This preview updates while you fill the form so owners can catch issues early.</p>
+            <p className="text-xs font-bold uppercase tracking-[0.2em] text-[var(--rf-cyan)]">Live preview</p>
+            <h3 className="mt-2 text-2xl font-bold text-[var(--rf-ink)]">How the listing will look</h3>
+            <p className="mt-2 text-sm font-medium leading-6 text-[var(--rf-muted)]">This preview updates while you fill the form so owners can catch issues early.</p>
           </div>
           <div className="overflow-hidden rounded-[24px] border border-base-300 bg-white shadow-[0_20px_60px_-40px_rgba(15,23,42,0.45)]">
             <div className="relative aspect-[4/3] bg-base-200">
@@ -693,46 +693,46 @@ export function PropertyForm({ initialValues, propertyId }: PropertyFormProps) {
                 <span className="pill-badge">{form.category || "Category"}</span>
               </div>
               <div>
-                <h4 className="text-xl font-bold text-[#111827]">{form.title || "Property title"}</h4>
-                <p className="mt-2 text-sm font-medium leading-6 text-[#64748b]">
+                <h4 className="text-xl font-bold text-[var(--rf-ink)]">{form.title || "Property title"}</h4>
+                <p className="mt-2 text-sm font-medium leading-6 text-[var(--rf-muted)]">
                   {[form.areaLocality, form.city, form.district, form.state].filter(Boolean).join(", ") || "Location preview"}
                 </p>
               </div>
               <div className="flex items-center justify-between rounded-[18px] bg-base-100 px-4 py-3">
                 <div>
                   <p className="text-xs uppercase tracking-[0.18em] text-base-content/50">Rent</p>
-                  <p className="text-2xl font-extrabold text-[#d92f71]">Rs. {form.price || 0}</p>
+                  <p className="text-2xl font-extrabold text-[var(--rf-cyan)]">Rs. {form.price || 0}</p>
                 </div>
                 <div className="text-right">
                   <p className="text-xs uppercase tracking-[0.18em] text-base-content/50">Deposit</p>
-                  <p className="text-sm font-semibold text-[#111827]">{form.securityDeposit ? `Rs. ${form.securityDeposit}` : "On request"}</p>
+                  <p className="text-sm font-semibold text-[var(--rf-ink)]">{form.securityDeposit ? `Rs. ${form.securityDeposit}` : "On request"}</p>
                 </div>
               </div>
               <div className="grid gap-3 sm:grid-cols-2">
                 <div className="rounded-[16px] border border-base-300 bg-white px-3 py-2 text-xs">
                   <div className="flex items-center gap-2 text-base-content/60">
-                    <ShieldCheck className="size-3.5 text-[#0f9f8f]" />
+                    <ShieldCheck className="size-3.5 text-[var(--rf-cyan)]" />
                     Availability
                   </div>
                   <p className="mt-1 font-semibold text-base-content">{form.availabilityStatus || "AVAILABLE"}</p>
                 </div>
                 <div className="rounded-[16px] border border-base-300 bg-white px-3 py-2 text-xs">
                   <div className="flex items-center gap-2 text-base-content/60">
-                    <BedDouble className="size-3.5 text-[#0f9f8f]" />
+                    <BedDouble className="size-3.5 text-[var(--rf-cyan)]" />
                     Furnishing
                   </div>
                   <p className="mt-1 font-semibold text-base-content">{form.furnishedStatus ? form.furnishedStatus.replaceAll("_", " ") : "Not specified"}</p>
                 </div>
                 <div className="rounded-[16px] border border-base-300 bg-white px-3 py-2 text-xs">
                   <div className="flex items-center gap-2 text-base-content/60">
-                    <Wallet className="size-3.5 text-[#0f9f8f]" />
+                    <Wallet className="size-3.5 text-[var(--rf-cyan)]" />
                     Sharing
                   </div>
                   <p className="mt-1 font-semibold text-base-content">{form.sharingType || "Not specified"}</p>
                 </div>
                 <div className="rounded-[16px] border border-base-300 bg-white px-3 py-2 text-xs">
                   <div className="flex items-center gap-2 text-base-content/60">
-                    <MapPin className="size-3.5 text-[#0f9f8f]" />
+                    <MapPin className="size-3.5 text-[var(--rf-cyan)]" />
                     Listed by
                   </div>
                   <p className="mt-1 font-semibold text-base-content">{form.listedByType || "OWNER"}</p>

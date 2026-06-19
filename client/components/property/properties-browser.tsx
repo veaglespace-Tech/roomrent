@@ -3,7 +3,7 @@
 import { Suspense, useEffect, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { ArrowDownUp, Building2, Filter, MapPinned, PlusCircle, SlidersHorizontal } from "lucide-react";
+import { Building2, Filter, MapPinned, PlusCircle, SlidersHorizontal } from "lucide-react";
 import { FiltersSidebar } from "@/components/property/filters-sidebar";
 import { PropertyCard } from "@/components/property/property-card";
 import { SearchSuggestions } from "@/components/property/search-suggestions";
@@ -111,7 +111,7 @@ function PropertiesContent({ title, subtitle }: PropertiesBrowserProps) {
           <FiltersSidebar filters={filters} onChange={setFilters} />
         </div>
         <div className="min-w-0">
-          <div className="mb-6 space-y-4 border-b border-[rgba(21,197,206,0.2)] pb-6">
+          <div className="mb-6 space-y-4 border-b border-[rgba(15,23,42,0.12)] pb-6">
             <div className="flex flex-col gap-3 md:flex-row md:items-end md:justify-between">
               <div className="max-w-3xl">
                 <p className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--rf-cyan)]">Live rental search</p>
@@ -119,7 +119,7 @@ function PropertiesContent({ title, subtitle }: PropertiesBrowserProps) {
                 <p className="mt-2 text-sm leading-7 text-[var(--rf-muted)]">{subtitle}</p>
               </div>
               <div className="flex flex-wrap items-center gap-3">
-                <div className="border border-[rgba(21,197,206,0.28)] px-4 py-3 text-sm font-bold text-[var(--rf-cyan)]">
+                <div className="border border-[rgba(15,23,42,0.12)] px-4 py-3 text-sm font-bold text-[var(--rf-cyan)]">
                   {properties.length} results
                 </div>
                 <button
@@ -135,7 +135,7 @@ function PropertiesContent({ title, subtitle }: PropertiesBrowserProps) {
           </div>
 
           <form
-            className="mb-6 flex flex-col gap-3 border border-[rgba(21,197,206,0.22)] bg-[rgba(8,15,19,0.82)] p-3 shadow-[0_24px_60px_-48px_rgba(0,0,0,0.38)] md:flex-row md:items-center"
+            className="mb-6 flex flex-col gap-3 border border-[rgba(15,23,42,0.12)] bg-[rgba(249,251,253,0.94)] p-3 shadow-[0_24px_60px_-48px_rgba(15,23,42,0.28)] md:flex-row md:items-center"
             onSubmit={(event) => {
               event.preventDefault();
               void loadProperties(filters);
@@ -184,7 +184,7 @@ function PropertiesContent({ title, subtitle }: PropertiesBrowserProps) {
           </div>
 
           {mapViewOpen ? (
-            <div className="mb-6 overflow-hidden border border-[rgba(21,197,206,0.22)] bg-[rgba(8,15,19,0.82)]">
+            <div className="mb-6 overflow-hidden border border-[rgba(15,23,42,0.12)] bg-[rgba(249,251,253,0.94)]">
               <div className="grid gap-4 p-5 lg:grid-cols-[1.2fr_0.8fr]">
                 <div className="space-y-4">
                   <div>
@@ -201,14 +201,14 @@ function PropertiesContent({ title, subtitle }: PropertiesBrowserProps) {
                       { label: "Trust signal", value: "Verified listing badge shown" },
                       { label: "Quick action", value: "Call or WhatsApp from detail page" }
                     ].map((item) => (
-                      <div key={item.label} className="border border-[rgba(21,197,206,0.18)] p-4">
+                      <div key={item.label} className="border border-[rgba(15,23,42,0.1)] bg-white/70 p-4">
                         <p className="text-xs font-bold uppercase tracking-[0.18em] text-[var(--rf-muted)]">{item.label}</p>
                         <p className="mt-2 text-sm font-semibold text-[var(--rf-ink)]">{item.value}</p>
                       </div>
                     ))}
                   </div>
                 </div>
-                <div className="overflow-hidden border border-[rgba(21,197,206,0.18)]">
+                <div className="overflow-hidden border border-[rgba(15,23,42,0.1)] bg-white/80">
                   <MapView properties={properties} height="320px" />
                 </div>
               </div>
@@ -260,7 +260,7 @@ function PropertiesContent({ title, subtitle }: PropertiesBrowserProps) {
           {loading ? (
             <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-3">
               {Array.from({ length: 6 }).map((_, index) => (
-                <div key={index} className="h-96 animate-pulse border border-[rgba(21,197,206,0.18)] bg-[rgba(8,15,19,0.82)]" />
+                <div key={index} className="h-96 animate-pulse border border-[rgba(15,23,42,0.1)] bg-[rgba(249,251,253,0.94)]" />
               ))}
             </div>
           ) : sortedProperties.length ? (
@@ -292,10 +292,10 @@ function PropertiesContent({ title, subtitle }: PropertiesBrowserProps) {
           <button
             type="button"
             aria-label="Close filters"
-            className="absolute inset-0 bg-slate-950/20"
+            className="drawer-overlay"
             onClick={() => setMobileFiltersOpen(false)}
           />
-          <div className="absolute left-0 top-0 h-full w-[min(86vw,340px)] border-r border-[var(--rf-line)] bg-[var(--rf-panel)] shadow-[18px_0_48px_-30px_rgba(15,23,42,0.38)]">
+          <div className="drawer-panel w-[min(86vw,360px)]">
             <FiltersSidebar
               filters={filters}
               onChange={setFilters}

@@ -33,35 +33,35 @@ export default function ContactPage() {
   return (
     <section className="page-shell py-10">
       <div className="grid gap-8 lg:grid-cols-[0.9fr_1.1fr]">
-        <div className="bento-shell min-h-[620px]">
+        <div className="surface-card min-h-[620px]">
           <div className="relative flex h-full flex-col justify-between p-6 sm:p-8">
             <div>
-              <div className="inline-flex items-center gap-2 rounded-full border border-white/12 bg-white/8 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-white/75">
-                <Sparkles className="size-4 text-[#ff9f74]" />
+              <div className="pill-badge px-4 py-2 text-[10px] uppercase tracking-[0.18em] text-[var(--rf-cyan)]">
+                <Sparkles className="size-4 text-[var(--rf-cyan)]" />
                 Contact us
               </div>
-              <h1 className="mt-7 text-4xl font-bold leading-tight text-white md:text-5xl">
+              <h1 className="mt-7 text-4xl font-bold leading-tight text-[var(--rf-ink)] md:text-5xl">
                 Tell us what you need. We will help you move faster.
               </h1>
-              <p className="mt-5 text-sm leading-7 text-white/65">
+              <p className="mt-5 text-sm leading-7 text-[var(--rf-muted)]">
                 Reach out for rooms, PGs, owner listing support, commercial spaces or city coverage questions across Maharashtra.
               </p>
             </div>
 
             <div className="mt-10 grid gap-4">
-              <div className="bento-card">
-                <Mail className="size-6 text-[#75e6d8]" />
-                <p className="mt-4 text-sm text-white/60">Email</p>
+              <div className="form-section">
+                <Mail className="size-6 text-[var(--rf-cyan)]" />
+                <p className="mt-4 text-sm text-[var(--rf-muted)]">Email</p>
                 <p className="text-lg font-semibold">hello@roomrentmaharashtra.com</p>
               </div>
-              <div className="bento-card">
-                <Phone className="size-6 text-[#ff9f74]" />
-                <p className="mt-4 text-sm text-white/60">Support</p>
+              <div className="form-section">
+                <Phone className="size-6 text-[var(--rf-cyan)]" />
+                <p className="mt-4 text-sm text-[var(--rf-muted)]">Support</p>
                 <p className="text-lg font-semibold">Owner and seeker assistance</p>
               </div>
-              <div className="bento-card">
-                <MapPin className="size-6 text-[#ff7fac]" />
-                <p className="mt-4 text-sm text-white/60">Coverage</p>
+              <div className="form-section">
+                <MapPin className="size-6 text-[var(--rf-cyan)]" />
+                <p className="mt-4 text-sm text-[var(--rf-muted)]">Coverage</p>
                 <p className="text-lg font-semibold">Mumbai, Pune, Nagpur, Nashik, Thane and more</p>
               </div>
             </div>
@@ -69,9 +69,9 @@ export default function ContactPage() {
         </div>
 
         <form onSubmit={handleSubmit} className="form-glass space-y-6 p-5 sm:p-7">
-          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-base-300/70 pb-5">
+          <div className="flex flex-wrap items-center justify-between gap-4 border-b border-[rgba(15,23,42,0.12)] pb-5">
             <div>
-              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[#ef3d81]">Message details</p>
+              <p className="text-sm font-semibold uppercase tracking-[0.2em] text-[var(--rf-cyan)]">Message details</p>
               <h2 className="mt-2 text-3xl font-bold text-neutral">Contact RoomRent Maharashtra</h2>
             </div>
             <div className="icon-tile">
@@ -81,21 +81,21 @@ export default function ContactPage() {
 
           <div className="grid gap-4 sm:grid-cols-2">
             <label className="form-glass-field">
-              <span className="block text-xs font-semibold uppercase tracking-[0.16em] text-base-content/50">Full name</span>
+              <span className="block text-xs font-semibold uppercase tracking-[0.16em] text-[var(--rf-muted)]">Full name</span>
               <input name="name" required className="mt-2 w-full bg-transparent text-sm outline-none" placeholder="Your name" />
             </label>
             <label className="form-glass-field">
-              <span className="block text-xs font-semibold uppercase tracking-[0.16em] text-base-content/50">Phone</span>
+              <span className="block text-xs font-semibold uppercase tracking-[0.16em] text-[var(--rf-muted)]">Phone</span>
               <input name="phone" required inputMode="numeric" maxLength={10} className="mt-2 w-full bg-transparent text-sm outline-none" placeholder="Mobile number" />
             </label>
             <label className="form-glass-field sm:col-span-2">
-              <span className="block text-xs font-semibold uppercase tracking-[0.16em] text-base-content/50">Email</span>
+              <span className="block text-xs font-semibold uppercase tracking-[0.16em] text-[var(--rf-muted)]">Email</span>
               <input name="email" type="email" required className="mt-2 w-full bg-transparent text-sm outline-none" placeholder="you@example.com" />
             </label>
           </div>
 
           <div>
-            <p className="mb-3 text-sm font-semibold text-base-content/75">I need help with</p>
+            <p className="mb-3 text-sm font-semibold text-[var(--rf-muted)]">I need help with</p>
             <div className="grid gap-3 sm:grid-cols-2">
               {contactReasons.map((item) => (
                 <button
@@ -104,8 +104,8 @@ export default function ContactPage() {
                   onClick={() => setReason(item)}
                   className={`rounded-[16px] border px-4 py-3 text-left text-sm font-semibold transition ${
                     reason === item
-                      ? "border-[#ff5c8a]/40 bg-[#fff1f4] text-neutral shadow-[0_18px_40px_-32px_rgba(255,92,138,0.75)]"
-                      : "border-base-300/70 bg-base-200/55 text-base-content/68 hover:border-[#ff5c8a]/28"
+                      ? "border-[rgba(15,118,110,0.28)] bg-[rgba(15,118,110,0.08)] text-[var(--rf-ink)] shadow-[0_18px_40px_-32px_rgba(15,118,110,0.22)]"
+                      : "border-[rgba(15,23,42,0.12)] bg-white/70 text-[var(--rf-muted)] hover:border-[rgba(15,118,110,0.28)]"
                   }`}
                 >
                   {item}
@@ -116,7 +116,7 @@ export default function ContactPage() {
           </div>
 
           <label className="form-glass-field block">
-            <span className="block text-xs font-semibold uppercase tracking-[0.16em] text-base-content/50">Message</span>
+            <span className="block text-xs font-semibold uppercase tracking-[0.16em] text-[var(--rf-muted)]">Message</span>
             <textarea name="message" required className="mt-2 min-h-36 w-full resize-none bg-transparent text-sm outline-none" placeholder="Write your requirement, city, budget, and preferred move-in date." />
           </label>
 
@@ -127,7 +127,7 @@ export default function ContactPage() {
               <SendHorizonal className="relative size-4" />
               Send Message
             </button>
-            <Link href="/properties" className="inline-flex min-h-12 items-center gap-2 rounded-[14px] border border-base-300/70 px-5 text-sm font-semibold text-base-content/70 transition hover:border-[#ff5c8a]/30 hover:text-neutral">
+            <Link href="/properties" className="inline-flex min-h-12 items-center gap-2 rounded-[14px] border border-[rgba(15,23,42,0.12)] px-5 text-sm font-semibold text-base-content/70 transition hover:border-[rgba(15,118,110,0.28)] hover:text-[var(--rf-cyan)]">
               Browse first
               <ArrowRight className="size-4" />
             </Link>

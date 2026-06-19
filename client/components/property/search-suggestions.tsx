@@ -61,8 +61,8 @@ export function SearchSuggestions({ value, onChange }: SearchSuggestionsProps) {
   }, []);
 
   const featuredSuggestions: SuggestionItem[] = useMemo(() => {
-    const featured = ["Mumbai", "Pune", "Thane", "Nagpur", "Nashik"];
-    return allItems.filter((item) => item.type === "city" && featured.includes(item.value));
+    const featured = ["Mumbai", "Pune", "Thane", "Nagpur", "Nashik", "Kolhapur", "Solapur", "Chhatrapati Sambhajinagar", "Raigad", "Satara"];
+    return allItems.filter((item) => (item.type === "city" || item.type === "district") && featured.includes(item.value));
   }, [allItems]);
 
   useEffect(() => {
@@ -132,7 +132,7 @@ export function SearchSuggestions({ value, onChange }: SearchSuggestionsProps) {
       case "locality":
         return <MapPin className="size-4 text-[var(--rf-cyan)]" />;
       case "city":
-        return <Building2 className="size-4 text-[var(--rf-cyan-soft)]" />;
+        return <Building2 className="size-4 text-[var(--rf-accent)]" />;
       case "district":
         return <Map className="size-4 text-[var(--rf-muted)]" />;
     }
@@ -161,7 +161,7 @@ export function SearchSuggestions({ value, onChange }: SearchSuggestionsProps) {
       </div>
 
       {isOpen && suggestions.length > 0 ? (
-        <div className="absolute left-0 right-0 top-full z-[100] mt-1.5 max-h-72 overflow-y-auto border border-[rgba(28,183,200,0.38)] bg-[#0c1216]/98 p-1 shadow-[0_26px_76px_-46px_rgba(0,0,0,0.88)] backdrop-blur-md">
+        <div className="absolute left-0 right-0 top-full z-[100] mt-1.5 max-h-72 overflow-y-auto border border-[rgba(15,23,42,0.12)] bg-[rgba(249,251,253,0.98)] p-1 shadow-[0_26px_76px_-46px_rgba(15,23,42,0.28)] backdrop-blur-md">
           <div className="px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-[0.18em] text-[var(--rf-cyan)] opacity-70">
             {!query.trim() ? "Featured Cities" : "Suggestions"}
           </div>
@@ -173,13 +173,13 @@ export function SearchSuggestions({ value, onChange }: SearchSuggestionsProps) {
               onMouseEnter={() => setActiveIndex(index)}
               className={`flex w-full items-center gap-3 px-3 py-2 text-left text-sm transition-colors duration-150 ${
                 index === activeIndex
-                  ? "bg-[rgba(28,183,200,0.12)] text-[var(--rf-cyan)]"
-                  : "text-[var(--rf-ink)] hover:bg-[rgba(28,183,200,0.06)]"
+                  ? "bg-[rgba(15,118,110,0.08)] text-[var(--rf-cyan)]"
+                  : "text-[var(--rf-ink)] hover:bg-[rgba(15,118,110,0.06)]"
               }`}
             >
               <span className="shrink-0">{getIcon(item.type)}</span>
               <div className="flex-1 truncate">
-                <span className="font-semibold text-white">{item.label}</span>
+                <span className="font-semibold text-[var(--rf-ink)]">{item.label}</span>
                 <span className="ml-2 text-xs text-[var(--rf-muted)] opacity-80">- {item.sublabel}</span>
               </div>
             </button>
