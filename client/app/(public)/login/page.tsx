@@ -10,6 +10,7 @@ import { setCredentials } from "@/store/slices/auth-slice";
 import { AuthCard } from "@/components/auth-card";
 import { firstZodError, loginSchema } from "@/lib/validation";
 import { getApiErrorMessage } from "@/lib/api-error";
+import { getDashboardRoute, getStoredAuthRole } from "@/lib/auth-session";
 
 export default function LoginPage() {
   const router = useRouter();
@@ -29,6 +30,13 @@ export default function LoginPage() {
     setRegistered(new URLSearchParams(window.location.search).get("registered") === "1");
   }, []);
 
+  useEffect(() => {
+    const role = getStoredAuthRole();
+    if (role) {
+      router.replace(getDashboardRoute(role));
+    }
+  }, [router]);
+
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
     setTouched({ email: true, password: true });
@@ -41,10 +49,8 @@ export default function LoginPage() {
       setLoading(true);
       setError("");
       const data = await loginUser(validation.data);
-      localStorage.setItem("roomrent_token", data.token);
-      localStorage.setItem("roomrent_user", JSON.stringify(data));
       dispatch(setCredentials(data));
-      router.push("/dashboard");
+      router.replace(getDashboardRoute(data.role));
     } catch (loginError) {
       setError(getApiErrorMessage(loginError, "Invalid email or password."));
     } finally {

@@ -39,11 +39,7 @@ export function ContactButtons({ property }: { property: Property }) {
         <a
           href={hasPhone ? `tel:${dialNumber}` : "#"}
           aria-disabled={!hasPhone}
-          className={`flex items-center justify-center gap-2 rounded-2xl px-4 py-3 text-sm font-bold transition ${
-            hasPhone
-              ? "bg-[#0f9f8f] text-white shadow-[0_18px_36px_-22px_rgba(15,159,143,0.9)] hover:brightness-95"
-              : "cursor-not-allowed bg-base-200 text-base-content/40"
-          }`}
+          className={`action-button ${hasPhone ? "action-button-active" : "action-button-disabled"}`}
         >
           <Phone className="size-4" />
           Call Now
@@ -53,11 +49,7 @@ export function ContactButtons({ property }: { property: Property }) {
           href={hasPhone ? whatsappHref : "#"}
           target={hasPhone ? "_blank" : undefined}
           aria-disabled={!hasPhone}
-          className={`flex items-center justify-center gap-2 rounded-2xl px-4 py-3 text-sm font-bold transition ${
-            hasPhone
-              ? "bg-[#25D366] text-white shadow-[0_18px_36px_-22px_rgba(37,211,102,0.9)] hover:brightness-95"
-              : "cursor-not-allowed bg-base-200 text-base-content/40"
-          }`}
+          className={`action-button ${hasPhone ? "action-button-active" : "action-button-disabled"}`}
         >
           <MessageCircle className="size-4" />
           WhatsApp
@@ -67,7 +59,7 @@ export function ContactButtons({ property }: { property: Property }) {
           type="button"
           onClick={handleCallback}
           disabled={loading}
-          className="flex items-center justify-center gap-2 rounded-2xl border border-[#ef3d81]/20 bg-[#fff1f4] px-4 py-3 text-sm font-bold text-[#d92f71] transition hover:border-[#ef3d81]/30 hover:bg-[#ffe8ee] disabled:cursor-not-allowed disabled:opacity-60"
+          className="action-button disabled:cursor-not-allowed disabled:opacity-60"
         >
           <BellRing className="size-4" />
           {loading ? "Saving..." : "Request Callback"}

@@ -36,7 +36,9 @@ public record PropertyResponse(
     List<String> imageUrls,
     OwnerSummary owner,
     boolean saved,
-    LocalDateTime createdAt
+    LocalDateTime createdAt,
+    String moderationStatus,
+    LocalDateTime publishedAt
 ) {
     public record OwnerSummary(Long id, String name, String email) {
     }

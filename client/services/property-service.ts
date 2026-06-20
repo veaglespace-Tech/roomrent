@@ -1,15 +1,20 @@
 "use client";
 
 import api from "@/services/api";
-import { Property, PropertyFilters, PropertyPayload } from "@/types";
+import { PaginatedResponse, Property, PropertyFilters, PropertyPayload } from "@/types";
 
 export const getProperties = async (filters: PropertyFilters = {}) => {
-  const { data } = await api.get<Property[]>("/properties", {
+  const { data } = await api.get<PaginatedResponse<Property>>("/properties", {
     params: {
       ...filters,
       amenities: filters.amenities?.join(",") || undefined
     }
   });
+  return data;
+};
+
+export const getSearchSuggestions = async (q: string) => {
+  const { data } = await api.get<string[]>("/properties/suggestions", { params: { q } });
   return data;
 };
 

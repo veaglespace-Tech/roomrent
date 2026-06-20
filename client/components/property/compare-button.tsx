@@ -34,9 +34,7 @@ export function CompareButton({ propertyId, compact }: CompareButtonProps) {
   return (
     <button
       type="button"
-      className={`inline-flex items-center gap-2 rounded-2xl border px-4 py-2 text-sm font-bold transition ${
-        compared ? "border-[#0f9f8f]/25 bg-[#ecfdf8] text-[#0f766e]" : "border-base-300 bg-white text-[#111827] hover:border-[#ef3d81]/25 hover:text-[#ef3d81]"
-      } ${compact ? "px-3 py-2 text-xs" : ""}`}
+      className={`action-button ${compared ? "action-button-active" : ""} ${compact ? "min-h-10 px-3 py-2 text-xs" : ""}`}
       disabled={loading}
       onClick={async () => {
         try {

@@ -2,6 +2,7 @@
 
 import api from "@/services/api";
 import { Property } from "@/types";
+import { getStoredAuthRole } from "@/lib/auth-session";
 
 export interface CompareToggleResponse {
   compared: boolean;
@@ -12,7 +13,7 @@ let cachedIds: number[] | null = null;
 let pendingLoad: Promise<number[]> | null = null;
 
 function hasAuthToken() {
-  return typeof window !== "undefined" && Boolean(window.localStorage.getItem("roomrent_token"));
+  return typeof window !== "undefined" && Boolean(getStoredAuthRole());
 }
 
 function emitCompareUpdated() {

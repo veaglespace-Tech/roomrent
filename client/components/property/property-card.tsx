@@ -38,12 +38,12 @@ export function PropertyCard({ property, onSavedChange }: PropertyCardProps) {
           fill
           className="object-cover transition duration-500 group-hover:scale-105"
         />
-        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(16,23,32,0.05)_0%,rgba(16,23,32,0.0)_38%,rgba(16,23,32,0.78)_100%)]" />
-        <div className="absolute left-4 top-4 rounded-full border border-white/45 bg-white/92 px-3 py-1 text-xs font-bold text-green-700 shadow-sm backdrop-blur">
+        <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.02)_0%,rgba(255,255,255,0.0)_38%,rgba(15,23,42,0.68)_100%)]" />
+        <div className="absolute left-4 top-4 rounded-full border border-white/55 bg-white/90 px-3 py-1 text-xs font-bold text-[var(--rf-cyan)] shadow-sm backdrop-blur">
           {property.availableFromDate || "Available now"}
         </div>
         <button
-          className="btn btn-circle btn-sm absolute right-4 top-4 border-none bg-base-100/95 shadow-sm transition hover:scale-105 hover:bg-[#fff1f4] hover:text-[#ef3d81]"
+          className="btn btn-circle btn-sm absolute right-4 top-4 border border-white/60 bg-white/95 text-[var(--rf-ink)] shadow-sm transition hover:scale-105 hover:border-[var(--rf-cyan)] hover:text-[var(--rf-cyan)]"
           onClick={handleSave}
           disabled={isSaving}
         >
@@ -53,10 +53,10 @@ export function PropertyCard({ property, onSavedChange }: PropertyCardProps) {
       <div className="card-body relative gap-4 p-5">
         <div className="space-y-3">
         <div className="flex flex-wrap gap-2">
-            <div className="pill-badge border-green-100 bg-green-50 text-green-700">{property.type}</div>
-            {property.category ? <div className="pill-badge border-pink-100 bg-pink-50 text-[#d92f71]">{property.category}</div> : null}
+            <div className="pill-badge">{property.type}</div>
+            {property.category ? <div className="pill-badge">{property.category}</div> : null}
             {property.sharingType ? <div className="pill-badge">{property.sharingType}</div> : null}
-            <div className="pill-badge border-amber-100 bg-amber-50 text-amber-700">
+            <div className="pill-badge">
               <Star className="mr-1 size-3.5" />
               Verified listing
             </div>
@@ -64,7 +64,7 @@ export function PropertyCard({ property, onSavedChange }: PropertyCardProps) {
           <h3 className="line-clamp-2 text-xl font-semibold leading-snug">{property.title}</h3>
         </div>
         <div>
-          <p className="bg-[linear-gradient(135deg,#d92f71,#ff7a35)] bg-clip-text text-3xl font-extrabold leading-none text-transparent">{displayPrice}</p>
+          <p className="bg-[linear-gradient(135deg,#0f766e,#334155)] bg-clip-text text-3xl font-extrabold leading-none text-transparent">{displayPrice}</p>
           <p className="mt-1 text-xs uppercase tracking-[0.15em] text-base-content/55">{property.price > 0 ? "monthly rent" : "source price"}</p>
         </div>
         <div className="flex items-center gap-2 text-sm text-base-content/70">
@@ -73,14 +73,14 @@ export function PropertyCard({ property, onSavedChange }: PropertyCardProps) {
         </div>
         <p className="line-clamp-2 text-sm text-base-content/70">{property.description}</p>
         <div className="grid gap-2 sm:grid-cols-2">
-          <div className="rounded-[16px] border border-base-300/60 bg-white/80 px-3 py-2 text-xs text-base-content/70 shadow-[0_14px_28px_-24px_rgba(15,23,42,0.5)]">
+          <div className="rounded-md border border-base-300/60 bg-white/78 px-3 py-2 text-xs text-base-content/70 shadow-[0_14px_28px_-24px_rgba(15,23,42,0.5)]">
             <div className="flex items-center gap-2">
               <Wallet className="size-3.5 text-primary" />
               Deposit
             </div>
             <p className="mt-1 font-semibold text-base-content">{property.securityDeposit ? `Rs. ${property.securityDeposit}` : "On request"}</p>
           </div>
-          <div className="rounded-[16px] border border-base-300/60 bg-white/80 px-3 py-2 text-xs text-base-content/70 shadow-[0_14px_28px_-24px_rgba(15,23,42,0.5)]">
+          <div className="rounded-md border border-base-300/60 bg-white/78 px-3 py-2 text-xs text-base-content/70 shadow-[0_14px_28px_-24px_rgba(15,23,42,0.5)]">
             <div className="flex items-center gap-2">
               <BedDouble className="size-3.5 text-primary" />
               Furnishing
@@ -90,7 +90,7 @@ export function PropertyCard({ property, onSavedChange }: PropertyCardProps) {
         </div>
         <div className="flex flex-wrap gap-2">
           {property.amenities.slice(0, 3).map((amenity) => (
-            <span key={amenity} className="rounded-full border border-base-300/60 bg-base-200/70 px-3 py-1 text-xs text-base-content/70">
+            <span key={amenity} className="rounded-md border border-base-300/60 bg-base-200/70 px-3 py-1 text-xs text-base-content/70">
               {amenity}
             </span>
           ))}

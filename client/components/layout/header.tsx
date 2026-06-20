@@ -2,15 +2,12 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { Building2, ChevronDown, Globe, HelpCircle, LogIn, Menu, MessageSquare, Sparkles, X } from "lucide-react";
-import { usePathname } from "next/navigation";
-
-const quickLinks = [
-  { label: "Help", href: "/contact", icon: HelpCircle },
-  { label: "Support", href: "/contact", icon: MessageSquare },
-  { label: "En", href: "#", icon: Globe },
-  { label: "Log in", href: "/login", icon: LogIn }
-];
+import { Building2, ChevronDown, HelpCircle, LogIn, LogOut, Menu, Sparkles, X } from "lucide-react";
+import { usePathname, useRouter } from "next/navigation";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { logout as logoutAction } from "@/store/slices/auth-slice";
+import { clearAuthSession, getDashboardRoute, getStoredAuthRole } from "@/lib/auth-session";
+import { logoutUser } from "@/services/auth-service";
 
 const navTabs = [
   { label: "About Us", href: "/#about" },
@@ -29,9 +26,7 @@ const navTabs = [
     href: "/#services",
     children: [
       { label: "Post requirement", href: "/contact" },
-      { label: "Compare listings", href: "/compare" },
-      { label: "Saved searches", href: "/dashboard/saved-searches" },
-      { label: "Owner tools", href: "/dashboard/owner/add-property" }
+      { label: "Compare listings", href: "/compare" }
     ]
   },
   { label: "Contact", href: "/contact" }
@@ -48,9 +43,10 @@ function Logo() {
   );
 }
 
-function DesktopTabs() {
+function DesktopTabs({ role, onLogout }: { role: string | null; onLogout: () => void }) {
   const pathname = usePathname();
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
+  const dashboardHref = role === "OWNER" ? "/dashboard/owner" : role === "ADMIN" ? "/dashboard/admin" : "/dashboard/user";
 
   useEffect(() => {
     setActiveMenu(null);
@@ -61,19 +57,30 @@ function DesktopTabs() {
       <div className="flex items-center justify-between gap-4 border-b border-[var(--rf-line)] pb-3">
         <span className="text-xs uppercase tracking-[0.22em] text-[var(--rf-cyan)]">Property Technology</span>
         <div className="flex flex-wrap items-center justify-end gap-3 text-xs text-[var(--rf-muted)]">
-          {quickLinks.map((link) => {
-            const Icon = link.icon;
-            return (
-              <Link key={link.label} href={link.href} className="inline-flex items-center gap-1.5 transition hover:text-[var(--rf-cyan)]">
-                <Icon className="size-3.5" />
-                {link.label}
+          {role ? null : (
+            <>
+              <Link href="/contact" className="inline-flex items-center gap-1.5 transition hover:text-[var(--rf-cyan)]">
+                <HelpCircle className="size-3.5" />
+                Help
               </Link>
-            );
-          })}
-          <Link href="/register" className="landing-primary-button min-h-9 px-4 text-xs">
-            <Sparkles className="size-4" />
-            Get Started
-          </Link>
+              <Link href="/register" className="landing-primary-button min-h-9 px-4 text-xs">
+                <Sparkles className="size-4" />
+                Get Started
+              </Link>
+            </>
+          )}
+          {role ? (
+            <>
+              <Link href={dashboardHref} className="inline-flex items-center gap-1.5 transition hover:text-[var(--rf-cyan)]">
+                <Building2 className="size-3.5" />
+                Dashboard
+              </Link>
+              <button type="button" className="inline-flex items-center gap-1.5 transition hover:text-[var(--rf-cyan)]" onClick={onLogout}>
+                <LogOut className="size-3.5" />
+                Logout
+              </button>
+            </>
+          ) : null}
         </div>
       </div>
 
@@ -111,10 +118,11 @@ function DesktopTabs() {
   );
 }
 
-function MobileNav() {
+function MobileNav({ role, onLogout }: { role: string | null; onLogout: () => void }) {
   const [open, setOpen] = useState(false);
   const [activeMenu, setActiveMenu] = useState<string | null>(null);
   const pathname = usePathname();
+  const dashboardHref = role === "OWNER" ? "/dashboard/owner" : role === "ADMIN" ? "/dashboard/admin" : "/dashboard/user";
 
   useEffect(() => {
     setOpen(false);
@@ -138,22 +146,37 @@ function MobileNav() {
             </div>
             <div className="grid gap-4 p-4">
               <div className="grid gap-2">
-                {quickLinks.map((link) => {
-                  const Icon = link.icon;
-                  return (
-                    <Link
-                      key={link.label}
-                      href={link.href}
-                      className="mobile-nav-direct"
-                      onClick={() => setOpen(false)}
-                    >
+                {role ? (
+                  <>
+                    <Link href={dashboardHref} className="mobile-nav-direct" onClick={() => setOpen(false)}>
                       <span className="inline-flex items-center gap-2">
-                        <Icon className="size-4" />
-                        {link.label}
+                        <Building2 className="size-4" />
+                        Dashboard
                       </span>
                     </Link>
-                  );
-                })}
+                    <button type="button" className="mobile-nav-direct" onClick={onLogout}>
+                      <span className="inline-flex items-center gap-2">
+                        <LogOut className="size-4" />
+                        Logout
+                      </span>
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <Link href="/contact" className="mobile-nav-direct" onClick={() => setOpen(false)}>
+                      <span className="inline-flex items-center gap-2">
+                        <HelpCircle className="size-4" />
+                        Help
+                      </span>
+                    </Link>
+                    <Link href="/login" className="mobile-nav-direct" onClick={() => setOpen(false)}>
+                      <span className="inline-flex items-center gap-2">
+                        <LogIn className="size-4" />
+                        Log in
+                      </span>
+                    </Link>
+                  </>
+                )}
               </div>
               <div className="grid gap-2">
                 {navTabs.map((item) =>
@@ -185,9 +208,15 @@ function MobileNav() {
                   )
                 )}
               </div>
-              <Link href="/register" className="mobile-nav-direct mobile-nav-trigger-featured" onClick={() => setOpen(false)}>
-                Get Started
-              </Link>
+              {role ? (
+                <button type="button" className="mobile-nav-direct mobile-nav-trigger-featured" onClick={onLogout}>
+                  Logout
+                </button>
+              ) : (
+                <Link href="/register" className="mobile-nav-direct mobile-nav-trigger-featured" onClick={() => setOpen(false)}>
+                  Get Started
+                </Link>
+              )}
             </div>
           </div>
         </div>
@@ -197,25 +226,32 @@ function MobileNav() {
 }
 
 export function Header() {
+  const router = useRouter();
+  const dispatch = useAppDispatch();
+  const user = useAppSelector((state) => state.auth.user);
+  const role = user?.role || getStoredAuthRole();
+
+  const handleLogout = async () => {
+    try {
+      await logoutUser();
+    } catch {
+      // Fall back to client-side cleanup even if the network call fails.
+    } finally {
+      clearAuthSession();
+      dispatch(logoutAction());
+      router.push("/login");
+    }
+  };
+
   return (
     <header className="sticky top-0 z-50 px-3 pt-2 md:px-5">
       <div className="header-shell">
         <div className="page-shell flex min-h-[84px] flex-col gap-2 py-3">
           <div className="flex items-center justify-between gap-4">
             <Logo />
-            <div className="hidden items-center gap-3 text-xs text-[var(--rf-muted)] md:flex lg:hidden">
-              <Link href="/contact" className="inline-flex items-center gap-1.5 transition hover:text-[var(--rf-cyan)]">
-                <HelpCircle className="size-3.5" />
-                Help
-              </Link>
-              <Link href="/register" className="landing-primary-button min-h-9 px-4 text-xs">
-                <Sparkles className="size-4" />
-                Get Started
-              </Link>
-            </div>
-            <MobileNav />
+            <MobileNav role={role} onLogout={handleLogout} />
           </div>
-          <DesktopTabs />
+          <DesktopTabs role={role} onLogout={handleLogout} />
         </div>
       </div>
     </header>

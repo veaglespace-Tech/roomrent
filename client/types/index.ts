@@ -54,6 +54,8 @@ export interface Property {
   owner: OwnerSummary;
   saved: boolean;
   createdAt: string;
+  moderationStatus?: string;
+  publishedAt?: string;
 }
 
 export interface AuthResponse extends AuthUser {}
@@ -131,7 +133,22 @@ export interface PropertyFilters {
   maxPrice?: string;
   type?: PropertyType | "";
   gender?: GenderPreference | "";
+  furnishedStatus?: FurnishedStatus | "";
+  sharingType?: string;
+  listedByType?: ListedByType | "";
   amenities?: string[];
+  sortBy?: "newest" | "price_asc" | "price_desc" | "";
+  page?: number;
+  size?: number;
+}
+
+export interface PaginatedResponse<T> {
+  content: T[];
+  totalElements: number;
+  totalPages: number;
+  page: number;
+  size: number;
+  last: boolean;
 }
 
 export interface ListingSource {

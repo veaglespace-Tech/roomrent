@@ -1,4 +1,13 @@
 type CityOption = { name: string; slug: string; highlight: string };
+type LocalityOption = {
+  name: string;
+  slug: string;
+  city: string;
+  citySlug: string;
+  district: string;
+  districtSlug: string;
+  highlight: string;
+};
 
 const slugify = (value: string) =>
   value
@@ -9,6 +18,16 @@ const slugify = (value: string) =>
 const city = (name: string, highlight = "Rooms, PGs, flats and local rental demand"): CityOption => ({
   name,
   slug: slugify(name),
+  highlight
+});
+
+const locality = (name: string, city: string, district: string, highlight: string): LocalityOption => ({
+  name,
+  slug: slugify(name),
+  city,
+  citySlug: slugify(city),
+  district,
+  districtSlug: slugify(district),
   highlight
 });
 
@@ -568,4 +587,25 @@ export const categoryBlueprint = [
     label: "Commercial",
     items: ["Shops", "Offices", "Co-working Spaces"]
   }
+] as const;
+
+export const localityPages = [
+  locality("Andheri West", "Mumbai", "Mumbai City", "Film studios, office districts and premium rental demand"),
+  locality("Bandra West", "Mumbai", "Mumbai City", "High-intent rental demand for shared flats and studio homes"),
+  locality("Powai", "Mumbai", "Mumbai City", "IT workforce housing, premium apartments and co-living"),
+  locality("Thane West", "Thane", "Thane", "Commuter apartments, PGs and family rentals"),
+  locality("Kalyan West", "Thane", "Thane", "Affordable apartments and transit-friendly homes"),
+  locality("Nerul", "Navi Mumbai", "Thane", "Planned township rentals and student housing"),
+  locality("Viman Nagar", "Pune", "Pune", "Student and IT rentals near airports and offices"),
+  locality("Kothrud", "Pune", "Pune", "Family homes, shared rooms and education-driven demand"),
+  locality("Wakad", "Pune", "Pune", "Fast-moving rental demand near the IT corridor"),
+  locality("Hinjewadi", "Pune", "Pune", "IT park rentals, PGs and compact flats"),
+  locality("Sitabuldi", "Nagpur", "Nagpur", "Central rental demand and commercial visibility"),
+  locality("Dharampeth", "Nagpur", "Nagpur", "Upscale residential demand and office access"),
+  locality("College Road", "Nashik", "Nashik", "Student housing, rooms and compact family flats"),
+  locality("Indira Nagar", "Nashik", "Nashik", "Balanced rental demand across rooms and apartments"),
+  locality("Shahupuri", "Kolhapur", "Kolhapur", "Local commerce, flats and premium rooms"),
+  locality("Ichalkaranji", "Kolhapur", "Kolhapur", "Textile workforce housing and commercial demand"),
+  locality("Chhatrapati Sambhajinagar West", "Chhatrapati Sambhajinagar", "Chhatrapati Sambhajinagar", "Student and working professional rentals"),
+  locality("Aurangabad CIDCO", "Chhatrapati Sambhajinagar", "Chhatrapati Sambhajinagar", "Planned neighbourhood rentals and family flats")
 ] as const;

@@ -94,6 +94,12 @@ public class Property {
     @Column(name = "listing_url", length = 500)
     private String listingUrl;
 
+    @Column(name = "moderation_status", length = 30)
+    private String moderationStatus = "PENDING";
+
+    @Column(name = "published_at")
+    private LocalDateTime publishedAt;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, length = 50)
     private PropertyType type;
@@ -315,6 +321,22 @@ public class Property {
 
     public void setListingUrl(String listingUrl) {
         this.listingUrl = listingUrl;
+    }
+
+    public String getModerationStatus() {
+        return moderationStatus;
+    }
+
+    public void setModerationStatus(String moderationStatus) {
+        this.moderationStatus = moderationStatus;
+    }
+
+    public LocalDateTime getPublishedAt() {
+        return publishedAt;
+    }
+
+    public void setPublishedAt(LocalDateTime publishedAt) {
+        this.publishedAt = publishedAt;
     }
 
     public PropertyType getType() {

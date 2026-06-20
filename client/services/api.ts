@@ -3,18 +3,8 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api"
-});
-
-api.interceptors.request.use((config) => {
-  if (typeof window !== "undefined") {
-    const isAuthRequest = config.url?.includes("/auth/");
-    const token = isAuthRequest ? null : localStorage.getItem("roomrent_token");
-    if (token) {
-      config.headers.Authorization = `Bearer ${token}`;
-    }
-  }
-  return config;
+  baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080/api",
+  withCredentials: true
 });
 
 export default api;

@@ -9,10 +9,10 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        ink: "#1F2937",
-        mist: "#F4F7FB",
+        ink: "#102033",
+        mist: "#EEF3F8",
         brand: "#0F766E",
-        accent: "#F97316"
+        accent: "#334155"
       },
       fontFamily: {
         sans: ["Plus Jakarta Sans", "Inter", "ui-sans-serif", "system-ui"]
@@ -32,12 +32,12 @@ const config: Config = {
       {
         roomrent: {
           primary: "#0F766E",
-          secondary: "#F97316",
+          secondary: "#334155",
           accent: "#14B8A6",
-          neutral: "#1F2937",
-          "base-100": "#FFFFFF",
-          "base-200": "#F4F7FB",
-          "base-300": "#E5ECF3",
+          neutral: "#102033",
+          "base-100": "#F9FBFD",
+          "base-200": "#EEF3F8",
+          "base-300": "#D9E4EC",
           info: "#2563EB",
           success: "#16A34A",
           warning: "#F59E0B",

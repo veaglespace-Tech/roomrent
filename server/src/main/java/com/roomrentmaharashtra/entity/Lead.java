@@ -35,6 +35,9 @@ public class Lead {
     @Column(name = "contact_phone", nullable = false, length = 30)
     private String contactPhone;
 
+    @Column(name = "status", length = 30)
+    private String status = "NEW";
+
     @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
 
@@ -77,6 +80,14 @@ public class Lead {
 
     public void setContactPhone(String contactPhone) {
         this.contactPhone = contactPhone;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
     }
 
     public LocalDateTime getCreatedAt() {

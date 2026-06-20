@@ -8,6 +8,7 @@ public record LeadResponse(
     String propertyTitle,
     String contactName,
     String contactPhone,
+    String status,
     LocalDateTime createdAt
 ) {
 }

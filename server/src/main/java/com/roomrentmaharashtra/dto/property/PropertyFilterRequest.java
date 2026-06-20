@@ -12,6 +12,9 @@ public record PropertyFilterRequest(
     BigDecimal maxPrice,
     PropertyType type,
     GenderPreference gender,
+    String furnishedStatus,
+    String sharingType,
+    String listedByType,
     List<String> amenities
 ) {
 }

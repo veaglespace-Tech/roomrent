@@ -12,6 +12,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class LeadService {
@@ -53,6 +54,21 @@ public class LeadService {
             .toList();
     }
 
+    public LeadResponse updateLeadStatus(Long id, Map<String, String> payload, Authentication authentication) {
+        User owner = userService.getCurrentUser(authentication);
+        Lead lead = leadRepository.findById(id)
+            .orElseThrow(() -> new ResourceNotFoundException("Lead not found"));
+
+        if (!lead.getProperty().getCreatedBy().getId().equals(owner.getId())) {
+            throw new IllegalArgumentException("You don't have permission to update this lead");
+        }
+
+        if (payload.containsKey("status")) {
+            lead.setStatus(payload.get("status"));
+        }
+        return toResponse(leadRepository.save(lead));
+    }
+
     private LeadResponse toResponse(Lead lead) {
         return new LeadResponse(
             lead.getId(),
@@ -60,6 +76,7 @@ public class LeadService {
             lead.getProperty().getTitle(),
             lead.getContactName(),
             lead.getContactPhone(),
+            lead.getStatus(),
             lead.getCreatedAt()
         );
     }

@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.stream.Collectors;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 @Service
 public class PropertyService {
@@ -47,12 +49,10 @@ public class PropertyService {
         this.enquiryRepository = enquiryRepository;
     }
 
-    public List<PropertyResponse> getProperties(PropertyFilterRequest filterRequest, Authentication authentication) {
+    public Page<PropertyResponse> getProperties(PropertyFilterRequest filterRequest, Pageable pageable, Authentication authentication) {
         User currentUser = userService.getCurrentUserOptional(authentication).orElse(null);
-        List<Property> properties = propertyRepository.findAll(buildSpecification(filterRequest));
-        return properties.stream()
-            .map(property -> toResponse(property, currentUser))
-            .collect(Collectors.toList());
+        Page<Property> propertyPage = propertyRepository.findAll(buildSpecification(filterRequest), pageable);
+        return propertyPage.map(property -> toResponse(property, currentUser));
     }
 
     public PropertyResponse getPropertyById(Long id, Authentication authentication) {
@@ -203,7 +203,9 @@ public class PropertyService {
                 property.getCreatedBy().getEmail()
             ),
             isSaved,
-            property.getCreatedAt()
+            property.getCreatedAt(),
+            property.getModerationStatus(),
+            property.getPublishedAt()
         );
     }
 
@@ -214,7 +216,18 @@ public class PropertyService {
                 return cb.and(predicates.toArray(Predicate[]::new));
             }
             if (filterRequest.location() != null && !filterRequest.location().isBlank()) {
-                predicates.add(cb.like(cb.lower(root.get("location")), "%" + filterRequest.location().toLowerCase() + "%"));
+                String pattern = "%" + filterRequest.location().toLowerCase() + "%";
+                predicates.add(cb.or(
+                    cb.like(cb.lower(root.get("location")), pattern),
+                    cb.like(cb.lower(root.get("areaLocality")), pattern),
+                    cb.like(cb.lower(root.get("city")), pattern),
+                    cb.like(cb.lower(root.get("district")), pattern),
+                    cb.like(cb.lower(root.get("state")), pattern),
+                    cb.like(cb.lower(root.get("category")), pattern),
+                    cb.like(cb.lower(root.get("sharingType")), pattern),
+                    cb.like(cb.lower(root.get("listedByType")), pattern),
+                    cb.like(cb.lower(root.get("listingSource")), pattern)
+                ));
             }
             if (filterRequest.minPrice() != null) {
                 predicates.add(cb.greaterThanOrEqualTo(root.get("price"), filterRequest.minPrice()));
@@ -228,11 +241,24 @@ public class PropertyService {
             if (filterRequest.gender() != null) {
                 predicates.add(cb.equal(root.get("gender"), filterRequest.gender()));
             }
+            if (filterRequest.furnishedStatus() != null && !filterRequest.furnishedStatus().isBlank()) {
+                predicates.add(cb.equal(root.get("furnishedStatus"), filterRequest.furnishedStatus()));
+            }
+            if (filterRequest.sharingType() != null && !filterRequest.sharingType().isBlank()) {
+                predicates.add(cb.equal(root.get("sharingType"), filterRequest.sharingType()));
+            }
+            if (filterRequest.listedByType() != null && !filterRequest.listedByType().isBlank()) {
+                predicates.add(cb.equal(root.get("listedByType"), filterRequest.listedByType()));
+            }
             if (filterRequest.amenities() != null && !filterRequest.amenities().isEmpty()) {
                 for (String amenity : filterRequest.amenities()) {
                     predicates.add(cb.isMember(amenity, root.get("amenities")));
                 }
             }
+            predicates.add(cb.or(
+                cb.isNull(root.get("moderationStatus")),
+                cb.equal(root.get("moderationStatus"), "APPROVED")
+            ));
             query.distinct(true);
             return cb.and(predicates.toArray(Predicate[]::new));
         };

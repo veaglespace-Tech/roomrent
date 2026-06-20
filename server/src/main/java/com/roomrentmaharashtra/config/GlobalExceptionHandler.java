@@ -1,6 +1,7 @@
 package com.roomrentmaharashtra.config;
 
 import com.roomrentmaharashtra.exception.ResourceNotFoundException;
+import com.roomrentmaharashtra.exception.RateLimitExceededException;
 import com.roomrentmaharashtra.exception.UnauthorizedException;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
@@ -9,6 +10,8 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -16,6 +19,8 @@ import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
+
+    private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<?> handleNotFound(ResourceNotFoundException ex) {
@@ -25,6 +30,11 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UnauthorizedException.class)
     public ResponseEntity<?> handleUnauthorized(UnauthorizedException ex) {
         return buildResponse(HttpStatus.FORBIDDEN, ex.getMessage());
+    }
+
+    @ExceptionHandler(RateLimitExceededException.class)
+    public ResponseEntity<?> handleRateLimit(RateLimitExceededException ex) {
+        return buildResponse(HttpStatus.TOO_MANY_REQUESTS, ex.getMessage());
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
@@ -54,7 +64,8 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<?> handleGeneral(Exception ex) {
-        return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+        logger.error("Unhandled application error", ex);
+        return buildResponse(HttpStatus.INTERNAL_SERVER_ERROR, "Internal server error");
     }
 
     private ResponseEntity<Map<String, Object>> buildResponse(HttpStatus status, String message) {
