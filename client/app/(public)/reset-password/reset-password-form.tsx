@@ -47,7 +47,7 @@ export default function ResetPasswordForm() {
   };
 
   return (
-    <section className="page-shell flex min-h-[calc(100vh-220px)] items-center py-10">
+    <section className="page-shell flex min-h-[calc(100dvh-220px)] items-center py-10">
       <AuthCard title="Reset password" description="Enter the new password for your account.">
         <form onSubmit={handleSubmit} className="space-y-5">
           <label className="auth-field">

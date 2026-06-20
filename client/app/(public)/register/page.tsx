@@ -80,7 +80,7 @@ export default function RegisterPage() {
   };
 
   return (
-    <section className="page-shell flex min-h-[calc(100vh-220px)] items-center py-10">
+    <section className="page-shell flex min-h-[calc(100dvh-220px)] items-center py-10">
       <AuthCard title="Register" description="Create a user account for room search, enquiries, saved properties, and listing tools after plan activation.">
         <form onSubmit={handleSubmit} className="grid gap-5 md:grid-cols-2" noValidate>
           {success ? (

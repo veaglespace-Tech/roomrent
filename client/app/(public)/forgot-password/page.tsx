@@ -35,7 +35,7 @@ export default function ForgotPasswordPage() {
   };
 
   return (
-    <section className="page-shell flex min-h-[calc(100vh-220px)] items-center py-10">
+    <section className="page-shell flex min-h-[calc(100dvh-220px)] items-center py-10">
       <AuthCard title="Forgot password" description="Enter your email and we will send a password reset link.">
         <form onSubmit={handleSubmit} className="space-y-5">
           <label className="auth-field">

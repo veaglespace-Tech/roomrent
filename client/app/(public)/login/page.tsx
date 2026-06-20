@@ -65,7 +65,7 @@ export default function LoginPage() {
   };
 
   return (
-    <section className="page-shell flex min-h-[calc(100vh-220px)] items-center py-10">
+    <section className="page-shell flex min-h-[calc(100dvh-220px)] items-center py-10">
       <AuthCard title="Log in" description="Use your account to access saved properties, owner tools, enquiries, and admin controls.">
         <form onSubmit={handleSubmit} className="space-y-5" noValidate>
           {registered ? (

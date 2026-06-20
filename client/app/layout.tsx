@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import type { Viewport } from "next";
 import { Providers } from "@/components/providers";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
@@ -33,6 +34,12 @@ export const metadata: Metadata = {
   }
 };
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+  viewportFit: "cover"
+};
+
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" data-theme="roomrent">
@@ -45,7 +52,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
       <body>
         <Providers>
           <Header />
-          <main>{children}</main>
+          <main className="overflow-x-hidden">{children}</main>
           <Footer />
         </Providers>
       </body>

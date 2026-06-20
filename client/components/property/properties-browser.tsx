@@ -97,6 +97,18 @@ function PropertiesContent({ title, subtitle }: PropertiesBrowserProps) {
     return () => clearTimeout(timeout);
   }, [filters]);
 
+  useEffect(() => {
+    if (!mobileFiltersOpen) {
+      return;
+    }
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [mobileFiltersOpen]);
+
   const sortedProperties = [...properties].sort((a, b) => {
     if (filters.sortBy === "price_asc") return a.price - b.price;
     if (filters.sortBy === "price_desc") return b.price - a.price;

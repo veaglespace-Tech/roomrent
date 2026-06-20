@@ -129,6 +129,18 @@ function MobileNav({ role, onLogout }: { role: string | null; onLogout: () => vo
     setActiveMenu(null);
   }, [pathname]);
 
+  useEffect(() => {
+    if (!open) {
+      return;
+    }
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [open]);
+
   return (
     <div className="relative lg:hidden">
       <button type="button" className="mobile-menu-button" aria-expanded={open} onClick={() => setOpen((value) => !value)}>

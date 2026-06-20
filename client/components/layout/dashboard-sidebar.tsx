@@ -96,6 +96,18 @@ export function DashboardSidebar() {
     setOpen(false);
   }, [pathname]);
 
+  useEffect(() => {
+    if (!open) {
+      return;
+    }
+
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = "hidden";
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [open]);
+
   const handleLogout = async () => {
     try {
       await logoutUser();
