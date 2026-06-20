@@ -18,6 +18,7 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [registered, setRegistered] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
@@ -25,6 +26,7 @@ export default function LoginPage() {
 
   const validation = useMemo(() => loginSchema.safeParse({ email, password }), [email, password]);
   const fieldErrors = validation.success ? {} : validation.error.flatten().fieldErrors;
+  const canSubmit = validation.success && !loading;
 
   useEffect(() => {
     setRegistered(new URLSearchParams(window.location.search).get("registered") === "1");
@@ -48,9 +50,13 @@ export default function LoginPage() {
     try {
       setLoading(true);
       setError("");
+      setSuccess("");
       const data = await loginUser(validation.data);
       dispatch(setCredentials(data));
-      router.replace(getDashboardRoute(data.role));
+      setSuccess("Login successful. Redirecting...");
+      window.setTimeout(() => {
+        router.replace(getDashboardRoute(data.role));
+      }, 500);
     } catch (loginError) {
       setError(getApiErrorMessage(loginError, "Invalid email or password."));
     } finally {
@@ -63,19 +69,29 @@ export default function LoginPage() {
       <AuthCard title="Log in" description="Use your account to access saved properties, owner tools, enquiries, and admin controls.">
         <form onSubmit={handleSubmit} className="space-y-5" noValidate>
           {registered ? (
-            <p className="border border-[rgba(83,211,138,0.35)] bg-[rgba(83,211,138,0.08)] px-4 py-3 text-sm font-medium text-[var(--rf-success)]">
+            <p className="rounded-xl border border-[rgba(83,211,138,0.35)] bg-[rgba(83,211,138,0.12)] px-4 py-3 text-sm font-medium text-[var(--rf-success)]" role="status" aria-live="polite">
               Registration complete. Sign in to continue.
+            </p>
+          ) : null}
+          {success ? (
+            <p className="rounded-xl border border-[rgba(83,211,138,0.35)] bg-[rgba(83,211,138,0.12)] px-4 py-3 text-sm font-medium text-[var(--rf-success)]" role="status" aria-live="polite">
+              {success}
+            </p>
+          ) : null}
+          {error ? (
+            <p className="rounded-xl border border-[rgba(239,68,68,0.25)] bg-[rgba(239,68,68,0.08)] px-4 py-3 text-sm font-medium text-error" role="alert" aria-live="assertive">
+              {error}
             </p>
           ) : null}
           <label className="auth-field block">
             <Mail className="auth-field-icon" />
-            <input className="form-input auth-field-control" type="email" autoComplete="email" placeholder="Email address" value={email} onChange={(e) => setEmail(e.target.value)} onBlur={() => setTouched((current) => ({ ...current, email: true }))} aria-invalid={touched.email && Boolean(fieldErrors.email?.[0])} />
+            <input className={`form-input auth-field-control ${touched.email && fieldErrors.email?.[0] ? "auth-field-control-error" : ""}`} type="email" autoComplete="email" placeholder="Email address" value={email} onChange={(e) => setEmail(e.target.value)} onBlur={() => setTouched((current) => ({ ...current, email: true }))} aria-invalid={touched.email && Boolean(fieldErrors.email?.[0])} />
             {touched.email && fieldErrors.email?.[0] ? <p className="mt-1 text-xs font-semibold text-error">{fieldErrors.email[0]}</p> : null}
           </label>
           <label className="auth-field block">
             <Shield className="auth-field-icon" />
             <input
-              className="form-input auth-field-control"
+              className={`form-input auth-field-control ${touched.password && fieldErrors.password?.[0] ? "auth-field-control-error" : ""}`}
               type={showPassword ? "text" : "password"}
               autoComplete="current-password"
               placeholder="Password"
@@ -91,10 +107,9 @@ export default function LoginPage() {
               aria-label={showPassword ? "Hide password" : "Show password"}
             >
               {showPassword ? <EyeOff className="size-4" /> : <Eye className="size-4" />}
-              </button>
+            </button>
             {touched.password && fieldErrors.password?.[0] ? <p className="mt-1 text-xs font-semibold text-error">{fieldErrors.password[0]}</p> : null}
           </label>
-          {error ? <p className="text-sm text-error">{error}</p> : null}
           <div className="flex items-center justify-between gap-3 text-sm">
             <Link href="/forgot-password" className="font-medium text-[var(--rf-cyan)] hover:underline">
               Forgot password?
@@ -103,7 +118,7 @@ export default function LoginPage() {
               Create account
             </Link>
           </div>
-          <button className="glow-button h-14 w-full" disabled={loading}>
+          <button className="glow-button h-14 w-full disabled:cursor-not-allowed disabled:opacity-60" disabled={!canSubmit}>
             <LogIn className="relative size-4" />
             {loading ? "Logging in..." : "Continue"}
           </button>

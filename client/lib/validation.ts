@@ -18,11 +18,12 @@ export const emailSchema = z
   .string()
   .trim()
   .toLowerCase()
+  .min(1, "Email is required.")
   .email("Enter a valid email address.");
 
 export const loginSchema = z.object({
   email: emailSchema,
-  password: z.string().min(1, "Password is required.")
+  password: z.string().trim().min(1, "Password is required.")
 });
 
 export const forgotPasswordSchema = z.object({
@@ -42,7 +43,7 @@ export const resetPasswordSchema = z
 
 export const registerSchema = z
   .object({
-    firstName: z.string().trim().min(2, "First name must be at least 2 characters."),
+    firstName: z.string().trim().min(3, "Name must be at least 3 characters."),
     lastName: z.string().trim().optional(),
     phone: phoneSchema,
     email: emailSchema,
