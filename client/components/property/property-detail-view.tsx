@@ -38,12 +38,12 @@ export function PropertyDetailView() {
         <div className="space-y-6">
           <div className="grid gap-4 md:grid-cols-[1.2fr_0.8fr]">
             <div className="relative min-h-[360px] overflow-hidden rounded-lg border border-base-300/70 shadow-[0_28px_70px_-44px_rgba(15,23,42,0.48)]">
-              <Image src={gallery[0]} alt={property.title} fill className="object-cover" />
+              <Image src={gallery[0]} alt={property.title} fill priority sizes="(max-width: 1024px) 100vw, 60vw" className="object-cover" />
             </div>
             <div className="grid gap-4">
               {gallery.slice(1, 3).map((image) => (
                 <div key={image} className="relative min-h-[172px] overflow-hidden rounded-lg border border-base-300/70">
-                  <Image src={image} alt={property.title} fill className="object-cover" />
+                  <Image src={image} alt={property.title} fill sizes="(max-width: 1024px) 50vw, 30vw" loading="lazy" className="object-cover" />
                 </div>
               ))}
             </div>

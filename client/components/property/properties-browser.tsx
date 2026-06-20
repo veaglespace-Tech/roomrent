@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Building2, Filter, MapPinned, PlusCircle, SlidersHorizontal } from "lucide-react";
@@ -109,12 +109,16 @@ function PropertiesContent({ title, subtitle }: PropertiesBrowserProps) {
     };
   }, [mobileFiltersOpen]);
 
-  const sortedProperties = [...properties].sort((a, b) => {
-    if (filters.sortBy === "price_asc") return a.price - b.price;
-    if (filters.sortBy === "price_desc") return b.price - a.price;
-    if (filters.sortBy === "newest") return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-    return 0;
-  });
+  const sortedProperties = useMemo(
+    () =>
+      [...properties].sort((a, b) => {
+        if (filters.sortBy === "price_asc") return a.price - b.price;
+        if (filters.sortBy === "price_desc") return b.price - a.price;
+        if (filters.sortBy === "newest") return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+        return 0;
+      }),
+    [filters.sortBy, properties]
+  );
 
   return (
     <section className="page-shell py-8 lg:py-10">
@@ -307,7 +311,7 @@ function PropertiesContent({ title, subtitle }: PropertiesBrowserProps) {
             className="drawer-overlay"
             onClick={() => setMobileFiltersOpen(false)}
           />
-          <div className="drawer-panel w-[min(86vw,360px)]">
+          <div className="drawer-panel w-[min(88vw,360px)]">
             <FiltersSidebar
               filters={filters}
               onChange={setFilters}

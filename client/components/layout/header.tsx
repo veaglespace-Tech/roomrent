@@ -149,7 +149,7 @@ function MobileNav({ role, onLogout }: { role: string | null; onLogout: () => vo
       {open ? (
         <div className="fixed inset-0 z-50">
           <button type="button" aria-label="Close menu" className="drawer-overlay" onClick={() => setOpen(false)} />
-          <div className="drawer-panel w-[min(86vw,340px)]">
+          <div className="drawer-panel w-[min(88vw,360px)]">
             <div className="flex items-center justify-between border-b border-[var(--rf-line)] px-4 py-4">
               <Logo />
               <button type="button" className="mobile-menu-button" onClick={() => setOpen(false)}>

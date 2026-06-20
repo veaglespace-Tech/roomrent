@@ -36,6 +36,8 @@ export function PropertyCard({ property, onSavedChange }: PropertyCardProps) {
           src={property.imageUrls[0] || "https://images.unsplash.com/photo-1505693416388-ac5ce068fe85"}
           alt={property.title}
           fill
+          sizes="(max-width: 640px) 100vw, (max-width: 1280px) 50vw, 33vw"
+          loading="lazy"
           className="object-cover transition duration-500 group-hover:scale-105"
         />
         <div className="absolute inset-0 bg-[linear-gradient(180deg,rgba(255,255,255,0.02)_0%,rgba(255,255,255,0.0)_38%,rgba(15,23,42,0.68)_100%)]" />

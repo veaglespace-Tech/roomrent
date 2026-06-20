@@ -55,7 +55,7 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
 
   return (
     <div className="flex h-full min-h-0 flex-col">
-      <div className="dashboard-sidebar-head">
+      <div className="sidebar-header">
         <p className="text-xs font-bold uppercase tracking-[0.22em] text-[var(--rf-cyan)]">Workspace</p>
         <h2 className="mt-3 text-2xl font-bold tracking-wide text-[var(--rf-ink)]">Dashboard</h2>
         <p className="mt-2 text-sm leading-6 text-[var(--rf-muted)]">
@@ -63,7 +63,7 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
         </p>
       </div>
 
-      <div className="min-h-0 p-4">
+      <div className="sidebar-body">
         <ul className="menu gap-2 pr-1">
           {links.map((link) => {
             const Icon = link.icon;
@@ -71,10 +71,12 @@ function SidebarContent({ onNavigate }: { onNavigate?: () => void }) {
               <li key={link.href}>
                 <Link
                   href={link.href}
-                  className={cn("dashboard-nav-item", pathname === link.href ? "dashboard-nav-item-active" : "")}
+                  className={cn("sidebar-link", pathname === link.href ? "sidebar-link-active" : "")}
                   onClick={onNavigate}
                 >
-                  <Icon className="size-4" />
+                  <span className="sidebar-icon">
+                    <Icon className="size-4" />
+                  </span>
                   {link.label}
                 </Link>
               </li>
@@ -140,10 +142,10 @@ export function DashboardSidebar() {
             className="drawer-overlay"
             onClick={() => setOpen(false)}
           />
-          <aside className="drawer-panel w-[min(86vw,340px)] overflow-hidden">
+          <aside className="drawer-panel w-[min(88vw,360px)] overflow-hidden">
             <div className="flex items-center justify-between border-b border-[var(--rf-line)] px-4 py-4">
               <span className="inline-flex items-center gap-3">
-                <span className="flex size-10 items-center justify-center border border-[var(--rf-line)] bg-[var(--rf-panel)] text-[var(--rf-cyan)]">
+                <span className="sidebar-icon">
                   <Building2 className="size-4" />
                 </span>
                 <span className="text-sm font-bold tracking-wide text-[var(--rf-ink)]">RentFlow</span>
@@ -165,9 +167,9 @@ export function DashboardSidebar() {
         </div>
       ) : null}
 
-      <aside className="dashboard-shell hidden w-full min-w-0 lg:sticky lg:top-24 lg:block lg:h-[calc(100vh-7rem)] lg:overflow-y-auto">
+      <aside className="sidebar-shell hidden w-full min-w-0 lg:sticky lg:top-24 lg:block lg:h-[calc(100vh-7rem)] lg:overflow-y-auto">
         <SidebarContent />
-        <div className="border-t border-[var(--rf-line)] p-4">
+        <div className="sidebar-footer">
           <button type="button" className="landing-secondary-button w-full" onClick={handleLogout}>
             <LogOut className="size-4" />
             Logout

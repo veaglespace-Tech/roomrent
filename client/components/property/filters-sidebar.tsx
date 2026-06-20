@@ -61,14 +61,14 @@ export function FiltersSidebar({ filters, onChange, mobile = false, onClose }: F
     <aside
       className={
         mobile
-          ? "filter-shell flex h-full min-h-0 flex-col space-y-5 !overflow-y-auto !overflow-x-hidden p-5"
-          : "filter-shell sticky top-24 h-[calc(100vh-7rem)] w-full min-h-0 space-y-5 !overflow-y-auto !overflow-x-hidden p-5 lg:max-w-[300px] xl:max-w-[312px]"
+          ? "sidebar-shell flex h-full min-h-0 flex-col space-y-5 !overflow-y-auto !overflow-x-hidden p-5"
+          : "sidebar-shell sticky top-24 h-[calc(100vh-7rem)] w-full min-h-0 space-y-5 !overflow-y-auto !overflow-x-hidden p-5 lg:max-w-[300px] xl:max-w-[312px]"
       }
     >
       <div className="border-b border-[rgba(15,23,42,0.1)] pb-4">
         <div className="flex items-start justify-between gap-3">
           <div className="flex items-center gap-3">
-            <div className="icon-tile">
+            <div className="sidebar-icon">
               <Filter className="size-5" />
             </div>
             <div>
@@ -184,7 +184,7 @@ export function FiltersSidebar({ filters, onChange, mobile = false, onClose }: F
         <p className="text-sm font-semibold text-[var(--rf-ink)]">Amenities</p>
         <div className="grid gap-2">
           {amenities.map((amenity) => (
-            <label key={amenity} className="flex cursor-pointer items-center gap-3 border border-[rgba(15,23,42,0.1)] px-3 py-2 transition hover:border-[var(--rf-cyan)]">
+            <label key={amenity} className="sidebar-link cursor-pointer justify-start">
               <input type="checkbox" className="checkbox checkbox-sm" checked={selectedAmenities.includes(amenity)} onChange={() => toggleAmenity(amenity)} />
               <span className="text-sm text-[var(--rf-muted)]">{amenity}</span>
             </label>

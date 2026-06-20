@@ -131,6 +131,71 @@ h4,
   color: var(--rf-ink);
 }
 
+.sidebar-shell {
+  position: relative;
+  overflow: hidden;
+  border: 1px solid var(--rf-line);
+  border-radius: 6px;
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.94), rgba(245, 249, 252, 0.94)),
+    linear-gradient(135deg, rgba(15, 118, 110, 0.05), transparent 34%);
+  box-shadow: var(--rf-shadow);
+}
+
+.sidebar-header {
+  @apply border-b p-4;
+  border-color: rgba(15, 23, 42, 0.1);
+  background: linear-gradient(135deg, rgba(15, 118, 110, 0.08), rgba(255, 255, 255, 0));
+}
+
+.sidebar-body {
+  @apply min-h-0 p-4;
+}
+
+.sidebar-footer {
+  @apply border-t p-4;
+  border-color: rgba(15, 23, 42, 0.1);
+  background: rgba(255, 255, 255, 0.76);
+}
+
+.sidebar-link {
+  @apply flex min-h-[44px] items-center gap-3 px-3 py-2 text-sm font-semibold transition duration-200;
+  position: relative;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  color: var(--rf-muted);
+}
+
+.sidebar-link:hover {
+  color: var(--rf-cyan);
+  border-color: rgba(15, 118, 110, 0.16);
+  background: rgba(15, 118, 110, 0.06);
+  transform: translateX(2px);
+}
+
+.sidebar-link-active {
+  background: linear-gradient(135deg, rgba(15, 118, 110, 0.12), rgba(15, 118, 110, 0.05)) !important;
+  border-color: var(--rf-cyan) !important;
+  color: var(--rf-cyan) !important;
+}
+
+.sidebar-icon {
+  @apply flex size-9 items-center justify-center;
+  border: 1px solid rgba(15, 118, 110, 0.18);
+  border-radius: 6px;
+  background: rgba(15, 118, 110, 0.08);
+  color: var(--rf-cyan);
+  flex: 0 0 auto;
+}
+
+.sidebar-chip {
+  @apply inline-flex items-center gap-1 border px-3 py-1 text-xs font-semibold;
+  border-color: rgba(148, 163, 184, 0.28);
+  border-radius: 9999px;
+  background: rgba(255, 255, 255, 0.86);
+  color: var(--rf-cyan);
+}
+
 .panel::before,
 .soft-card::before,
 .surface-card::before,
