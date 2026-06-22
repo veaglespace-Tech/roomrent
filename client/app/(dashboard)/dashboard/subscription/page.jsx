@@ -4,9 +4,9 @@ import { useEffect, useState } from "react";
 import { CheckCircle2, Crown, CreditCard, Sparkles } from "lucide-react";
 import { activateSubscription, getProfile } from "@/services/user-service";
 const plans = [
-    { plan: "STARTER", label: "Starter", price: "Rs. 499", duration: "30 days", accent: "from-[#0f9f8f] to-[#14b8a6]" },
-    { plan: "PRO", label: "Pro", price: "Rs. 999", duration: "90 days", accent: "from-[#ef3d81] to-[#fb7185]" },
-    { plan: "BUSINESS", label: "Business", price: "Rs. 1,999", duration: "180 days", accent: "from-[#ff7a35] to-[#facc15]" }
+    { plan: "STARTER", label: "Starter", price: "Managed access", duration: "30 days", accent: "from-[#0f9f8f] to-[#14b8a6]" },
+    { plan: "PRO", label: "Pro", price: "Managed access", duration: "90 days", accent: "from-[#ef3d81] to-[#fb7185]" },
+    { plan: "BUSINESS", label: "Business", price: "Managed access", duration: "180 days", accent: "from-[#ff7a35] to-[#facc15]" }
 ];
 export default function SubscriptionPage() {
     const [profile, setProfile] = useState(null);

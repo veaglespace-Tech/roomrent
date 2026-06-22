@@ -47,13 +47,23 @@ public class DataSeeder {
         "test listing"
     );
 
+    private static final Set<String> SEEDED_SOURCE_TITLES = Set.of(
+        "Raymond The Address",
+        "Raymond Realty Signia High",
+        "Rustomjee Azziano",
+        "Piramal Mahalaxmi",
+        "Hiranandani Regent Hill",
+        "Transcon Triumph"
+    );
+
     @Bean
     CommandLineRunner seedDatabase(PropertyRepository propertyRepository,
                                    UserRepository userRepository,
                                    PasswordEncoder passwordEncoder,
                                    @Value("${app.seed-demo-data:false}") boolean seedDemoData,
                                    @Value("${app.purge-legacy-demo-listings:true}") boolean purgeLegacyDemoListings,
-                                   @Value("${app.seed-real-source-records:true}") boolean seedRealSourceRecords,
+                                   @Value("${app.purge-seeded-source-records:true}") boolean purgeSeededSourceRecords,
+                                   @Value("${app.seed-real-source-records:false}") boolean seedRealSourceRecords,
                                    @Value("${app.admin.email:admin@roomrentmaharashtra.com}") String adminEmail,
                                    @Value("${app.admin.password:Admin@12345}") String adminPassword,
                                    @Value("${app.admin.name:RoomRent Maharashtra Admin}") String adminName,
@@ -68,6 +78,16 @@ public class DataSeeder {
 
                 if (!legacyDemoProperties.isEmpty()) {
                     propertyRepository.deleteAll(legacyDemoProperties);
+                }
+            }
+
+            if (purgeSeededSourceRecords) {
+                List<Property> seededSourceProperties = propertyRepository.findAll().stream()
+                    .filter(this::isSeededSourceProperty)
+                    .toList();
+
+                if (!seededSourceProperties.isEmpty()) {
+                    propertyRepository.deleteAll(seededSourceProperties);
                 }
             }
 
@@ -202,6 +222,32 @@ public class DataSeeder {
         ).toLowerCase(Locale.ROOT);
 
         return LEGACY_DEMO_MARKERS.stream().anyMatch(combinedContent::contains);
+    }
+
+    private boolean isSeededSourceProperty(Property property) {
+        if (property == null) {
+            return false;
+        }
+
+        if (SEEDED_SOURCE_TITLES.contains(property.getTitle())) {
+            return true;
+        }
+
+        String ownerEmail = property.getCreatedBy() != null ? property.getCreatedBy().getEmail() : "";
+        if ("source-data@roomrentmaharashtra.com".equalsIgnoreCase(ownerEmail)) {
+            return true;
+        }
+
+        String combinedContent = String.join(" ",
+            safe(property.getTitle()),
+            safe(property.getDescription()),
+            safe(property.getListingSource()),
+            safe(property.getListingUrl())
+        ).toLowerCase(Locale.ROOT);
+
+        return combinedContent.contains("brickplot open data")
+            || combinedContent.contains("maharera")
+            || combinedContent.contains("project records");
     }
 
     private String safe(String value) {

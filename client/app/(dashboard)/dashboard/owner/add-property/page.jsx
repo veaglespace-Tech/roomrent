@@ -9,21 +9,21 @@ const plans = [
     {
         plan: "STARTER",
         name: "Starter",
-        price: "Rs. 499",
+        price: "Managed access",
         copy: "For one owner or broker starting with a focused property set.",
         features: ["30 days listing access", "Add and edit properties", "Receive listing enquiries"]
     },
     {
         plan: "PRO",
         name: "Pro",
-        price: "Rs. 999",
+        price: "Managed access",
         copy: "For active property managers listing multiple rooms and flats.",
         features: ["90 days listing access", "Priority property workspace", "Better enquiry tracking"]
     },
     {
         plan: "BUSINESS",
         name: "Business",
-        price: "Rs. 1,999",
+        price: "Managed access",
         copy: "For high-volume operators and admin-grade listing management.",
         features: ["180 days listing access", "Large inventory workflow", "Premium support desk"]
     }
