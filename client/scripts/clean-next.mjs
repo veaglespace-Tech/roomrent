@@ -1,14 +1,14 @@
 import { rmSync, existsSync } from "node:fs";
 import { resolve } from "node:path";
 
-const nextDir = resolve(process.cwd(), ".next");
+const nextCacheDir = resolve(process.cwd(), ".next", "cache");
 
-if (existsSync(nextDir)) {
+if (existsSync(nextCacheDir)) {
   try {
-    rmSync(nextDir, { recursive: true, force: true });
+    rmSync(nextCacheDir, { recursive: true, force: true });
     console.log("Removed stale .next cache");
   } catch (error) {
-    console.warn("WARNING: Could not fully remove the .next directory. A process may be locking these files.");
+    console.warn("WARNING: Could not fully remove the Next cache. A process may be locking these files.");
     console.warn("If you see compilation errors, please stop any running dev/build processes and try again.");
     console.warn("Details:", error.message);
   }
