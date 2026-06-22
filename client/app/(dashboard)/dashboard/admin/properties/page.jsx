@@ -1,0 +1,22 @@
+"use client";
+import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+import { useEffect, useState } from "react";
+import { getAdminProperties } from "@/services/property-service";
+import { AlertTriangle, BadgeCheck, Search } from "lucide-react";
+export default function ManagePropertiesPage() {
+    const [properties, setProperties] = useState([]);
+    const [query, setQuery] = useState("");
+    useEffect(() => {
+        getAdminProperties().then(setProperties).catch(() => setProperties([]));
+    }, []);
+    const duplicateGroups = Object.values(properties.reduce((groups, property) => {
+        const key = `${property.title.trim().toLowerCase()}|${property.location.trim().toLowerCase()}|${property.price}`;
+        groups[key] = groups[key] ? [...groups[key], property] : [property];
+        return groups;
+    }, {})).filter((group) => group.length > 1);
+    const filteredProperties = properties.filter((property) => {
+        const haystack = `${property.title} ${property.owner.name} ${property.location} ${property.city ?? ""}`.toLowerCase();
+        return haystack.includes(query.toLowerCase().trim());
+    });
+    return (_jsxs("div", { className: "space-y-6", children: [_jsxs("div", { className: "panel p-8", children: [_jsx("h1", { className: "text-3xl font-extrabold text-[#111827]", children: "Manage Properties" }), _jsx("p", { className: "mt-2 text-sm font-medium text-[#64748b]", children: "Superadmin view of every published property." }), _jsxs("div", { className: "mt-6 flex flex-wrap items-center gap-3", children: [_jsxs("label", { className: "flex min-h-12 flex-1 items-center gap-3 rounded-[16px] border border-base-300 bg-base-100 px-4", children: [_jsx(Search, { className: "size-4 text-[#ef3d81]" }), _jsx("input", { className: "w-full bg-transparent text-sm font-medium outline-none", placeholder: "Search title, owner, city", value: query, onChange: (event) => setQuery(event.target.value) })] }), _jsxs("div", { className: "rounded-2xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm font-semibold text-amber-800", children: [duplicateGroups.length, " duplicate groups flagged"] })] })] }), duplicateGroups.length > 0 ? (_jsxs("div", { className: "panel space-y-4 p-8", children: [_jsxs("div", { className: "flex items-center gap-3", children: [_jsx(AlertTriangle, { className: "size-5 text-amber-600" }), _jsxs("div", { children: [_jsx("h2", { className: "text-xl font-bold text-[#111827]", children: "Duplicate candidates" }), _jsx("p", { className: "text-sm text-[#64748b]", children: "These listings share title, location, and price. Review before publishing or merging." })] })] }), _jsx("div", { className: "grid gap-4 lg:grid-cols-2", children: duplicateGroups.map((group) => (_jsxs("div", { className: "rounded-[22px] border border-amber-200 bg-amber-50/70 p-5", children: [_jsxs("div", { className: "flex items-center justify-between gap-3", children: [_jsxs("div", { children: [_jsx("p", { className: "text-sm font-bold text-amber-900", children: group[0].title }), _jsxs("p", { className: "mt-1 text-xs text-amber-800/80", children: [group[0].location, " | Rs. ", group[0].price] })] }), _jsx(BadgeCheck, { className: "size-5 text-amber-700" })] }), _jsx("div", { className: "mt-4 space-y-2", children: group.map((property) => (_jsx("div", { className: "rounded-[16px] border border-amber-200 bg-white px-4 py-3 text-sm", children: _jsxs("div", { className: "flex items-center justify-between gap-3", children: [_jsx("span", { className: "font-semibold text-[#111827]", children: property.owner.name }), _jsx("span", { className: "text-xs font-semibold text-[#64748b]", children: property.city || property.district || "No city" })] }) }, property.id))) })] }, group.map((item) => item.id).join("-")))) })] })) : null, _jsx("div", { className: "panel overflow-x-auto p-8", children: _jsxs("table", { className: "table mt-0", children: [_jsx("thead", { children: _jsxs("tr", { children: [_jsx("th", { children: "Title" }), _jsx("th", { children: "Publisher" }), _jsx("th", { children: "Location" }), _jsx("th", { children: "Price" })] }) }), _jsx("tbody", { children: filteredProperties.map((property) => (_jsxs("tr", { children: [_jsx("td", { children: property.title }), _jsx("td", { children: property.owner.name }), _jsx("td", { children: property.location }), _jsxs("td", { children: ["Rs. ", property.price] })] }, property.id))) })] }) })] }));
+}
