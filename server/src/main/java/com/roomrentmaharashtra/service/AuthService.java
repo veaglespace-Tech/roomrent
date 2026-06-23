@@ -5,8 +5,8 @@ import com.roomrentmaharashtra.dto.auth.ForgotPasswordRequest;
 import com.roomrentmaharashtra.dto.auth.LoginRequest;
 import com.roomrentmaharashtra.dto.auth.ResetPasswordRequest;
 import com.roomrentmaharashtra.dto.auth.RegisterRequest;
-import com.roomrentmaharashtra.entity.Role;
 import com.roomrentmaharashtra.entity.PasswordResetToken;
+import com.roomrentmaharashtra.entity.Role;
 import com.roomrentmaharashtra.entity.User;
 import com.roomrentmaharashtra.exception.ResourceNotFoundException;
 import com.roomrentmaharashtra.repository.PasswordResetTokenRepository;
@@ -16,6 +16,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
@@ -44,6 +45,7 @@ public class AuthService {
         this.mailService = mailService;
     }
 
+    @Transactional
     public AuthResponse register(RegisterRequest request) {
         String email = request.email().trim().toLowerCase();
         if (userRepository.existsByEmailIgnoreCase(email)) {
@@ -65,7 +67,7 @@ public class AuthService {
         User savedUser = userRepository.save(user);
         mailService.sendWelcomeMail(savedUser);
         String token = jwtService.generateToken(savedUser.getEmail(), savedUser.getRole().name());
-        return toAuthResponse(token, savedUser);
+        return toAuthResponse(token, savedUser, "Registration successful. Confirmation email sent.");
     }
 
     public AuthResponse login(LoginRequest request) {
@@ -78,9 +80,10 @@ public class AuthService {
             .orElseThrow(() -> new IllegalArgumentException("Invalid credentials"));
 
         String token = jwtService.generateToken(user.getEmail(), user.getRole().name());
-        return toAuthResponse(token, user);
+        return toAuthResponse(token, user, "Login successful.");
     }
 
+    @Transactional
     public void requestPasswordReset(ForgotPasswordRequest request) {
         String email = request.email().trim().toLowerCase();
         userRepository.findByEmailIgnoreCase(email).ifPresent(user -> {
@@ -115,7 +118,7 @@ public class AuthService {
         passwordResetTokenRepository.save(token);
     }
 
-    private AuthResponse toAuthResponse(String token, User user) {
+    private AuthResponse toAuthResponse(String token, User user, String message) {
         return new AuthResponse(
             token,
             user.getId(),
@@ -125,7 +128,8 @@ public class AuthService {
             user.getRole(),
             user.getSubscriptionPlan(),
             hasActiveListingPlan(user),
-            user.getSubscriptionExpiresAt()
+            user.getSubscriptionExpiresAt(),
+            message
         );
     }
 

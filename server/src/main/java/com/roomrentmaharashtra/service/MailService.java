@@ -1,8 +1,11 @@
 package com.roomrentmaharashtra.service;
 
 import com.roomrentmaharashtra.entity.User;
+import com.roomrentmaharashtra.exception.EmailDeliveryException;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.mail.javamail.MimeMessageHelper;
@@ -11,6 +14,8 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 @Service
 public class MailService {
+
+    private static final Logger logger = LoggerFactory.getLogger(MailService.class);
 
     private final JavaMailSender mailSender;
     private final String frontendBaseUrl;
@@ -89,8 +94,9 @@ public class MailService {
             helper.setSubject(subject);
             helper.setText(text, html);
             mailSender.send(message);
-        } catch (MessagingException ex) {
-            throw new IllegalStateException("Unable to send email", ex);
+        } catch (MessagingException | RuntimeException ex) {
+            logger.error("Email delivery failed to {} with subject '{}'", to, subject, ex);
+            throw new EmailDeliveryException("Email delivery failed", ex);
         }
     }
 

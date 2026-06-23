@@ -13,6 +13,7 @@ public record AuthResponse(
     Role role,
     String subscriptionPlan,
     boolean subscriptionActive,
-    LocalDateTime subscriptionExpiresAt
+    LocalDateTime subscriptionExpiresAt,
+    String message
 ) {
 }

@@ -1,19 +1,20 @@
 package com.roomrentmaharashtra.config;
 
+import com.roomrentmaharashtra.exception.EmailDeliveryException;
 import com.roomrentmaharashtra.exception.ResourceNotFoundException;
 import com.roomrentmaharashtra.exception.RateLimitExceededException;
 import com.roomrentmaharashtra.exception.UnauthorizedException;
 import jakarta.validation.ConstraintViolationException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.security.access.AccessDeniedException;
-import org.springframework.security.core.AuthenticationException;
 
 import java.time.LocalDateTime;
 import java.util.HashMap;
@@ -23,6 +24,12 @@ import java.util.Map;
 public class GlobalExceptionHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
+
+    @ExceptionHandler(EmailDeliveryException.class)
+    public ResponseEntity<?> handleEmailDelivery(EmailDeliveryException ex) {
+        logger.error("Email delivery failure", ex);
+        return buildResponse(HttpStatus.SERVICE_UNAVAILABLE, "Email delivery is temporarily unavailable. Please try again.");
+    }
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<?> handleNotFound(ResourceNotFoundException ex) {
