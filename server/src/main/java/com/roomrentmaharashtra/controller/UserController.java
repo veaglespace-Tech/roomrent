@@ -1,17 +1,17 @@
 package com.roomrentmaharashtra.controller;
 
+import com.roomrentmaharashtra.dto.auth.GenericMessageResponse;
+import com.roomrentmaharashtra.dto.user.PasswordUpdateRequest;
+import com.roomrentmaharashtra.dto.user.ProfileUpdateRequest;
 import com.roomrentmaharashtra.dto.user.SubscriptionRequest;
 import com.roomrentmaharashtra.entity.Role;
 import com.roomrentmaharashtra.entity.User;
 import com.roomrentmaharashtra.service.PropertyService;
 import com.roomrentmaharashtra.service.UserService;
 import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
 import java.util.List;
@@ -33,6 +33,20 @@ public class UserController {
     public Map<String, Object> getProfile(Authentication authentication) {
         User user = userService.getCurrentUser(authentication);
         return profileResponse(user);
+    }
+
+    @PutMapping("/users/profile")
+    public Map<String, Object> updateProfile(@Valid @RequestBody ProfileUpdateRequest request,
+                                            Authentication authentication) {
+        User updated = userService.updateProfile(authentication, request);
+        return profileResponse(updated);
+    }
+
+    @PutMapping("/users/password")
+    public ResponseEntity<GenericMessageResponse> updatePassword(@Valid @RequestBody PasswordUpdateRequest request,
+                                                                 Authentication authentication) {
+        userService.updatePassword(authentication, request);
+        return ResponseEntity.ok(new GenericMessageResponse("Password updated successfully"));
     }
 
     @PostMapping("/users/subscription")
@@ -70,6 +84,20 @@ public class UserController {
     @GetMapping("/admin/users")
     public List<User> getUsers() {
         return userService.getAllUsers();
+    }
+
+    @PutMapping("/admin/users/{id}")
+    public Map<String, Object> updateUserByAdmin(@PathVariable Long id,
+                                                 @Valid @RequestBody ProfileUpdateRequest request,
+                                                 @RequestParam(required = false) String role) {
+        User updated = userService.updateUserByAdmin(id, request, role);
+        return profileResponse(updated);
+    }
+
+    @DeleteMapping("/admin/users/{id}")
+    public ResponseEntity<GenericMessageResponse> deleteUserByAdmin(@PathVariable Long id) {
+        userService.deleteUser(id);
+        return ResponseEntity.ok(new GenericMessageResponse("User deleted successfully"));
     }
 
     @GetMapping("/admin/properties")

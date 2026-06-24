@@ -38,6 +38,8 @@ CREATE TABLE IF NOT EXISTS properties (
     occupancy_details VARCHAR(160) NULL,
     listing_source VARCHAR(180) NULL,
     listing_url VARCHAR(500) NULL,
+    moderation_status VARCHAR(30) NOT NULL DEFAULT 'PENDING',
+    published_at TIMESTAMP NULL,
     type VARCHAR(50) NOT NULL,
     gender VARCHAR(30) NOT NULL,
     created_by BIGINT NOT NULL,

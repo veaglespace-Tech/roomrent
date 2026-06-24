@@ -1,40 +1,36 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useRouter } from "next/navigation";
-import Link from "next/link";
-import { Eye, EyeOff, LogIn, Mail, Shield } from "lucide-react";
 import { loginUser } from "@/services/auth-service";
 import { useAppDispatch } from "@/store/hooks";
 import { setCredentials } from "@/store/slices/auth-slice";
-import { AuthCard } from "@/components/auth-card";
-import { firstZodError, loginSchema } from "@/lib/validation";
+import { getDashboardRoute, getStoredAuthRole, clearAuthSession } from "@/lib/auth-session";
+import { Eye, EyeOff, Mail, Lock, ShieldCheck } from "lucide-react";
+import { loginSchema, firstZodError } from "@/lib/validation";
 import { getApiErrorMessage } from "@/lib/api-error";
-import { getDashboardRoute, getStoredAuthRole } from "@/lib/auth-session";
+import { logoutUser } from "@/services/auth-service";
+import { logout as logoutAction } from "@/store/slices/auth-slice";
+import { AuthCard } from "@/components/auth-card";
 
-export default function LoginPage() {
+export default function AdminLoginPage() {
     const router = useRouter();
     const dispatch = useAppDispatch();
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
-    const [registered, setRegistered] = useState(false);
     const [loading, setLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [touched, setTouched] = useState({ email: false, password: false });
-    
+
     const validation = useMemo(() => loginSchema.safeParse({ email, password }), [email, password]);
     const fieldErrors = validation.success ? {} : validation.error.flatten().fieldErrors;
     const canSubmit = validation.success && !loading;
 
     useEffect(() => {
-        setRegistered(new URLSearchParams(window.location.search).get("registered") === "1");
-    }, []);
-
-    useEffect(() => {
         const role = getStoredAuthRole();
-        if (role) {
+        if (role === "ADMIN") {
             router.replace(getDashboardRoute(role));
         }
     }, [router]);
@@ -46,18 +42,32 @@ export default function LoginPage() {
             setError(firstZodError(validation.error));
             return;
         }
+
         try {
             setLoading(true);
             setError("");
             setSuccess("");
             const data = await loginUser(validation.data);
+
+            if (data.role !== "ADMIN") {
+                setError("Access denied: You are not authorized as an administrator.");
+                try {
+                    await logoutUser();
+                } catch (e) {
+                    // Ignore logout failure
+                }
+                clearAuthSession();
+                dispatch(logoutAction());
+                return;
+            }
+
             dispatch(setCredentials(data));
-            setSuccess(`${data.message || "Login successful."} Redirecting...`);
+            setSuccess(`${data.message || "Admin authentication successful."} Redirecting...`);
             window.setTimeout(() => {
                 router.replace(getDashboardRoute(data.role));
-            }, 500);
+            }, 800);
         } catch (loginError) {
-            setError(getApiErrorMessage(loginError, "Invalid email or password."));
+            setError(getApiErrorMessage(loginError, "Invalid admin email or password."));
         } finally {
             setLoading(false);
         }
@@ -65,13 +75,11 @@ export default function LoginPage() {
 
     return (
         <section className="flex min-h-[calc(100dvh-100px)] items-center justify-center p-4">
-            <AuthCard title="Welcome Back" description="Use your account to access saved properties, owner tools, enquiries, and admin controls.">
+            <AuthCard 
+                title="Admin Console" 
+                description="Please sign in with administrative email and password."
+            >
                 <form onSubmit={handleSubmit} className="space-y-5" noValidate>
-                    {registered && (
-                        <p className="rounded-[16px] border border-indigo-200 bg-indigo-50 px-4 py-3 text-sm font-semibold text-indigo-700">
-                            Registration complete. Sign in to continue.
-                        </p>
-                    )}
                     {success && (
                         <p className="rounded-[16px] border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-semibold text-emerald-700">
                             {success}
@@ -85,7 +93,7 @@ export default function LoginPage() {
 
                     <div className="space-y-4">
                         <label className="block relative">
-                            <span className="sr-only">Email address</span>
+                            <span className="sr-only">Admin Email Address</span>
                             <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
                                 <Mail className="size-5 text-slate-400" />
                             </div>
@@ -93,7 +101,7 @@ export default function LoginPage() {
                                 className={`w-full rounded-[16px] border ${touched.email && fieldErrors.email?.[0] ? "border-rose-500 ring-1 ring-rose-500 bg-rose-50/50" : "border-slate-200 bg-slate-50 focus:border-indigo-500 focus:ring-indigo-500"} pl-12 pr-4 py-3.5 text-sm font-semibold text-slate-900 placeholder:text-slate-400 transition-colors`}
                                 type="email" 
                                 autoComplete="email" 
-                                placeholder="Email address" 
+                                placeholder="Admin Email Address" 
                                 value={email} 
                                 onChange={(e) => setEmail(e.target.value)} 
                                 onBlur={() => setTouched((current) => ({ ...current, email: true }))} 
@@ -106,7 +114,7 @@ export default function LoginPage() {
                         <label className="block relative">
                             <span className="sr-only">Password</span>
                             <div className="absolute inset-y-0 left-0 flex items-center pl-4 pointer-events-none">
-                                <Shield className="size-5 text-slate-400" />
+                                <Lock className="size-5 text-slate-400" />
                             </div>
                             <input 
                                 className={`w-full rounded-[16px] border ${touched.password && fieldErrors.password?.[0] ? "border-rose-500 ring-1 ring-rose-500 bg-rose-50/50" : "border-slate-200 bg-slate-50 focus:border-indigo-500 focus:ring-indigo-500"} pl-12 pr-12 py-3.5 text-sm font-semibold text-slate-900 placeholder:text-slate-400 transition-colors`}
@@ -131,15 +139,6 @@ export default function LoginPage() {
                         </label>
                     </div>
 
-                    <div className="flex items-center justify-between px-1 text-sm">
-                        <Link href="/forgot-password" className="font-bold text-slate-600 hover:text-indigo-600 transition-colors">
-                            Forgot password?
-                        </Link>
-                        <Link href="/register" className="font-bold text-indigo-600 hover:text-indigo-700 transition-colors">
-                            Create account
-                        </Link>
-                    </div>
-
                     <button 
                         type="submit"
                         className="landing-primary-button w-full h-14 mt-6 text-[15px] shadow-sm flex items-center justify-center gap-2"
@@ -148,14 +147,12 @@ export default function LoginPage() {
                         {loading ? (
                             <span className="loading loading-spinner loading-sm"></span>
                         ) : (
-                            <LogIn className="size-5" />
+                            <ShieldCheck className="size-5" />
                         )}
-                        {loading ? "Logging in..." : "Sign In"}
+                        {loading ? "Authenticating..." : "Login to Console"}
                     </button>
                 </form>
             </AuthCard>
         </section>
     );
 }
-
-

@@ -1,10 +1,12 @@
 "use client";
-import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
+
 import Link from "next/link";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { CheckCircle2, CreditCard, ShieldCheck, Sparkles } from "lucide-react";
 import { PropertyForm } from "@/components/forms/property-form";
 import { activateSubscription, getProfile } from "@/services/user-service";
+import gsap from "gsap";
+
 const plans = [
     {
         plan: "STARTER",
@@ -28,18 +30,34 @@ const plans = [
         features: ["180 days listing access", "Large inventory workflow", "Premium support desk"]
     }
 ];
+
 export default function AddPropertyPage() {
     const [profile, setProfile] = useState(null);
     const [loading, setLoading] = useState(true);
     const [activating, setActivating] = useState(null);
     const [error, setError] = useState("");
+    
+    const containerRef = useRef(null);
+    const plansRef = useRef([]);
+
     useEffect(() => {
         getProfile()
             .then(setProfile)
             .catch(() => setProfile(null))
             .finally(() => setLoading(false));
     }, []);
+
     const hasListingAccess = profile?.isSuperAdmin || profile?.subscriptionActive;
+
+    useEffect(() => {
+        if (!loading && !hasListingAccess && profile && plansRef.current.length > 0) {
+            gsap.fromTo(plansRef.current,
+                { opacity: 0, y: 30 },
+                { opacity: 1, y: 0, duration: 0.5, stagger: 0.1, ease: "power2.out", delay: 0.1 }
+            );
+        }
+    }, [loading, hasListingAccess, profile]);
+
     const choosePlan = async (plan) => {
         try {
             setActivating(plan);
@@ -54,14 +72,109 @@ export default function AddPropertyPage() {
             setActivating(null);
         }
     };
+
     if (loading) {
-        return _jsx("div", { className: "dashboard-empty-state", children: "Loading listing access..." });
+        return (
+            <div className="flex min-h-[400px] flex-col items-center justify-center gap-3">
+                <span className="loading loading-spinner loading-lg text-indigo-500"></span>
+                <p className="text-sm font-semibold text-slate-500 animate-pulse">Loading listing access...</p>
+            </div>
+        );
     }
+
     if (!profile) {
-        return (_jsxs("div", { className: "landing-card p-8 text-center", children: [_jsx(ShieldCheck, { className: "mx-auto size-10 text-[#ef3d81]" }), _jsx("h1", { className: "mt-5 text-3xl font-extrabold text-[#111827]", children: "Login required" }), _jsx("p", { className: "mx-auto mt-3 max-w-xl text-sm font-medium leading-7 text-[#64748b]", children: "Login before choosing a listing plan and publishing a property." }), _jsx(Link, { href: "/login", className: "landing-primary-button mx-auto mt-7 w-fit", children: "Login" })] }));
+        return (
+            <div className="surface-card flex flex-col items-center justify-center rounded-[24px] border border-slate-200/60 bg-white p-12 text-center shadow-sm">
+                <div className="rounded-full bg-rose-50 p-5 mb-5 border border-rose-100">
+                    <ShieldCheck className="size-10 shrink-0 text-rose-500" />
+                </div>
+                <h1 className="text-3xl font-extrabold text-slate-900 font-heading">Login required</h1>
+                <p className="mx-auto mt-3 max-w-xl text-sm font-medium leading-7 text-slate-500">
+                    Login before choosing a listing plan and publishing a property.
+                </p>
+                <Link href="/login" className="mt-8 rounded-[14px] bg-indigo-600 px-8 py-3.5 text-sm font-bold text-white shadow-sm transition hover:bg-indigo-700">
+                    Login
+                </Link>
+            </div>
+        );
     }
+
     if (!hasListingAccess) {
-        return (_jsxs("div", { children: [_jsx("div", { className: "landing-card p-6 md:p-8", children: _jsxs("div", { className: "flex flex-col gap-5 md:flex-row md:items-center md:justify-between", children: [_jsxs("div", { children: [_jsx("p", { className: "landing-eyebrow", children: "Listing access required" }), _jsx("h1", { className: "mt-3 text-3xl font-extrabold text-[#111827] md:text-4xl", children: "Choose a plan before adding property." }), _jsx("p", { className: "mt-3 max-w-2xl text-sm font-medium leading-7 text-[#64748b]", children: "Users can browse and enquire freely. Publishing rooms, PGs, flats or shops needs an active listing plan." })] }), _jsx("div", { className: "landing-icon", children: _jsx(CreditCard, { className: "size-5" }) })] }) }), error ? _jsx("p", { className: "mt-5 text-sm text-error", children: error }) : null, _jsx("div", { className: "mt-6 grid gap-5 lg:grid-cols-3", children: plans.map((item) => (_jsxs("article", { className: "landing-card flex min-h-[330px] flex-col justify-between p-6", children: [_jsxs("div", { children: [_jsxs("div", { className: "flex items-center justify-between gap-3", children: [_jsxs("div", { children: [_jsx("p", { className: "text-sm font-extrabold uppercase text-[#ef3d81]", children: item.name }), _jsx("h2", { className: "mt-2 text-3xl font-extrabold text-[#111827]", children: item.price })] }), _jsx("div", { className: "icon-tile", children: _jsx(Sparkles, { className: "size-5" }) })] }), _jsx("p", { className: "mt-4 text-sm font-medium leading-7 text-[#64748b]", children: item.copy }), _jsx("div", { className: "mt-5 grid gap-3", children: item.features.map((feature) => (_jsxs("div", { className: "flex items-center gap-2 text-sm font-semibold text-[#475569]", children: [_jsx(CheckCircle2, { className: "size-4 text-[#0f9f8f]" }), feature] }, feature))) })] }), _jsx("button", { className: "landing-primary-button mt-7", onClick: () => choosePlan(item.plan), disabled: activating !== null, children: activating === item.plan ? "Activating..." : "Choose Plan" })] }, item.plan))) })] }));
+        return (
+            <div className="space-y-6" ref={containerRef}>
+                <div className="surface-card p-6 md:p-8 rounded-[24px] border border-slate-200/60 bg-white shadow-sm">
+                    <div className="flex flex-col gap-5 md:flex-row md:items-center md:justify-between">
+                        <div>
+                            <p className="text-xs font-bold uppercase tracking-[0.2em] text-indigo-500">Listing access required</p>
+                            <h1 className="mt-3 text-3xl font-extrabold text-slate-900 md:text-4xl font-heading">Choose a plan before adding property.</h1>
+                            <p className="mt-3 max-w-2xl text-sm font-medium leading-7 text-slate-500">
+                                Users can browse and enquire freely. Publishing rooms, PGs, flats or shops needs an active listing plan.
+                            </p>
+                        </div>
+                        <div className="flex size-14 shrink-0 items-center justify-center rounded-[16px] bg-indigo-50 text-indigo-600">
+                            <CreditCard className="size-6 shrink-0" />
+                        </div>
+                    </div>
+                </div>
+
+                {error && (
+                    <div className="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-semibold text-rose-600">
+                        {error}
+                    </div>
+                )}
+
+                <div className="mt-6 grid gap-6 lg:grid-cols-3">
+                    {plans.map((item, i) => (
+                        <article key={item.plan} ref={el => plansRef.current[i] = el} className="surface-card flex min-h-[350px] flex-col justify-between rounded-[24px] border border-slate-200/60 bg-white p-8 shadow-sm transition duration-300 hover:border-indigo-300 hover:shadow-lg">
+                            <div>
+                                <div className="flex items-center justify-between gap-3">
+                                    <div>
+                                        <p className="text-sm font-extrabold uppercase text-indigo-500">{item.name}</p>
+                                        <h2 className="mt-2 text-2xl font-extrabold text-slate-900">{item.price}</h2>
+                                    </div>
+                                    <div className="flex size-10 shrink-0 items-center justify-center rounded-full bg-slate-50 text-slate-500">
+                                        <Sparkles className="size-5 shrink-0" />
+                                    </div>
+                                </div>
+                                <p className="mt-4 text-sm font-medium leading-7 text-slate-500">{item.copy}</p>
+                                <div className="mt-6 space-y-3">
+                                    {item.features.map((feature) => (
+                                        <div key={feature} className="flex items-center gap-2.5 text-sm font-semibold text-slate-700">
+                                            <CheckCircle2 className="size-4 shrink-0 text-indigo-500" />
+                                            <span>{feature}</span>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
+                            <button 
+                                className="mt-8 w-full rounded-[14px] bg-slate-900 px-6 py-3.5 text-sm font-bold text-white shadow-sm transition hover:bg-indigo-600 disabled:opacity-50 disabled:cursor-not-allowed" 
+                                onClick={() => choosePlan(item.plan)} 
+                                disabled={activating !== null}
+                            >
+                                {activating === item.plan ? "Activating..." : "Choose Plan"}
+                            </button>
+                        </article>
+                    ))}
+                </div>
+            </div>
+        );
     }
-    return (_jsxs("div", { children: [_jsxs("div", { className: "landing-card p-6", children: [_jsx("p", { className: "landing-eyebrow", children: profile.isSuperAdmin ? "Superadmin access" : `${profile.subscriptionPlan} plan active` }), _jsx("h1", { className: "mt-2 text-3xl font-extrabold text-[#111827]", children: "Add Property" }), _jsx("p", { className: "mt-2 text-sm font-medium leading-7 text-[#64748b]", children: "Publish a verified room, PG, flat, hostel or commercial listing." })] }), _jsx("div", { className: "mt-8", children: _jsx(PropertyForm, {}) })] }));
+
+    return (
+        <div className="space-y-8 animate-in fade-in slide-in-from-bottom-4 duration-500">
+            <div className="surface-card p-6 md:p-8 rounded-[24px] border border-slate-200/60 bg-white shadow-sm">
+                <p className="text-xs font-bold uppercase tracking-[0.2em] text-indigo-500">
+                    {profile.isSuperAdmin ? "Superadmin access" : `${profile.subscriptionPlan} plan active`}
+                </p>
+                <h1 className="mt-2 text-3xl font-extrabold text-slate-900 font-heading">Add Property</h1>
+                <p className="mt-2 text-sm font-medium leading-7 text-slate-500">
+                    Publish a verified room, PG, flat, hostel or commercial listing.
+                </p>
+            </div>
+            
+            <div className="surface-card p-6 md:p-8 rounded-[24px] border border-slate-200/60 bg-white shadow-sm">
+                <PropertyForm />
+            </div>
+        </div>
+    );
 }

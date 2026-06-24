@@ -1,11 +1,18 @@
 package com.roomrentmaharashtra.service;
 
+import com.roomrentmaharashtra.dto.user.PasswordUpdateRequest;
+import com.roomrentmaharashtra.dto.user.ProfileUpdateRequest;
 import com.roomrentmaharashtra.entity.Role;
 import com.roomrentmaharashtra.entity.User;
+import com.roomrentmaharashtra.entity.Property;
 import com.roomrentmaharashtra.exception.ResourceNotFoundException;
 import com.roomrentmaharashtra.repository.UserRepository;
+import com.roomrentmaharashtra.repository.PropertyRepository;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -16,9 +23,15 @@ import java.util.Optional;
 public class UserService {
 
     private final UserRepository userRepository;
+    private final PropertyRepository propertyRepository;
+    private final PasswordEncoder passwordEncoder;
 
-    public UserService(UserRepository userRepository) {
+    public UserService(UserRepository userRepository, 
+                       PropertyRepository propertyRepository,
+                       @Lazy PasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.propertyRepository = propertyRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public User getCurrentUser(Authentication authentication) {
@@ -81,6 +94,65 @@ public class UserService {
         user.setSubscriptionActive(true);
         user.setSubscriptionStartedAt(now);
         user.setSubscriptionExpiresAt(now.plusDays(durationDays));
+        return userRepository.save(user);
+    }
+
+    public User updateProfile(Authentication authentication, ProfileUpdateRequest request) {
+        User user = getCurrentUser(authentication);
+        
+        String cleanEmail = request.email().trim().toLowerCase(Locale.ROOT);
+        if (!user.getEmail().equalsIgnoreCase(cleanEmail)) {
+            if (userRepository.findByEmailIgnoreCase(cleanEmail).isPresent()) {
+                throw new IllegalArgumentException("Email already in use");
+            }
+            user.setEmail(cleanEmail);
+        }
+        
+        user.setName(request.name().trim());
+        user.setPhone(request.phone() == null ? null : request.phone().trim());
+        return userRepository.save(user);
+    }
+
+    public void updatePassword(Authentication authentication, PasswordUpdateRequest request) {
+        User user = getCurrentUser(authentication);
+        if (!passwordEncoder.matches(request.oldPassword(), user.getPassword())) {
+            throw new IllegalArgumentException("Incorrect current password");
+        }
+        user.setPassword(passwordEncoder.encode(request.newPassword()));
+        userRepository.save(user);
+    }
+
+    @Transactional
+    public void deleteUser(Long userId) {
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        
+        // Remove properties created by this user first
+        List<Property> properties = propertyRepository.findByCreatedBy(user);
+        propertyRepository.deleteAll(properties);
+
+        userRepository.delete(user);
+    }
+
+    public User updateUserByAdmin(Long userId, ProfileUpdateRequest request, String role) {
+        User user = userRepository.findById(userId)
+            .orElseThrow(() -> new ResourceNotFoundException("User not found"));
+
+        String cleanEmail = request.email().trim().toLowerCase(Locale.ROOT);
+        if (!user.getEmail().equalsIgnoreCase(cleanEmail)) {
+            if (userRepository.findByEmailIgnoreCase(cleanEmail).isPresent()) {
+                throw new IllegalArgumentException("Email already in use");
+            }
+            user.setEmail(cleanEmail);
+        }
+
+        user.setName(request.name().trim());
+        user.setPhone(request.phone() == null ? null : request.phone().trim());
+        
+        if (role != null) {
+            user.setRole(Role.valueOf(role.trim().toUpperCase(Locale.ROOT)));
+        }
+
         return userRepository.save(user);
     }
 }

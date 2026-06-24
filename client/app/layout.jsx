@@ -2,6 +2,7 @@ import { jsx as _jsx, jsxs as _jsxs } from "react/jsx-runtime";
 import { Providers } from "@/components/providers";
 import { Header } from "@/components/layout/header";
 import { Footer } from "@/components/layout/footer";
+import { PageTransitionWrapper } from "@/components/page-transition-wrapper";
 import { websiteJsonLd } from "@/lib/json-ld";
 import "./globals.css";
 export const metadata = {
@@ -37,5 +38,6 @@ export const viewport = {
     viewportFit: "cover"
 };
 export default function RootLayout({ children }) {
-    return (_jsxs("html", { lang: "en", "data-theme": "roomrent", children: [_jsx("head", { children: _jsx("script", { type: "application/ld+json", dangerouslySetInnerHTML: { __html: JSON.stringify(websiteJsonLd()) } }) }), _jsx("body", { children: _jsxs(Providers, { children: [_jsx(Header, {}), _jsx("main", { className: "overflow-x-hidden", children: children }), _jsx(Footer, {})] }) })] }));
+    return (_jsxs("html", { lang: "en", "data-theme": "roomrent", children: [_jsx("head", { children: _jsx("script", { type: "application/ld+json", dangerouslySetInnerHTML: { __html: JSON.stringify(websiteJsonLd()) } }) }), _jsx("body", { children: _jsxs(Providers, { children: [_jsx(Header, {}), _jsx("main", { className: "overflow-x-hidden", children: _jsx(PageTransitionWrapper, { children: children }) }), _jsx(Footer, {})] }) })] }));
+
 }

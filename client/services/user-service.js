@@ -63,3 +63,18 @@ export const enqueueIngestionRun = async (payload) => {
     const { data } = await api.post("/admin/ingestion-runs", payload);
     return data;
 };
+export const updateProfile = async (payload) => {
+    const { data } = await api.put("/users/profile", payload);
+    return data;
+};
+export const updatePassword = async (payload) => {
+    const { data } = await api.put("/users/password", payload);
+    return data;
+};
+export const updateAdminUser = async (id, payload, role) => {
+    const { data } = await api.put(`/admin/users/${id}`, payload, { params: { role } });
+    return data;
+};
+export const deleteAdminUser = async (id) => {
+    await api.delete(`/admin/users/${id}`);
+};

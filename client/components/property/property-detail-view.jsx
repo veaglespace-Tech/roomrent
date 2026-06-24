@@ -18,7 +18,28 @@ export function PropertyDetailView() {
         if (!propertyId) {
             return;
         }
-        getPropertyById(propertyId).then(setProperty).catch(() => setProperty(null));
+        getPropertyById(propertyId).then((data) => {
+            setProperty(data);
+            if (data) {
+                try {
+                    const raw = localStorage.getItem("recently_viewed");
+                    const recentlyViewed = raw ? JSON.parse(raw) : [];
+                    const filtered = recentlyViewed.filter((item) => item.id !== data.id);
+                    filtered.unshift({
+                        id: data.id,
+                        title: data.title,
+                        price: data.price,
+                        imageUrls: data.imageUrls || [],
+                        location: data.location || [data.areaLocality, data.city, data.district].filter(Boolean).join(", "),
+                        type: data.type,
+                        category: data.category
+                    });
+                    localStorage.setItem("recently_viewed", JSON.stringify(filtered.slice(0, 8)));
+                } catch (e) {
+                    console.error("Failed to log recently viewed property:", e);
+                }
+            }
+        }).catch(() => setProperty(null));
     }, [propertyId]);
     if (!property) {
         return _jsx("div", { className: "page-shell py-20", children: "Loading property details..." });
